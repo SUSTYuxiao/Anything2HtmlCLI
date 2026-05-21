@@ -1,0 +1,4 @@
+{"file": "README.md", "reason": "Verify charter covers: positioning, pain points, goals, non-goals, architecture principles, MVP capabilities, roadmap, directory plan."}
+{"file": ".trellis/tasks/05-21-project-charter-and-reference-setup/prd.md", "reason": "Verify ADR-lite section locks the four charter-level decisions and explicitly defers T1/T2/T3 to MVP task."}
+{"file": "AGENTS.md", "reason": "Verify `ref/` read-only semantics and license attribution language are present outside the TRELLIS-managed block."}
+{"file": "ref/html-anything/LICENSE", "reason": "Confirm Apache-2.0; required for any future code porting in MVP task."}

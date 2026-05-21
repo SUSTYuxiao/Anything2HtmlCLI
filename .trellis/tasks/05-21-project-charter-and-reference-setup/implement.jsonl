@@ -1,0 +1,5 @@
+{"file": "README.md", "reason": "Project charter: goals, non-goals, MVP capability list, roadmap. Sub-agents must align all design choices to this document."}
+{"file": "AGENTS.md", "reason": "Defines `ref/` read-only semantics and Apache-2.0 attribution rules for code ported from upstream."}
+{"file": ".trellis/tasks/05-21-project-charter-and-reference-setup/prd.md", "reason": "Charter ADR-lite: runtime-transparent principle (constraint A), upstream-thin-shell principle (constraint B), upstream architecture findings, out-of-scope boundary."}
+{"file": "ref/html-anything/README.md", "reason": "Upstream project overview — confirms agent-CLI orchestration model and 75 prompt-style skill templates."}
+{"file": "ref/html-anything/AGENTS.md", "reason": "Upstream's own AI-collaboration contract; informs how to read its code structure."}

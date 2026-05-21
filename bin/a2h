@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+// =====================================================================
+// bin/a2h —— shebang 包装层
+// 详见 .trellis/spec/backend/directory-structure.md §bin/a2h
+// 业务逻辑全在 dist/cli.js；本壳只负责 ESM 动态加载，避开 Windows 行尾 / 路径
+// quoting 雷区。
+// =====================================================================
+import("../dist/cli.js");

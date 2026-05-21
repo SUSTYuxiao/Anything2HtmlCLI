@@ -1,0 +1,6 @@
+{"file": ".trellis/tasks/05-21-mvp-cli-extract-and-ship/prd.md", "reason": "Acceptance criteria checklist (6 items) — every PR must pass these before claim 'done'."}
+{"file": ".trellis/tasks/05-21-mvp-cli-extract-and-ship/research/spike-end-to-end.md", "reason": "F1-F6 architectural decisions — verify implementation has not drifted (e.g. accidentally re-introducing stream-json parsing, or skipping --bare default)."}
+{"file": ".trellis/tasks/05-21-project-charter-and-reference-setup/prd.md", "reason": "Charter principles — verify MVP does not violate (no Next.js dep, no React, no headless browser, sync mechanism stays minimal)."}
+{"file": "README.md", "reason": "Public-facing project goals — verify CLI behavior matches the documented MVP capability list."}
+{"file": "AGENTS.md", "reason": "Verify any ported file from ref/ has Apache-2.0 attribution header citing upstream path + commit."}
+{"file": "ref/html-anything/LICENSE", "reason": "Reference for license-compliance verification when reviewing ported code."}

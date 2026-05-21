@@ -1,0 +1,35 @@
+{
+  "name": "@a2h/cli",
+  "version": "0.1.0",
+  "description": "Anything-to-HTML CLI: thin shell over local agent CLIs (claude / …) that turns any text into a self-contained HTML file.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": {
+    "a2h": "bin/a2h"
+  },
+  "files": [
+    "dist/",
+    "bin/",
+    "package.json",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "esbuild src/cli.ts --bundle --platform=node --target=node20 --format=esm --external:node:* --outfile=dist/cli.js --minify --legal-comments=inline",
+    "sync": "node scripts/sync-from-ref.mjs",
+    "test:build": "esbuild src/__tests__/extract-html.test.ts src/__tests__/errors.test.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist-test --external:node:*",
+    "test": "npm run test:build && node --test --enable-source-maps dist-test/extract-html.test.js dist-test/errors.test.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit && eslint"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.10.0",
+    "typescript": "^5.6.0"
+  }
+}

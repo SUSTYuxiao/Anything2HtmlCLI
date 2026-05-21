@@ -1,0 +1,23 @@
+# Upstream reference (read-only, sync via npm run sync, not tracked)
+ref/
+
+# Build artifacts
+dist/
+dist-test/
+node_modules/
+*.tsbuildinfo
+
+# Test / spike output
+*.log
+.trellis/tasks/*/research/spike/runs/
+.trellis/tasks/*/research/spike/inputs/
+.trellis/tasks/*/research/spike/out.html
+.trellis/tasks/*/research/spike/raw-stdout.txt
+.trellis/tasks/*/research/spike/report.json
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
