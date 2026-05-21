@@ -105,3 +105,36 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 4: README 重构：拆分用户视角与项目宪章（docs/design.md + docs/roadmap.md）
+
+**Date**: 2026-05-22
+**Task**: README 重构：拆分用户视角与项目宪章（docs/design.md + docs/roadmap.md）
+**Branch**: `main`
+
+### Summary
+
+把 README.md 从'项目宪章+用户手册'双轨重构为纯 CLI 用户文档（246→187 行 -24%），项目内部内容分离到 docs/design.md (169 行) + docs/roadmap.md (39 行 含完成状态+commit hash)。README 保留 tagline / Why / Install / Usage / Embedding cookbook / 成本表 / 更多链接段；迁出 §3-§7+§10 (核心目标/非目标/架构原则/能力清单/参考实现/目录结构) 和 §8 路线图。docs/ 不入 npm tarball (package.json files 字段不变，docs 通过 GitHub 链接访问)。验证：181 files / 323KB / docs 未入 tarball / 链接有效性全过 / typecheck-lint-test 50/50。退出码表 README §Embedding 与 spec/backend/error-handling.md 仍三方对齐。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `f406a7f` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
