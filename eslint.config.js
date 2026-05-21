@@ -11,6 +11,8 @@ export default [
     ignores: [
       "src/templates/**",
       "src/extract-html.ts",
+      "src/agents/detect.ts",
+      "src/agents/argv.ts",
       "src/__tests__/fixtures/**",
       "dist/**",
       "dist-test/**",

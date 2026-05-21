@@ -3,13 +3,16 @@
 // 协议: .trellis/spec/guides/cli-design.md (子命令面 / flag / help)
 //       .trellis/spec/backend/error-handling.md (退出码 / 双流分离)
 //
-// PR1 范围: 仅骨架 + 全局 flag + 子命令路由表。
-// render / skills / preview 的业务逻辑由 PR2/PR3 实现; 此处占位为
-// "not implemented" A2hError, 保证 cli 启动不崩、help 可打、未知子命令报错。
+// PR2: render / skills / preview 业务逻辑接入 src/commands/*; 本文件仅
+//      保留 argparse + dispatcher + 唯一 catch-and-exit. 业务命令一律
+//      抛 A2hError, 由顶层 normalize → 退出码映射.
 // =====================================================================
 
 import { A2hError, ErrorCode, normalize, type ErrorCodeName } from "./errors.js";
 import { configureLogger, log } from "./logger.js";
+import { runRender } from "./commands/render.js";
+import { runSkills } from "./commands/skills.js";
+import { runPreview } from "./commands/preview.js";
 
 // ─── version (PR4 时改为从 package.json 注入) ────────────────────────
 const VERSION = "0.1.0";
@@ -104,15 +107,7 @@ function hasFlag(argv: readonly string[], ...names: string[]): boolean {
   return argv.some((a) => names.includes(a));
 }
 
-// ─── PR1 stub: 子命令暂未实现, 抛 A2hError 不崩 stack ────────────────
-function notImplemented(name: string): never {
-  throw new A2hError(
-    "E_USAGE",
-    `${name}: not implemented in PR1`,
-    { subcommand: name, pr: 1 },
-    "PR2 will implement this subcommand. See .trellis/tasks/05-21-mvp-cli-extract-and-ship/prd.md",
-  );
-}
+// ─── PR2 实装: notImplemented stub 已被 commands/* 替换. 顶层仅作 dispatcher.
 
 // ─── 顶层 dispatcher ─────────────────────────────────────────────────
 async function main(argv: readonly string[]): Promise<void> {
@@ -136,7 +131,7 @@ async function main(argv: readonly string[]): Promise<void> {
   const sub = argv[0];
   const rest = argv.slice(1);
 
-  // 子命令级 --help 永远先于业务执行 (即使业务未实现)
+  // 子命令级 --help 永远先于业务执行
   const wantsHelp = hasFlag(rest, "--help", "-h");
 
   switch (sub) {
@@ -145,24 +140,24 @@ async function main(argv: readonly string[]): Promise<void> {
         process.stderr.write(HELP_RENDER);
         return;
       }
-      notImplemented("render");
-      break;
+      await runRender(rest);
+      return;
 
     case "skills":
       if (wantsHelp) {
         process.stderr.write(HELP_SKILLS);
         return;
       }
-      notImplemented("skills");
-      break;
+      await runSkills(rest);
+      return;
 
     case "preview":
       if (wantsHelp) {
         process.stderr.write(HELP_PREVIEW);
         return;
       }
-      notImplemented("preview");
-      break;
+      await runPreview(rest);
+      return;
 
     default:
       throw new A2hError(

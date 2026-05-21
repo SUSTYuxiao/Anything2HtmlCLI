@@ -30,6 +30,8 @@ Charter 原则 2 说得最清楚：
 | `ref/html-anything/next/src/lib/templates/loader.ts` | `src/templates/loader.ts` | cp + 仅修改 `SKILLS_DIR` 常量指向新路径 + 加 attribution header |
 | `ref/html-anything/next/src/lib/templates/shared.ts` | `src/templates/shared.ts` | cp + 加 attribution header |
 | `ref/html-anything/next/src/lib/extract-html.ts` | `src/extract-html.ts` | cp + 加 attribution header，零逻辑修改 |
+| `ref/html-anything/next/src/lib/agents/detect.ts` | `src/agents/detect.ts` | cp + attribution header（含 `// @ts-nocheck`），零逻辑修改 |
+| `ref/html-anything/next/src/lib/agents/argv.ts` | `src/agents/argv.ts` | cp + attribution header（含 `// @ts-nocheck`），零逻辑修改 |
 
 ### 明确**不**同步（首版排除清单）
 
@@ -37,7 +39,7 @@ Charter 原则 2 说得最清楚：
 | --- | --- |
 | `templates/scenarios.ts` | UI 场景元数据，CLI 无场景概念 |
 | `templates/index.ts` | 只是 barrel re-export，本项目自己组织 import |
-| `agents/{detect,invoke,argv}.ts` | 首版仅支持 claude；spike F1 表明 `--output-format text` 不需要 stream-json 解析层；P1 多 agent 时再纳入 |
+| `agents/invoke.ts` | ReadableStream + 多 agent 多协议派发，对 MVP 严重过度；spike F1 证明 `--output-format text` 不需要流式协议层；本项目自写最简版 spawn 替代，见 `src/agents/claude.ts` |
 | `export/**` | PRD Out of Scope（PPTX / XLSX / WeChat / Notion 导出） |
 | `parsers/**` | 首版只接 markdown 字符串；不引入文件类型分发 |
 
@@ -237,7 +239,7 @@ SHA 是同步可追溯性的唯一根：没有它就无法回答"这版本对应
 1. 上游 `next/` 与 `lib/` 的目录边界变动（白名单路径要改）。
 2. 上游开始发布 npm 包（白名单可能整体被 `dependencies` 替代）。
 3. 上游 `LICENSE` 不再是 Apache-2.0（attribution 模板要重写）。
-4. P1 任务决定纳入多 agent → 白名单扩展至 `agents/`。
+4. P1 任务决定纳入多 agent → 只需在 `src/agents/` 下扩本项目自写 wrapper（如新增 `src/agents/codex.ts`），**不需要**扩 sync 白名单（`detect.ts` 已涵盖 8 个 agent 的探测逻辑，PR2 已纳入）。
 
 更新本指南 = 同步纪律本身的变更，需要在 task PRD 中显式提案，不在常规同步 commit 里偷偷改。
 
@@ -248,7 +250,7 @@ SHA 是同步可追溯性的唯一根：没有它就无法回答"这版本对应
 | 议题 | 协议 |
 | --- | --- |
 | 同步触发 | 人工 `npm run sync`，频次随上游 release |
-| 白名单 | 4 条精确路径（templates/skills/** + loader.ts + shared.ts + extract-html.ts） |
+| 白名单 | 6 条精确路径（templates/skills/** + loader.ts + shared.ts + extract-html.ts + agents/detect.ts + agents/argv.ts） |
 | Attribution | 每文件强制 ASCII 分块 header，含 commit SHA |
 | 本地修改 | `// [a2h]` 标注，5 行以内 |
 | ref/ git 状态 | .gitignore 排除，禁止 git add |

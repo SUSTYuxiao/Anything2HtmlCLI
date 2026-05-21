@@ -100,8 +100,24 @@ const LOADER_DST = join(SRC, "templates/loader.ts");
 const EXTRACT_SRC = join(REF, "next/src/lib/extract-html.ts");
 const EXTRACT_DST = join(SRC, "extract-html.ts");
 
+// PR2 新增：agent 检测 + argv 构造层（仅 claude 路径需要它们的纯函数）
+// invoke.ts 上游是 ReadableStream + 多 agent 多协议派发，对 MVP 严重过度，
+// 不同步——src/agents/claude.ts 自写最简 spawn 替代。
+const DETECT_SRC = join(REF, "next/src/lib/agents/detect.ts");
+const DETECT_DST = join(SRC, "agents/detect.ts");
+
+const ARGV_SRC = join(REF, "next/src/lib/agents/argv.ts");
+const ARGV_DST = join(SRC, "agents/argv.ts");
+
+// 运行时 skills 目录：与 dist/cli.js 同级（quality-guidelines.md §Skills）
+// loader.ts 用 fileURLToPath(import.meta.url) 解析 SKILLS_DIR——bundle 后
+// import.meta.url 落在 dist/cli.js，故 skills 必须 mirror 到 dist/skills/。
+const DIST_SKILLS_DST = join(ROOT, "dist/skills");
+
 // ─── ensure parent dirs exist ────────────────────────────────────────
 mkdirSync(join(SRC, "templates"), { recursive: true });
+mkdirSync(join(SRC, "agents"), { recursive: true });
+mkdirSync(join(ROOT, "dist"), { recursive: true });
 
 // ─── 1. skills tree (零修改整树 cp) ──────────────────────────────────
 rmSync(SKILLS_DST, { recursive: true, force: true });
@@ -109,6 +125,11 @@ cpSync(SKILLS_SRC, SKILLS_DST, { recursive: true });
 const skillCount = readdirSync(SKILLS_DST, { withFileTypes: true }).filter((d) =>
   d.isDirectory(),
 ).length;
+
+// 1b. mirror to dist/skills/——bundle 后的 cli.js 在运行时按 module-relative
+// 路径读 skills，必须与 dist/cli.js 同级。详见 quality-guidelines.md §Skills。
+rmSync(DIST_SKILLS_DST, { recursive: true, force: true });
+cpSync(SKILLS_SRC, DIST_SKILLS_DST, { recursive: true });
 
 // ─── 2. shared.ts (header only, 零逻辑修改) ─────────────────────────
 {
@@ -154,5 +175,23 @@ const skillCount = readdirSync(SKILLS_DST, { withFileTypes: true }).filter((d) =
   writeFileSync(EXTRACT_DST, header("next/src/lib/extract-html.ts", []) + raw);
 }
 
+// ─── 5. agents/detect.ts (header only, 零逻辑修改) ──────────────────
+// PR2 引入：claude 的 PATH 检测（resolveOnPath / AGENTS / DEFAULT_MODEL）。
+// 不同步 invoke.ts——多 agent 多协议派发对 MVP 过度，由 src/agents/claude.ts
+// 自写最简 spawn 替代。
+{
+  const raw = readFileSync(DETECT_SRC, "utf8");
+  writeFileSync(DETECT_DST, header("next/src/lib/agents/detect.ts", []) + raw);
+}
+
+// ─── 6. agents/argv.ts (header only, 零逻辑修改) ────────────────────
+// PR2 引入：claude argv 构造（buildArgv / makeParser / parseLine）的纯函数。
+// MVP 仅用 buildArgv("claude", ...) 一支；其它 agent 分支随上游进 src/ 但
+// 不被 callClaude 调到。
+{
+  const raw = readFileSync(ARGV_SRC, "utf8");
+  writeFileSync(ARGV_DST, header("next/src/lib/agents/argv.ts", []) + raw);
+}
+
 // ─── done ────────────────────────────────────────────────────────────
-console.log(`Synced ${skillCount} skills + 3 ts files (commit ${shortSha})`);
+console.log(`Synced ${skillCount} skills + 5 ts files (commit ${shortSha})`);

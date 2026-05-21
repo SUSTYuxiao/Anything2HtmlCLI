@@ -159,6 +159,8 @@ export default [
     ignores: [
       "src/templates/**",      // 上游同步层
       "src/extract-html.ts",   // 上游同步层
+      "src/agents/detect.ts",  // 上游同步层，本仓库不为其风格背锅
+      "src/agents/argv.ts",    // 同上
       "src/__tests__/fixtures/**",
       "dist/**",
       "ref/**"
