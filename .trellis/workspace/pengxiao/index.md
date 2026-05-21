@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 1
+- **Total Sessions**: 2
 - **Last Active**: 2026-05-21
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~41 | Active |
+| `journal-1.md` | ~74 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 2 | 2026-05-21 | CLI polish: 砍 preview / 加 qoder / 心跳 progress + spec 中文化与反模式速查 | `f5931f0` | `main` |
 | 1 | 2026-05-21 | a2h CLI: charter → spec → spike → PR1 + PR2（P0 全过） | `cb6a6bc`, `51ee5b9` | `main` |
 <!-- @@@/auto:session-history -->
 
