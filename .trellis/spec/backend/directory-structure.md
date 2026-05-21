@@ -1,4 +1,4 @@
-# Directory Structure
+# 目录结构
 
 > **WHY**：本项目是 `ref/html-anything` 的薄壳 CLI；目录结构必须把"从上游同步进来的资产"和"本项目自己的编排层"物理分层，否则薄壳同步原则（charter 原则 2 + PRD 决策 Q-MVP-SYNC）会在第二次 `npm run sync` 时被冲突覆盖击穿。
 
@@ -12,11 +12,13 @@ src/
 ├── errors.ts                   # 本项目层：A2hError + ErrorCode（见 error-handling.md）
 ├── logger.ts                   # 本项目层：唯一 stderr 出口（见 logging-guidelines.md）
 ├── commands/                   # 本项目层：子命令实现（Q-MVP-5 多子命令）
-│   ├── render.ts               # a2h render <input> --skill <id> [-o]
-│   ├── skills.ts               # a2h skills [--json]
-│   └── preview.ts              # a2h preview <input> --skill <id>
+│   ├── render.ts               # a2h render <input> --skill <id> [--agent <id>] [-o]
+│   └── skills.ts               # a2h skills [--json]
 ├── agents/                     # 本项目层：Agent CLI 调用器
-│   └── claude.ts               # spawn("claude", argv) + argv 构造
+│   ├── invoke.ts               # 共享 invokeAgent(id, opts) 抽象（claude / qoder）
+│   ├── errors.ts               # AGENT_CLASSIFIERS：每 agent stderr → A2hError 映射
+│   ├── detect.ts               # 上游同步层：bin 探测（PATH + 常见 shim 目录）
+│   └── argv.ts                 # 上游同步层：buildArgv(agentId, opts)
 ├── templates/                  # 上游同步层：禁止原地修改
 │   ├── loader.ts               # 从 ref/ 同步：parseFrontmatter / listSkills / loadSkill
 │   ├── shared.ts               # 从 ref/ 同步：SHARED_DESIGN_DIRECTIVES / assemblePrompt

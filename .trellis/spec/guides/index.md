@@ -1,28 +1,28 @@
-# Thinking Guides
+# 思考指南（Thinking Guides）
 
-> **Purpose**: Expand your thinking to catch things you might not have considered.
-
----
-
-## Why Thinking Guides?
-
-**Most bugs and tech debt come from "didn't think of that"**, not from lack of skill:
-
-- Didn't think about what happens at layer boundaries → cross-layer bugs
-- Didn't think about code patterns repeating → duplicated code everywhere
-- Didn't think about edge cases → runtime errors
-- Didn't think about future maintainers → unreadable code
-
-These guides help you **ask the right questions before coding**.
+> **目的**：扩展思考维度，帮你抓住那些"没想到"的盲点。
 
 ---
 
-## Available Guides
+## 为什么需要 Thinking Guides？
 
-| Guide | Purpose | When to Use |
+**大多数 bug 与技术债源自"没想到"，而非"不会写"**：
+
+- 没想到层与层的边界 → 跨层 bug
+- 没想到代码模式重复 → 到处是重复代码
+- 没想到边界场景 → 运行时错误
+- 没想到未来维护者 → 没人看得懂的代码
+
+这些 guide 帮你**在动手编码前问对问题**。
+
+---
+
+## 可用 guides
+
+| Guide | 用途 | 何时使用 |
 |-------|---------|-------------|
-| [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | Identify patterns and reduce duplication | When you notice repeated patterns |
-| [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | Think through data flow across layers | Features spanning multiple layers |
+| [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | 识别模式、减少重复 | 注意到重复模式时 |
+| [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | 跨层数据流的思考 | 需求横跨多层时 |
 | [CLI Design Guide](./cli-design.md) | `a2h` 子命令面、flag 协议、I/O 契约、退出码表 | 新增子命令 / flag / 错误码前 |
 | [Upstream Sync Guide](./upstream-sync.md) | 上游 `ref/` 同步白名单、Apache-2.0 attribution、同步纪律 | 跑 `npm run sync` 或动 `src/templates`、`src/extract-html.ts` 前 |
 
@@ -33,54 +33,79 @@ These guides help you **ask the right questions before coding**.
 
 ---
 
-## Quick Reference: Thinking Triggers
+## 速查：思考触发器
 
-### When to Think About Cross-Layer Issues
+### 何时该思考跨层问题
 
-- [ ] Feature touches 3+ layers (API, Service, Component, Database)
-- [ ] Data format changes between layers
-- [ ] Multiple consumers need the same data
-- [ ] You're not sure where to put some logic
+- [ ] 需求触及 3+ 层（API、Service、Component、Database）
+- [ ] 数据格式在层之间发生变化
+- [ ] 多个消费者需要同一份数据
+- [ ] 你不确定某段逻辑应该放哪层
 
-→ Read [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md)
+→ 阅读 [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md)
 
-### When to Think About Code Reuse
+### 何时该思考代码复用
 
-- [ ] You're writing similar code to something that exists
-- [ ] You see the same pattern repeated 3+ times
-- [ ] You're adding a new field to multiple places
-- [ ] **You're modifying any constant or config**
-- [ ] **You're creating a new utility/helper function** ← Search first!
+- [ ] 你正在写与已有代码相似的逻辑
+- [ ] 你看到同一模式重复 3+ 次
+- [ ] 你正在为多个地方添加同一字段
+- [ ] **你正在修改任意常量或配置**
+- [ ] **你正在新建工具 / 辅助函数** ← 先搜！
 
-→ Read [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md)
+→ 阅读 [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md)
 
 ---
 
-## Pre-Modification Rule (CRITICAL)
+## 修改前规则（关键）
 
-> **Before changing ANY value, ALWAYS search first!**
+> **改任何值之前，永远先搜！**
 
 ```bash
-# Search for the value you're about to change
+# 搜索你即将修改的值
 grep -r "value_to_change" .
 ```
 
-This single habit prevents most "forgot to update X" bugs.
+这一个习惯能避免大多数"忘记同步更新 X"的 bug。
 
 ---
 
-## How to Use This Directory
+## 如何使用本目录
 
-1. **Before coding**: Skim the relevant thinking guide
-2. **During coding**: If something feels repetitive or complex, check the guides
-3. **After bugs**: Add new insights to the relevant guide (learn from mistakes)
-
----
-
-## Contributing
-
-Found a new "didn't think of that" moment? Add it to the relevant guide.
+1. **编码前**：扫一眼相关 thinking guide
+2. **编码中**：发现某段感觉重复或复杂，回头查 guide
+3. **修完 bug 后**：把新洞察补回相关 guide（从错误中学习）
 
 ---
 
-**Core Principle**: 30 minutes of thinking saves 3 hours of debugging.
+## 贡献
+
+发现新的"没想到"瞬间？补到对应 guide。
+
+---
+
+**核心原则**：30 分钟思考，省 3 小时排错。
+
+---
+
+## ⚠️ 反模式速查
+
+> guides 层的雷，常常跨多个 spec 才能避开；本段汇总。
+
+### CLI 设计
+
+- ❌ 引入 commander / yargs / oclif —— 手写 argparse（per cli-design.md）
+- ❌ 配置文件副作用（`a2h config set ...` / `~/.a2hrc`）—— MVP 是无状态工具
+- ❌ render 默认开浏览器 —— 浏览器交互不归 CLI（preview 子命令已砍）
+- ❌ `--help` 嵌广告 / banner / Telemetry 提示
+
+### 上游同步
+
+- ❌ 在 `src/templates/` 或 `src/extract-html.ts` 内"二次修改"上游代码 —— bug 修复推上游 PR
+- ❌ silent `.replace()` 同步替换 —— 用 `replaceExact()` 断言型替换
+- ❌ `git add ref/` —— `ref/` 整目录是只读参考，不进 git（已 `.gitignore`）
+- ❌ 同步后跳过测试就 commit —— 上游 breaking change 必须先发现
+
+### 引用 SSoT
+
+- [`cli-design.md`](./cli-design.md) / [`upstream-sync.md`](./upstream-sync.md)
+- 一般工程思维：[`code-reuse-thinking-guide.md`](./code-reuse-thinking-guide.md) / [`cross-layer-thinking-guide.md`](./cross-layer-thinking-guide.md)

@@ -1,4 +1,4 @@
-# Logging Guidelines — `a2h` 日志与进度协议
+# 日志规范 — `a2h` 日志与进度协议
 
 > 本文档定义 `a2h` CLI 的 stderr / stdout 通道纪律与进度反馈协议。**stdout 永远只承载数据（HTML 或 JSON 错误对象），stderr 承载所有给人看的字符**——这是被嵌入调用场景下不可让步的红线。
 

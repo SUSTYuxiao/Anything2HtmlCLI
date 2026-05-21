@@ -1,4 +1,4 @@
-# CLI Design Guide
+# CLI 设计指南
 
 > **本项目特有协议**：`a2h` 的命令面、flag 命名、I/O 契约、help 文本风格、退出码表。
 > 仅描述本项目自实现的最简 argparse 行为；不引用 commander / yargs / oclif 等库。
@@ -32,10 +32,11 @@ a2h render <input | -> --skill <id> [-o <file>] [flags]
 
 a2h skills [--json]
    列出可用 skill；--json 输出结构化数组供 agent 消费。
-
-a2h preview <input | -> --skill <id> [flags]
-   生成临时 HTML 并在系统浏览器中打开；不写 stdout。
 ```
+
+> **`a2h preview` 已砍**（PR3 cli-polish）：CLI 工具不承担浏览器交互。
+> 用户需要试看请 `a2h render in.md --skill X -o /tmp/preview.html` 后自行 `open` 或在编辑器打开。
+> 浏览器交互不是 CLI 的事，是上游 webapp 的事。
 
 ### 未来扩展子命令（P1+）
 
@@ -54,8 +55,7 @@ src/
 ├── cli.ts                # argparse + 路由表（subcommand → handler）
 └── commands/
     ├── render.ts         # export async function run(argv: string[])
-    ├── skills.ts
-    └── preview.ts
+    └── skills.ts
 ```
 
 ---
@@ -266,11 +266,11 @@ agent 嵌入场景下，agent 自己管 flag 即可，a2h 不需要"用户配置
 
 ```text
 ❌ a2h render input.md --skill blog        # 自动 open http://...
-✅ 浏览器交互全部归 a2h preview 子命令
-   render 永远只产 HTML（stdout 或 -o 文件）
+✅ render 永远只产 HTML（stdout 或 -o 文件）
+   浏览器交互不是 CLI 的事——用户需要试看请 -o 写文件后自己 open
 ```
 
-理由：渲染 = 纯函数；预览 = 副作用。混在一起会让 `a2h render in.md --skill blog | grep '<title>'` 这种 pipe 莫名其妙打开浏览器。
+理由：渲染 = 纯函数；预览 = 副作用。混在一起会让 `a2h render in.md --skill blog | grep '<title>'` 这种 pipe 莫名其妙打开浏览器。`a2h preview` 子命令已在 PR3 砍掉，理由同此。
 
 ### 禁止：在 --help 输出中嵌广告 / banner / Telemetry 提示
 

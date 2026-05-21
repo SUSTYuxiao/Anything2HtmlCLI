@@ -72,7 +72,7 @@ test("renderToHtml: passes input through to callAgent prompt", async () => {
   await renderToHtml({
     input: "# UNIQUE_TEST_MARKER_42",
     skillId: "article-magazine",
-    callAgent: async (opts) => {
+    callAgent: async (_id, opts) => {
       capturedPrompt = opts.prompt;
       return RAW_STDOUT;
     },
@@ -84,17 +84,48 @@ test("renderToHtml: passes input through to callAgent prompt", async () => {
 
 // ─── 5. budget / noBare 透传 ─────────────────────────────────────────
 test("renderToHtml: forwards budget + noBare to callAgent", async () => {
-  let captured: { budget?: number; noBare?: boolean } = {};
+  let capturedBudget: number | undefined;
+  let capturedNoBare: boolean | undefined;
   await renderToHtml({
     input: "x",
     skillId: "article-magazine",
     budget: 2.5,
     noBare: true,
-    callAgent: async (opts) => {
-      captured = { ...opts };
+    callAgent: async (_id, opts) => {
+      capturedBudget = opts.budget;
+      capturedNoBare = opts.noBare;
       return RAW_STDOUT;
     },
   });
-  assert.equal(captured.budget, 2.5);
-  assert.equal(captured.noBare, true);
+  assert.equal(capturedBudget, 2.5);
+  assert.equal(capturedNoBare, true);
+});
+
+// ─── 6. agentId 默认 claude ──────────────────────────────────────────
+test("renderToHtml: agentId defaults to claude", async () => {
+  let capturedId = "";
+  await renderToHtml({
+    input: "x",
+    skillId: "article-magazine",
+    callAgent: async (id) => {
+      capturedId = id;
+      return RAW_STDOUT;
+    },
+  });
+  assert.equal(capturedId, "claude");
+});
+
+// ─── 7. agentId qoder 透传 ──────────────────────────────────────────
+test("renderToHtml: agentId qoder passes through", async () => {
+  let capturedId = "";
+  await renderToHtml({
+    input: "x",
+    skillId: "article-magazine",
+    agentId: "qoder",
+    callAgent: async (id) => {
+      capturedId = id;
+      return RAW_STDOUT;
+    },
+  });
+  assert.equal(capturedId, "qoder");
 });

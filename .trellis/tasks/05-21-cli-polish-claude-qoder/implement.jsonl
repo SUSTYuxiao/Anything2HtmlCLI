@@ -1,0 +1,10 @@
+{"file": ".trellis/tasks/05-21-cli-polish-claude-qoder/prd.md", "reason": "本任务 PRD：最高原则、3 个 P0、Out of Scope、Acceptance Criteria、单 PR 实施计划。"}
+{"file": ".trellis/tasks/archive/2026-05/05-21-mvp-cli-extract-and-ship/prd.md", "reason": "父任务 PRD（已 archive）。本任务沿用 mvp 的 8 条 brainstorm 决策（命令面 / 错误协议 / I/O 契约 / TS+esbuild / 同步纪律），不要重复发明。"}
+{"file": ".trellis/tasks/05-21-project-charter-and-reference-setup/prd.md", "reason": "Charter 4 条 ADR-lite 原则——特别是原则 3（不重写渲染）和原则 4（self-contained）。本任务最高原则的源头。"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "src/agents/ 三层组织：上游同步层 (detect.ts + argv.ts) / 本项目层 (claude.ts → invoke.ts + errors.ts)。"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "DI 注入模式（ClaudeDeps → InvokeDeps）、node --test 测试栈、零运行时依赖红线、Lint ignores（含 detect+argv）。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "ErrorCode 表 / A2hError 类 / cli.ts 唯一退出点 / commands 严禁 process.exit。新 invoke.ts 必须遵守。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "stderr 协议、TTY 三条件检测、log.progress / done API。心跳 progress 必须按这套协议接 logger。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "subcommand 结构、flag 命名 (kebab-case)、--agent flag 应在 render 子命令；preview 砍掉后 cli-design 的 preview 段也需要本任务删除。"}
+{"file": ".trellis/spec/guides/upstream-sync.md", "reason": "@ts-nocheck attribution header / replaceExact / 6 项白名单。本任务不扩 sync 白名单（detect+argv 已有 case 覆盖 qoder）。"}
+{"file": ".trellis/tasks/archive/2026-05/05-21-mvp-cli-extract-and-ship/research/spike-end-to-end.md", "reason": "F1: claude --output-format text 已够用（不切 stream-json 的依据）；F3: 复杂模板 170s 黑屏（心跳 progress 的根因）；F6: TTY-aware progress 的 spec 出处。"}

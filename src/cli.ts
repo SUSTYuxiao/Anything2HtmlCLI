@@ -3,16 +3,18 @@
 // 协议: .trellis/spec/guides/cli-design.md (子命令面 / flag / help)
 //       .trellis/spec/backend/error-handling.md (退出码 / 双流分离)
 //
-// PR2: render / skills / preview 业务逻辑接入 src/commands/*; 本文件仅
+// PR2: render / skills 业务逻辑接入 src/commands/*; 本文件仅
 //      保留 argparse + dispatcher + 唯一 catch-and-exit. 业务命令一律
 //      抛 A2hError, 由顶层 normalize → 退出码映射.
+//
+// PR3 (cli-polish): 砍 preview 子命令 (CLI 不承担浏览器交互);
+//                   加 --agent flag (claude / qoder).
 // =====================================================================
 
 import { A2hError, ErrorCode, normalize, type ErrorCodeName } from "./errors.js";
 import { configureLogger, log } from "./logger.js";
 import { runRender } from "./commands/render.js";
 import { runSkills } from "./commands/skills.js";
-import { runPreview } from "./commands/preview.js";
 
 // ─── version (PR4 时改为从 package.json 注入) ────────────────────────
 const VERSION = "0.1.0";
@@ -27,8 +29,6 @@ COMMANDS
   render <input | -> --skill <id> [-o <file>]
                        Render input to a self-contained HTML file.
   skills [--json]      List available skill identifiers.
-  preview <input | -> --skill <id>
-                       Render and open in the system browser.
 
 GLOBAL FLAGS
   -q, --quiet          Suppress progress / info on stderr.
@@ -54,6 +54,8 @@ DESCRIPTION
 
 FLAGS
   --skill <id>           Skill identifier (required). Run \`a2h skills\` to list.
+  --agent <id>           Agent CLI to invoke (claude | qoder). Default: claude.
+                         Env override: A2H_AGENT.
   -o, --out <file>       Output file path. Defaults to stdout.
   --max-budget-usd <n>   Forward to claude CLI as cost ceiling.
   --json-errors          Emit JSON error object to stdout on failure.
@@ -64,6 +66,7 @@ FLAGS
 EXAMPLES
   a2h render article.md --skill article-magazine -o article.html
   echo "$content" | a2h render - --skill blog-post --json-errors > out.html
+  a2h render in.md --skill article-magazine --agent qoder -o out.html
 `;
 
 const HELP_SKILLS = `a2h skills — list available skill identifiers
@@ -72,7 +75,7 @@ USAGE
   a2h skills [--json] [flags]
 
 DESCRIPTION
-  List skill ids that \`render\` / \`preview\` accept.
+  List skill ids that \`render\` accepts.
 
 FLAGS
   --json                 Output as JSON array (for agent consumption).
@@ -81,25 +84,6 @@ FLAGS
 EXAMPLES
   a2h skills
   a2h skills --json | jq '.[].id'
-`;
-
-const HELP_PREVIEW = `a2h preview — render and open in browser
-
-USAGE
-  a2h preview <input | -> --skill <id> [flags]
-
-DESCRIPTION
-  Render input to a temp HTML file and open it in the system browser.
-
-FLAGS
-  --skill <id>           Skill identifier (required).
-  --max-budget-usd <n>   Forward to claude CLI as cost ceiling.
-  -q, --quiet            Suppress progress on stderr.
-  -h, --help             Show this help.
-
-EXAMPLES
-  a2h preview article.md --skill article-magazine
-  echo "$content" | a2h preview - --skill blog-post
 `;
 
 // ─── argv helpers (手写 argparse, 不引 commander/yargs) ──────────────
@@ -149,14 +133,6 @@ async function main(argv: readonly string[]): Promise<void> {
         return;
       }
       await runSkills(rest);
-      return;
-
-    case "preview":
-      if (wantsHelp) {
-        process.stderr.write(HELP_PREVIEW);
-        return;
-      }
-      await runPreview(rest);
       return;
 
     default:

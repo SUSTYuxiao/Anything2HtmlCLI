@@ -1,13 +1,10 @@
-# Frontend Spec Index
+# Frontend 规范索引
 
-**Status: N/A for this project.**
+**状态：本项目不适用。**
 
-`a2h` is a CLI tool with no UI layer. It does not ship a web frontend,
-a TUI library wrapper, or a desktop UI. The `a2h preview` subcommand
-opens system browser to view a generated HTML file — but the HTML
-itself is the rendering engine's output, not a "frontend" of `a2h`.
+`a2h` 是 CLI 工具，没有 UI 层：不发布 web 前端、不包装 TUI 库、不提供桌面 UI。
+`a2h render` 产生的 HTML 是渲染引擎的输出（数据），**不构成 `a2h` 的"前端"**——
+浏览器交互不是 CLI 的事，由调用方在拿到 HTML 文件后自行 `open` 或在编辑器打开。
 
-If a future iteration introduces a UI surface (e.g. interactive
-revision TUI, configuration GUI), populate this layer at that time.
-The previously-generated frontend spec scaffolding has been removed
-to avoid stale guidance.
+如未来引入 UI 表面（例如交互式修订 TUI、配置 GUI），届时再激活本层。
+此前自动生成的 frontend spec 脚手架已移除，避免陈旧引导。

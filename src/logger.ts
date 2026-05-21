@@ -49,6 +49,15 @@ export const log = {
     process.stderr.write(`\r${dim(`[a2h] ${msg}`)}`);
   },
 
+  // progressTick: 时间心跳, 每次 invoke 心跳触发追加一个点 (不换行).
+  // 与 progress 区别: progress 是覆盖同一行的"streaming X chars"; tick 是
+  // 累加的"·"——两者不会同时使用 (PR3 invokeAgent 用 tick, PR2 stream chars
+  // 路径已废弃, 见 commands/render.ts).
+  progressTick(): void {
+    if (!isTTY() || flags.quiet) return;
+    process.stderr.write(dim("·"));
+  },
+
   // done: 收束 progress, 换行落定为静态记录
   done(msg: string): void {
     if (!isTTY() || flags.quiet) return;

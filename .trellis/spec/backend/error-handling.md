@@ -1,4 +1,4 @@
-# Error Handling — `a2h` 错误协议
+# 错误处理 — `a2h` 错误协议
 
 > 本文档定义 `a2h` CLI 的错误信号协议。**所有错误必须可被调用方（LLM Agent / Skill / Shell 脚本）程序化解析**——因为本项目主场景是被嵌入调用，次场景才是人类手动。
 
@@ -16,7 +16,7 @@
 
 ---
 
-## 退出码表（Single Source of Truth）
+## 退出码表（唯一权威源 / Single Source of Truth）
 
 | 退出码 | 常量名 | 含义 | stderr 文案模板 |
 | --- | --- | --- | --- |
@@ -108,7 +108,7 @@ import { A2hError, ErrorCode, type ErrorObject } from "./errors";
 import { log } from "./logger";
 
 async function main(argv: string[]): Promise<void> {
-  // ... 路由到 commands/render | skills | preview
+  // ... 路由到 commands/render | skills
 }
 
 main(process.argv.slice(2)).catch((err: unknown) => {

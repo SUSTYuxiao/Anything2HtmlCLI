@@ -1,4 +1,4 @@
-# Quality Guidelines
+# 质量规范
 
 > **WHY**：本项目对外承诺"零运行时依赖纯 Node"（spike F5 实证）+ "薄壳跟进上游"（charter 原则 2）。质量门槛必须把这两条原则编码成机器可校验的 lint/test/build 规则——任何宽松一寸，下次 `npm run sync` 就会拖进 React/Tailwind 这种巨型尾巴。
 
@@ -116,13 +116,43 @@ fixture 种子直接复用 spike 产物：`research/spike/raw-stdout.txt` 与 `r
 
 ---
 
+## ─── 依赖注入 (DI)：让 spawn / PATH 解析可 mock ───────
+
+任何会 `spawn` / 读 PATH / 触网 / 读全局 env 的副作用入口，**必须**以可选 `Deps` 参数暴露注入口。默认实现走真实 io；测试注入桩，零真实 LLM 调用即可覆盖错误码全路径（`E_AGENT_UNAVAILABLE` / `E_BUDGET_EXCEEDED` / `E_NETWORK` / `E_OUTPUT_INVALID`）。
+
+```ts
+// src/agents/invoke.ts —— 默认走真实 io，deps 提供 mock 钩子
+export type InvokeDeps = {
+  resolveBin?: (def: AgentDef) => string | null;   // 默认: envOverride > PATH
+  spawn?: (cmd: string, argv: readonly string[]) => ChildProcess;
+};
+
+export async function invokeAgent(agentId, opts, deps: InvokeDeps = {}) {
+  const resolveBin = deps.resolveBin ?? defaultResolveBin;
+  const spawnImpl  = deps.spawn      ?? cpSpawn;
+  // ... 业务逻辑无需关心 deps 来源 ...
+}
+```
+
+```ts
+// src/__tests__/invoke.test.ts —— 注入桩驱动错误码全路径
+await invokeAgent("claude", opts, {
+  resolveBin: () => "/fake/claude",
+  spawn: () => makeFakeChildProcess({ stdout, stderr, code }),
+});
+```
+
+**铁律**：副作用 io 散落进业务函数体即不可测。模块级 `Deps` 类型 + 默认值 fallback 是当前项目唯一认可的可测性结构——**不要**为可测性引 sinon / proxyquire / module-mocking 库（违反零运行时依赖）。
+
+---
+
 ## ─── 输出验证：HTML 头尾正则 + 退出码 40 ───────────
 
 `commands/render.ts` 在 `extractHtml` 之后必检；**抛 `A2hError` 而非 `process.exit`**——
 顶层 `cli.ts` catch 才允许退出（见 `error-handling.md` 行为纪律）：
 
 ```ts
-// ─── HTML output validation (per spike F2 + PRD Q-MVP-8) ─────
+// ─── HTML 输出校验（per spike F2 + PRD Q-MVP-8） ─────
 import { A2hError } from "../errors.js";
 
 const okStart = /^<!DOCTYPE\s+html/i.test(html);

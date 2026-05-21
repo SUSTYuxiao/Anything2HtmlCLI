@@ -1,0 +1,6 @@
+{"file": ".trellis/tasks/05-21-cli-polish-claude-qoder/prd.md", "reason": "Acceptance Criteria 9 项 + Out of Scope；最高原则（仅 CLI 层适配，不深入 ref 业务）必须严守。"}
+{"file": ".trellis/tasks/05-21-project-charter-and-reference-setup/prd.md", "reason": "Charter 4 原则——验收时检查本任务是否有违反（特别原则 3：不重写渲染逻辑）。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "退出码表对照检查（preview 删后 'Unknown command' 应走 exit 1 / E_USAGE 路径）。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "TTY 检测条件 + 心跳行为（仅 TTY、非 quiet 时打）的核对依据。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "preview 提及是否已从 cli-design.md 中正确删除；--agent flag 是否符合 cli-design.md 的 flag 命名约定。"}
+{"file": ".trellis/spec/guides/upstream-sync.md", "reason": "本任务不扩 sync 白名单（claude-only 已被 detect+argv 涵盖 qoder）；attribution header 模板未变更。"}

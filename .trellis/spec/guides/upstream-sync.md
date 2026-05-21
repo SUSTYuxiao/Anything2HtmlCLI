@@ -1,4 +1,4 @@
-# Upstream Sync Guide
+# 上游同步指南
 
 > **本项目特有协议**：从 `ref/html-anything/` 同步代码与资产到 `src/` 的白名单、attribution header、纪律与反模式。
 > 围绕 Charter ADR-lite 决策 2（薄壳同步上游）+ PRD Q-MVP-SYNC（最简口子人工触发）+ AGENTS.md `ref/` 只读约定展开。
@@ -39,7 +39,7 @@ Charter 原则 2 说得最清楚：
 | --- | --- |
 | `templates/scenarios.ts` | UI 场景元数据，CLI 无场景概念 |
 | `templates/index.ts` | 只是 barrel re-export，本项目自己组织 import |
-| `agents/invoke.ts` | ReadableStream + 多 agent 多协议派发，对 MVP 严重过度；spike F1 证明 `--output-format text` 不需要流式协议层；本项目自写最简版 spawn 替代，见 `src/agents/claude.ts` |
+| `agents/invoke.ts` | ReadableStream + 多 agent 多协议派发，对 MVP 严重过度；spike F1 证明 `--output-format text` 不需要流式协议层；本项目自写最简版 spawn 替代，见 `src/agents/invoke.ts` |
 | `export/**` | PRD Out of Scope（PPTX / XLSX / WeChat / Notion 导出） |
 | `parsers/**` | 首版只接 markdown 字符串；不引入文件类型分发 |
 
@@ -191,6 +191,25 @@ Removed skills: (none)
 
 理由：codemod 会让"同步"从一行命令变成"另一个需要维护的子项目"，
 彻底背离 Charter 原则 2"< 1 工时人工成本"。
+
+### 禁止：在 sync 脚本中用 silent `String.replace()` 改写上游源码
+
+`scripts/sync-from-ref.mjs` 对上游文本的任何替换必须走**断言型 `replaceExact(src, needle, repl, label)`**：
+needle 不存在 / 多次匹配 → 立即 `process.exit(1)`，不允许静默落到 `src/`。
+
+```js
+// scripts/sync-from-ref.mjs
+function replaceExact(src, needle, repl, label) {
+  const idx = src.indexOf(needle);
+  if (idx === -1)                          process.exit(1); // 锚点不存在
+  if (src.indexOf(needle, idx + 1) !== -1) process.exit(1); // 锚点不唯一
+  return src.slice(0, idx) + repl + src.slice(idx + needle.length);
+}
+```
+
+**为什么不直接 `.replace()`**：原生 `String.prototype.replace()` 找不到 needle 时**静默返回原串、0 次替换**——sync 看似成功，实际同步层悄悄退化成"未打补丁"状态，silent drift 进 main，半个月后才在某次错误时被发现。断言型替换让"上游 rename / 重排版"在 sync 触发时立即可见，是同步纪律的最后一道闸。
+
+适用范围：`SKILLS_DIR` 重定位、`agents/argv.ts` 中针对 next.js 路径的局部改写、任何"上游模板内嵌特定字符串需替换"的场景。**不适用**于 attribution header 注入（那是"在文件首部 prepend"，不是"替换原文片段"）。
 
 ### 禁止：同步后跳过测试就 commit
 

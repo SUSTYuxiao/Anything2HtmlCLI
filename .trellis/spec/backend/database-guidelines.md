@@ -1,10 +1,8 @@
-# Database Guidelines
+# 数据库规范
 
-**Status: N/A for this project.**
+**状态：本项目不适用。**
 
-`a2h` is a stateless CLI tool. It reads stdin / a file, calls the local
-`claude` CLI, writes a single HTML file (or stdout). No database, no
-ORM, no persistence layer of any kind.
+`a2h` 是无状态 CLI 工具：从 stdin 或文件读入 → 调用本机 `claude` CLI → 写出单文件 HTML（或 stdout）。
+不引入数据库、ORM 或任何持久化层。
 
-If a future feature requires persistence (e.g. caching LLM responses),
-this file should be repurposed at that time — not before.
+如未来出现需要持久化的需求（例如缓存 LLM 响应），届时再激活本文档——**不在此前预留**。
