@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-05-21T11:35:07.287Z",
+  "skillId": "deck-product-launch",
+  "promptBytes": 5411,
+  "inputChars": 1826,
+  "elapsedSeconds": 170.7,
+  "exitCode": 0,
+  "stdoutBytes": 45511,
+  "stderrBytes": 0,
+  "htmlBytes": 45510,
+  "hasDoctype": true,
+  "hasHtmlClose": true,
+  "success": true
+}

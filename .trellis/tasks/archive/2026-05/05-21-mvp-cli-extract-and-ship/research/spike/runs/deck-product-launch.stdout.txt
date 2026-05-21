@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas X1 — AI 时代的产品发布 | 2026 春季发布会</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #1a1614;
+    --ink-2: #2d2622;
+    --paper: #faf7f2;
+    --paper-2: #f1ebe1;
+    --muted: #8a807a;
+    --line: #e8e0d4;
+    --accent-1: #ff7a45;
+    --accent-2: #ffb088;
+    --accent-3: #ffd6c2;
+  }
+  html,body{background:var(--paper); color:var(--ink); font-family:'Inter','Noto Sans SC',sans-serif; -webkit-font-smoothing:antialiased;}
+  .font-serif-cn{font-family:'Noto Serif SC', serif;}
+  .font-sans-cn{font-family:'Noto Sans SC', sans-serif;}
+  .font-mono{font-family:'JetBrains Mono', monospace;}
+  .accent-gradient{background:linear-gradient(135deg,#ff7a45 0%,#ff9866 45%,#ffb088 100%);}
+  .accent-text{background:linear-gradient(135deg,#ff7a45 0%,#ffb088 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .slide{
+    min-height:100vh;
+    width:100%;
+    padding:72px 80px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .slide.dark{background:#16110e; color:#f5ede2; border-bottom-color:#2a221d;}
+  .grid-bg{
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px; border-radius:999px;
+    font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    font-weight:500;
+  }
+  .chip-light{background:rgba(255,122,69,0.08); color:#c54a1f; border:1px solid rgba(255,122,69,0.2);}
+  .chip-dark{background:rgba(255,176,136,0.1); color:#ffb088; border:1px solid rgba(255,176,136,0.25);}
+  .num-mark{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-feature-settings:"tnum" 1, "ss01" 1;
+    letter-spacing:-0.04em;
+  }
+  .hairline{height:1px; background:var(--line);}
+  .hairline-dark{height:1px; background:rgba(255,255,255,0.1);}
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:20px;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:0 18px 40px -20px rgba(255,122,69,0.25);}
+  .dot::before{content:""; display:inline-block; width:6px;height:6px;border-radius:999px;background:var(--accent-1); margin-right:10px; vertical-align:middle;}
+  .kbd{font-family:'JetBrains Mono',monospace; font-size:11px; padding:2px 8px; border-radius:6px; background:var(--paper-2); border:1px solid var(--line); color:var(--ink-2);}
+  .glow{
+    position:absolute; border-radius:9999px; filter:blur(120px); opacity:0.55; pointer-events:none;
+  }
+  .ring-soft{box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06), 0 30px 80px -30px rgba(255,122,69,0.45);}
+  .vline{width:1px; background:var(--line);}
+  .vline-dark{width:1px; background:rgba(255,255,255,0.12);}
+  .pill-num{
+    width:36px;height:36px;border-radius:10px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:'Manrope',sans-serif; font-weight:700;
+    font-size:14px;
+  }
+  .marquee-mask{
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .bar{height:8px; border-radius:999px; background:var(--paper-2); overflow:hidden;}
+  .bar > span{display:block; height:100%; border-radius:999px;}
+  .bar-dark{background:rgba(255,255,255,0.08);}
+</style>
+</head>
+<body class="font-sans-cn">
+
+<!-- ============== 01 · COVER ============== -->
+<section class="slide dark relative">
+  <div class="grid-bg absolute inset-0 opacity-60"></div>
+  <div class="glow accent-gradient" style="width:560px;height:560px;top:-160px;right:-120px;"></div>
+  <div class="glow" style="width:420px;height:420px;bottom:-180px;left:-80px;background:#ff5a2c;opacity:0.35;"></div>
+
+  <div class="relative z-10 flex flex-col h-full" style="min-height: calc(100vh - 144px);">
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg accent-gradient flex items-center justify-center font-mono font-bold text-[#16110e]">A</div>
+        <div class="font-mono text-sm tracking-widest text-[#ffb088]">ATLAS / KEYNOTE 2026</div>
+      </div>
+      <div class="font-mono text-xs tracking-widest text-[#8a807a]">SPRING · MMXXVI · 2026/05/21</div>
+    </header>
+
+    <div class="flex-1 flex flex-col justify-center mt-20">
+      <span class="chip chip-dark mb-10 w-fit">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#ff7a45] animate-pulse"></span>
+        AI 工作站事业部 · Spring Keynote
+      </span>
+      <h1 class="font-serif-cn font-black tracking-tight" style="font-size:clamp(64px,9vw,148px); line-height:0.92;">
+        Atlas <span class="accent-text">X1</span>
+      </h1>
+      <p class="mt-8 font-serif-cn text-3xl md:text-4xl text-[#e9dccd] max-w-3xl leading-snug">
+        AI 时代的<br/>产品发布。
+      </p>
+      <p class="mt-10 max-w-2xl text-[#a89a8a] leading-relaxed text-lg" style="max-width:65ch;">
+        把 AI 从云端搬回桌面。一台为 Agent 工作流而生的桌面 AI 工作站——
+        本地 70B 模型实时推理, 全栈隐私, 价格 <span class="text-white font-medium">$4,999</span>。
+      </p>
+    </div>
+
+    <footer class="flex items-end justify-between mt-16">
+      <div class="flex gap-12">
+        <div>
+          <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">EVENT</div>
+          <div class="font-serif-cn">2026 春季发布会</div>
+        </div>
+        <div>
+          <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">CHAPTERS</div>
+          <div class="font-serif-cn">12 Sections</div>
+        </div>
+        <div>
+          <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">SHIPS</div>
+          <div class="font-serif-cn">07 / 15 / 2026</div>
+        </div>
+      </div>
+      <div class="font-mono text-xs tracking-widest text-[#8a807a]">↓ SCROLL</div>
+    </footer>
+  </div>
+</section>
+
+<!-- ============== 02 · WHY WE BUILT THIS ============== -->
+<section class="slide bg-[#faf7f2]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">01 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">Why we built this</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12">
+      <div class="col-span-12 lg:col-span-7">
+        <h2 class="font-serif-cn font-black text-[#1a1614]" style="font-size:clamp(40px,5vw,76px); line-height:1.05; letter-spacing:-0.02em;">
+          我们为什么<br/>再造一台 <span class="accent-text">AI 工作站</span>。
+        </h2>
+        <p class="mt-10 text-lg text-[#4a423d] leading-relaxed" style="max-width:65ch;">
+          过去十年, "PC" 与 "AI" 始终是两条平行轨道。本地算力没跟上模型膨胀,
+          云端 API 又把延迟与隐私甩给用户。
+        </p>
+        <p class="mt-6 font-serif-cn text-2xl text-[#1a1614] leading-snug" style="max-width:65ch;">
+          我们要把这条断层<span class="accent-text font-black">焊起来</span>。
+        </p>
+      </div>
+
+      <div class="col-span-12 lg:col-span-5 flex flex-col gap-5">
+        <div class="card p-7">
+          <div class="flex items-baseline gap-3">
+            <div class="num-mark accent-text" style="font-size:64px;">78<span class="text-3xl">%</span></div>
+            <div class="text-sm text-[#8a807a] uppercase tracking-widest">Daily AI use</div>
+          </div>
+          <p class="mt-3 text-[#4a423d]">开发者每天使用 AI, 但仅 <span class="font-mono font-semibold text-[#1a1614]">12%</span> 在本地推理。</p>
+          <div class="mt-5 bar"><span class="accent-gradient" style="width:78%"></span></div>
+          <div class="mt-2 flex justify-between text-xs font-mono text-[#8a807a]"><span>本地推理 12%</span><span>云端依赖 88%</span></div>
+        </div>
+
+        <div class="card p-7">
+          <div class="flex items-baseline gap-3">
+            <div class="num-mark accent-text" style="font-size:64px;">1.4<span class="text-3xl">s</span></div>
+            <div class="text-sm text-[#8a807a] uppercase tracking-widest">Avg round-trip</div>
+          </div>
+          <p class="mt-3 text-[#4a423d]">云端平均延迟, 远高于人类感知阈值 <span class="kbd">200ms</span>。</p>
+          <div class="mt-5 flex items-center gap-2">
+            <div class="flex-1 h-2 rounded-full bg-[#f1ebe1] relative overflow-hidden">
+              <div class="absolute left-0 top-0 h-full accent-gradient" style="width:14%"></div>
+            </div>
+            <div class="flex-[6] h-2 rounded-full accent-gradient opacity-30 relative">
+              <div class="absolute -top-5 right-0 text-xs font-mono text-[#c54a1f]">+1200ms 感知断裂</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 03 · INTRODUCING ============== -->
+<section class="slide dark relative">
+  <div class="glow accent-gradient" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.25;"></div>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">02 / 12</span>
+      <div class="hairline-dark flex-1"></div>
+      <span class="chip chip-dark">Introducing</span>
+    </div>
+
+    <div class="text-center mb-16">
+      <p class="font-mono text-sm tracking-[0.3em] text-[#ffb088] mb-6">ONE SENTENCE</p>
+      <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4.5vw,64px); line-height:1.15; letter-spacing:-0.02em;">
+        一台为 <span class="accent-text">Agent 工作流</span> 而生的<br/>桌面 AI 工作站。
+      </h2>
+    </div>
+
+    <!-- Hero shot — CSS-only product render -->
+    <div class="relative max-w-4xl mx-auto mt-20">
+      <div class="absolute inset-x-12 -bottom-10 h-32 accent-gradient rounded-full blur-3xl opacity-40"></div>
+
+      <div class="relative ring-soft rounded-[36px] p-1.5" style="background:linear-gradient(180deg,#3a2e25,#1c1612);">
+        <div class="rounded-[30px] p-12" style="background:linear-gradient(160deg,#221a14 0%,#16110e 100%);">
+          <div class="flex items-start justify-between mb-10">
+            <div>
+              <div class="font-mono text-xs tracking-widest text-[#8a807a]">DESKTOP · NPU</div>
+              <div class="font-serif-cn text-2xl mt-1">Atlas X1</div>
+            </div>
+            <div class="flex gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#ff7a45]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#3a2e25]"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#3a2e25]"></div>
+            </div>
+          </div>
+
+          <div class="relative h-64 rounded-2xl overflow-hidden grid-bg" style="background:linear-gradient(180deg,#0d0907,#1c1612);">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center">
+                <div class="font-mono text-[10px] tracking-[0.4em] text-[#8a807a] mb-3">N1 NPU · LIVE</div>
+                <div class="font-serif-cn text-5xl accent-text font-black">35 t/s</div>
+                <div class="font-mono text-xs text-[#a89a8a] mt-3">Llama-70B · streaming · 192GB unified</div>
+              </div>
+            </div>
+            <div class="absolute bottom-3 left-3 right-3 flex justify-between font-mono text-[10px] text-[#5a4d44]">
+              <span>● rec</span><span>28dB</span><span>180W</span><span>1M ctx</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mt-8">
+            <div class="rounded-xl p-4" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div class="font-mono text-[10px] text-[#8a807a]">UNIFIED MEM</div>
+              <div class="font-serif-cn text-xl mt-1">192 GB</div>
+            </div>
+            <div class="rounded-xl p-4" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div class="font-mono text-[10px] text-[#8a807a]">BANDWIDTH</div>
+              <div class="font-serif-cn text-xl mt-1">800 GB/s</div>
+            </div>
+            <div class="rounded-xl p-4" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div class="font-mono text-[10px] text-[#8a807a]">PRICE</div>
+              <div class="font-serif-cn text-xl mt-1 accent-text">$4,999</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 04 · THREE CORE NUMBERS ============== -->
+<section class="slide bg-[#faf7f2]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">03 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">By the numbers</span>
+    </div>
+
+    <h2 class="font-serif-cn font-black mb-20" style="font-size:clamp(36px,4.5vw,68px); line-height:1.05; letter-spacing:-0.02em;">
+      三个核心数据,<br/>说清 <span class="accent-text">Atlas X1</span> 是什么。
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-b border-[#e8e0d4]">
+      <div class="p-10 border-r border-[#e8e0d4]">
+        <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-4">01 — THROUGHPUT</div>
+        <div class="num-mark accent-text" style="font-size:96px; line-height:1;">35</div>
+        <div class="font-serif-cn text-xl mt-1 text-[#4a423d]">tokens / s</div>
+        <p class="mt-6 text-[#4a423d] leading-relaxed">
+          70B 参数模型本地<span class="font-semibold text-[#1a1614]">持续输出</span>, 不是峰值, 不是缓存命中, 是连续 24 小时的稳定速率。
+        </p>
+      </div>
+      <div class="p-10 border-r border-[#e8e0d4]">
+        <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-4">02 — CONTEXT</div>
+        <div class="num-mark accent-text" style="font-size:96px; line-height:1;">1M</div>
+        <div class="font-serif-cn text-xl mt-1 text-[#4a423d]">tokens</div>
+        <p class="mt-6 text-[#4a423d] leading-relaxed">
+          上下文窗口足以<span class="font-semibold text-[#1a1614]">一次吞下整个 monorepo</span>——含 README, 提交历史与依赖图。
+        </p>
+      </div>
+      <div class="p-10">
+        <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-4">03 — ACOUSTICS</div>
+        <div class="num-mark accent-text" style="font-size:96px; line-height:1;">28<span class="text-4xl">dB</span></div>
+        <div class="font-serif-cn text-xl mt-1 text-[#4a423d]">连续 24h 待机</div>
+        <p class="mt-6 text-[#4a423d] leading-relaxed">
+          24 小时连续推理, 待机噪音 <span class="font-semibold text-[#1a1614]">安静过图书馆</span>。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 05 · HARDWARE / NPU ============== -->
+<section class="slide bg-[#f1ebe1]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">04 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">Hardware · N1 NPU</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12 items-start">
+      <div class="col-span-12 lg:col-span-5">
+        <p class="font-mono text-sm text-[#c54a1f] tracking-widest mb-4">SILICON</p>
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4vw,60px); line-height:1.05; letter-spacing:-0.02em;">
+          NPU 不是 GPU 的<br/><span class="accent-text">副产品</span>。
+        </h2>
+        <p class="mt-8 text-[#4a423d] text-lg leading-relaxed" style="max-width:65ch;">
+          我们没有用现成的桌面 GPU。Atlas X1 自研了 <span class="font-mono font-semibold text-[#1a1614]">N1 NPU</span>——
+          为 transformer 推理特化的 ASIC。
+        </p>
+
+        <!-- Chip illustration -->
+        <div class="mt-10 relative aspect-square max-w-sm rounded-2xl p-8" style="background:linear-gradient(135deg,#16110e,#2d2622);">
+          <div class="absolute inset-8 rounded-xl border-2 border-[#3a2e25] flex items-center justify-center">
+            <div class="w-3/5 h-3/5 rounded-lg accent-gradient relative flex items-center justify-center">
+              <span class="font-mono font-bold text-[#16110e] tracking-widest">N1</span>
+              <div class="absolute inset-3 border border-[#16110e]/30 rounded"></div>
+            </div>
+          </div>
+          <!-- pins -->
+          <div class="absolute top-2 left-1/2 -translate-x-1/2 flex gap-1">
+            <span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span>
+          </div>
+          <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            <span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span><span class="w-1 h-3 bg-[#3a2e25]"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-7 space-y-5">
+        <div class="card p-8">
+          <div class="flex items-start gap-6">
+            <div class="pill-num accent-gradient text-[#16110e]">01</div>
+            <div class="flex-1">
+              <div class="flex items-baseline justify-between flex-wrap gap-3">
+                <h3 class="font-serif-cn text-2xl font-bold">统一内存 · 192GB</h3>
+                <span class="font-mono text-sm text-[#c54a1f]">800 GB/s</span>
+              </div>
+              <p class="mt-3 text-[#4a423d] leading-relaxed">
+                一块芯片同时供 NPU / CPU / 编码器读写, 70B 模型常驻显存, 切换零拷贝。
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card p-8">
+          <div class="flex items-start gap-6">
+            <div class="pill-num accent-gradient text-[#16110e]">02</div>
+            <div class="flex-1">
+              <h3 class="font-serif-cn text-2xl font-bold">硬件加速的注意力</h3>
+              <p class="mt-3 text-[#4a423d] leading-relaxed">
+                集成 <span class="kbd">Flash Attention 2</span> 与 <span class="kbd">Speculative Decoding</span>
+                直入硅片, 不靠 CUDA Kernel, 不靠驱动 hack。
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card p-8">
+          <div class="flex items-start gap-6">
+            <div class="pill-num accent-gradient text-[#16110e]">03</div>
+            <div class="flex-1">
+              <div class="flex items-baseline justify-between flex-wrap gap-3">
+                <h3 class="font-serif-cn text-2xl font-bold">能效比 3×</h3>
+                <span class="font-mono text-sm text-[#c54a1f]">180W</span>
+              </div>
+              <p class="mt-3 text-[#4a423d] leading-relaxed">
+                单芯片功耗 180W, 相同吞吐下仅是桌面 GPU 的 <span class="font-semibold">1/3</span>。
+              </p>
+              <div class="mt-5 grid grid-cols-2 gap-4 text-xs font-mono">
+                <div>
+                  <div class="flex justify-between mb-1.5"><span>N1 NPU</span><span class="text-[#c54a1f]">180W</span></div>
+                  <div class="bar"><span class="accent-gradient" style="width:33%"></span></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1.5"><span>Desktop GPU</span><span class="text-[#8a807a]">540W</span></div>
+                  <div class="bar"><span style="background:#bcae9d;width:100%"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 06 · AGENTOS ============== -->
+<section class="slide dark relative">
+  <div class="glow" style="width:480px;height:480px;top:20%;right:-100px;background:#ff7a45;opacity:0.25;"></div>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">05 / 12</span>
+      <div class="hairline-dark flex-1"></div>
+      <span class="chip chip-dark">Software · AgentOS 1.0</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12">
+      <div class="col-span-12 lg:col-span-6">
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4.5vw,68px); line-height:1.05; letter-spacing:-0.02em;">
+          硬件只是底座。<br/>
+          <span class="accent-text">AgentOS 1.0</span><br/>
+          才是答案。
+        </h2>
+        <p class="mt-8 text-[#a89a8a] text-lg leading-relaxed" style="max-width:65ch;">
+          一个把 Agent 当一等公民的操作系统层。它不是套在 Linux 上的壳, 是从内核安全模型重新写过的运行时。
+        </p>
+
+        <!-- Stack diagram -->
+        <div class="mt-10 space-y-2 font-mono text-sm">
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,122,69,0.12);border:1px solid rgba(255,122,69,0.3);">
+            <span class="w-2 h-2 rounded-full bg-[#ff7a45]"></span>
+            <span>Agent Runtime · MCP-native</span>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <span class="w-2 h-2 rounded-full bg-[#a89a8a]"></span>
+            <span>Capability Sandbox · zero-trust</span>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <span class="w-2 h-2 rounded-full bg-[#a89a8a]"></span>
+            <span>Context Graph Daemon</span>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+            <span class="w-2 h-2 rounded-full bg-[#a89a8a]"></span>
+            <span>N1 NPU Driver · Linux 6.x</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-6 space-y-6">
+        <article class="rounded-2xl p-8" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="font-mono text-xs text-[#ffb088] tracking-widest">01 · SECURITY</span>
+          </div>
+          <h3 class="font-serif-cn text-2xl font-bold mb-3">系统级 sandbox</h3>
+          <p class="text-[#a89a8a] leading-relaxed">
+            每个 Agent 默认 <span class="kbd" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#ffb088;">零网络</span>
+            <span class="kbd" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#ffb088;">零文件</span>
+            <span class="kbd" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#ffb088;">零 shell</span>, 显式申请。
+          </p>
+        </article>
+        <article class="rounded-2xl p-8" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="font-mono text-xs text-[#ffb088] tracking-widest">02 · INTEROP</span>
+          </div>
+          <h3 class="font-serif-cn text-2xl font-bold mb-3">原生 MCP 支持</h3>
+          <p class="text-[#a89a8a] leading-relaxed">
+            系统 daemon 即 MCP server, 任意 Agent 即插即用——不用写 glue, 不用维护 adapter。
+          </p>
+        </article>
+        <article class="rounded-2xl p-8" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="font-mono text-xs text-[#ffb088] tracking-widest">03 · MEMORY</span>
+          </div>
+          <h3 class="font-serif-cn text-2xl font-bold mb-3">全局上下文图谱</h3>
+          <p class="text-[#a89a8a] leading-relaxed">
+            跨应用的语义记忆, 一次理解, 处处可用——告别 copy-paste 的工作流。
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 07 · BENCHMARKS ============== -->
+<section class="slide bg-[#faf7f2]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">06 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">Benchmarks</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12 mb-16">
+      <div class="col-span-12 lg:col-span-7">
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4.5vw,68px); line-height:1.05; letter-spacing:-0.02em;">
+          性能基准。<br/><span class="accent-text">数字会说话。</span>
+        </h2>
+      </div>
+      <div class="col-span-12 lg:col-span-5 flex items-end">
+        <p class="text-[#4a423d] leading-relaxed" style="max-width:65ch;">
+          三个真实工作流, 对比 Atlas X1 与 <span class="font-mono">RTX 5090 + 云 API</span> 混合方案。
+          数据来自内部基准, 同一份输入, 同一套指标。
+        </p>
+      </div>
+    </div>
+
+    <div class="space-y-8">
+      <!-- Bench 1 -->
+      <div class="card p-8">
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-6">
+          <div>
+            <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">CASE 01 · CODEBASE REFACTOR</div>
+            <h3 class="font-serif-cn text-2xl font-bold">大型代码库重构 <span class="font-mono text-base text-[#8a807a]">2.3M LOC</span></h3>
+          </div>
+          <span class="chip chip-light">2.6× faster</span>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="font-medium">Atlas X1 · 本地</span><span class="font-mono text-[#c54a1f] font-semibold">18 min</span></div>
+            <div class="bar"><span class="accent-gradient" style="width:38%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="text-[#8a807a]">RTX 5090 + 云</span><span class="font-mono text-[#8a807a]">47 min</span></div>
+            <div class="bar"><span style="background:#bcae9d;width:100%"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bench 2 -->
+      <div class="card p-8">
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-6">
+          <div>
+            <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">CASE 02 · DEEP RESEARCH</div>
+            <h3 class="font-serif-cn text-2xl font-bold">100 篇论文综述</h3>
+          </div>
+          <span class="chip chip-light">$0 网络费用</span>
+        </div>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <div class="num-mark accent-text" style="font-size:56px;line-height:1;">6 <span class="text-2xl">min</span></div>
+            <div class="text-sm text-[#4a423d] mt-2">Atlas X1 完成时间</div>
+          </div>
+          <div class="border-l border-[#e8e0d4] pl-8">
+            <div class="num-mark text-[#8a807a]" style="font-size:56px;line-height:1;">$0</div>
+            <div class="text-sm text-[#4a423d] mt-2">API 调用费用 / 数据外泄风险</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bench 3 -->
+      <div class="card p-8">
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-6">
+          <div>
+            <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">CASE 03 · 24H AUTONOMOUS CODING</div>
+            <h3 class="font-serif-cn text-2xl font-bold">24 小时长任务完成度</h3>
+          </div>
+          <span class="chip chip-light">+21 pp 完成度</span>
+        </div>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <div class="flex items-baseline gap-3"><div class="num-mark accent-text" style="font-size:56px;">94<span class="text-2xl">%</span></div><div class="text-sm text-[#4a423d]">Atlas X1</div></div>
+            <div class="bar mt-3"><span class="accent-gradient" style="width:94%"></span></div>
+          </div>
+          <div>
+            <div class="flex items-baseline gap-3"><div class="num-mark text-[#8a807a]" style="font-size:56px;">73<span class="text-2xl">%</span></div><div class="text-sm text-[#4a423d]">云端方案</div></div>
+            <div class="bar mt-3"><span style="background:#bcae9d;width:73%"></span></div>
+            <p class="text-xs text-[#8a807a] mt-2 font-mono">受限于上下文截断</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 08 · PRIVACY ============== -->
+<section class="slide bg-[#1a1614] dark relative">
+  <div class="absolute inset-0 grid-bg opacity-50"></div>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">07 / 12</span>
+      <div class="hairline-dark flex-1"></div>
+      <span class="chip chip-dark">Privacy</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12">
+      <div class="col-span-12 lg:col-span-6">
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4.5vw,72px); line-height:1.05; letter-spacing:-0.02em;">
+          默认本地。<br/><span class="accent-text">显式上云。</span>
+        </h2>
+        <p class="mt-8 text-[#a89a8a] text-lg leading-relaxed" style="max-width:65ch;">
+          我们见过太多 "AI 优先" 的产品把用户数据当训练料。Atlas X1 反过来——
+          数据的默认归属是<span class="text-white font-medium">用户</span>, 而不是模型供应商。
+        </p>
+
+        <!-- Mock banner -->
+        <div class="mt-10 rounded-2xl border-2 border-[#ff5a2c] p-5 flex items-start gap-4" style="background:rgba(255,90,44,0.1);">
+          <div class="w-10 h-10 rounded-lg accent-gradient flex items-center justify-center text-[#16110e] font-bold flex-shrink-0">!</div>
+          <div>
+            <div class="font-mono text-xs tracking-widest text-[#ff7a45] mb-1">SYSTEM PROMPT · UPLOAD</div>
+            <div class="font-serif-cn text-base">Agent <span class="font-mono">research-bot</span> 请求向 <span class="font-mono">api.openai.com</span> 上传 24 个文件。允许吗?</div>
+            <div class="mt-3 flex gap-2">
+              <span class="kbd" style="background:rgba(255,122,69,0.15);border-color:rgba(255,122,69,0.3);color:#ffb088;">仅本次允许</span>
+              <span class="kbd" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:#a89a8a;">拒绝</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-6 space-y-5 lg:pl-6">
+        <div class="rounded-2xl p-7 border border-[#2a221d]" style="background:rgba(255,255,255,0.02);">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="font-mono text-2xl accent-text font-bold">01</span>
+            <h3 class="font-serif-cn text-xl font-semibold">权重与上下文留在 NPU 内存</h3>
+          </div>
+          <p class="text-[#a89a8a] leading-relaxed pl-9">所有模型权重 + 上下文默认不出芯片, 物理隔离, 不靠 EULA 承诺。</p>
+        </div>
+        <div class="rounded-2xl p-7 border border-[#2a221d]" style="background:rgba(255,255,255,0.02);">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="font-mono text-2xl accent-text font-bold">02</span>
+            <h3 class="font-serif-cn text-xl font-semibold">系统级红色横幅确认</h3>
+          </div>
+          <p class="text-[#a89a8a] leading-relaxed pl-9">每一次上云都需用户显式同意, 无 "记住选择" 选项, 不可被 Agent 自动绕过。</p>
+        </div>
+        <div class="rounded-2xl p-7 border border-[#2a221d]" style="background:rgba(255,255,255,0.02);">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="font-mono text-2xl accent-text font-bold">03</span>
+            <h3 class="font-serif-cn text-xl font-semibold">出厂自带审计日志</h3>
+          </div>
+          <p class="text-[#a89a8a] leading-relaxed pl-9">哪个 Agent 在何时读了哪个文件, 完整可追溯, 法务级别的证据链。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 09 · DEVELOPER ECOSYSTEM ============== -->
+<section class="slide bg-[#f1ebe1]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">08 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">Developer Ecosystem</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12 items-end mb-16">
+      <div class="col-span-12 lg:col-span-7">
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4.5vw,68px); line-height:1.05; letter-spacing:-0.02em;">
+          第一天就<span class="accent-text">开放</span>。
+        </h2>
+      </div>
+      <div class="col-span-12 lg:col-span-5">
+        <p class="text-[#4a423d] leading-relaxed" style="max-width:65ch;">
+          我们不打算关起门做闭源系统。Atlas X1 把 SDK / 模型 / 资金一起摊在桌上。
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- SDK -->
+      <div class="card p-8 col-span-1 md:col-span-1">
+        <div class="font-mono text-xs tracking-widest text-[#c54a1f] mb-4">SDK</div>
+        <h3 class="font-serif-cn text-2xl font-bold mb-6">全栈 SDK,<br/>一等支持</h3>
+        <div class="space-y-3 font-mono text-sm">
+          <div class="flex items-center justify-between p-3 rounded-lg bg-[#faf7f2] border border-[#e8e0d4]">
+            <span>Python</span><span class="text-[#c54a1f]">●</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-[#faf7f2] border border-[#e8e0d4]">
+            <span>TypeScript</span><span class="text-[#c54a1f]">●</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-[#faf7f2] border border-[#e8e0d4]">
+            <span>Rust</span><span class="text-[#c54a1f]">●</span>
+          </div>
+        </div>
+      </div>
+      <!-- Models -->
+      <div class="card p-8">
+        <div class="font-mono text-xs tracking-widest text-[#c54a1f] mb-4">MODELS</div>
+        <h3 class="font-serif-cn text-2xl font-bold mb-6">开源模型市场<br/>首发 200+</h3>
+        <div class="flex flex-wrap gap-2 font-mono text-xs">
+          <span class="kbd">Llama 3</span>
+          <span class="kbd">Llama 3.1 70B</span>
+          <span class="kbd">Mistral Large</span>
+          <span class="kbd">Mixtral 8×22B</span>
+          <span class="kbd">Qwen 2.5</span>
+          <span class="kbd">Qwen-Coder</span>
+          <span class="kbd">DeepSeek-V3</span>
+          <span class="kbd">DeepSeek-Coder</span>
+          <span class="kbd">+ 192 more</span>
+        </div>
+      </div>
+      <!-- Fund -->
+      <div class="card p-8 relative overflow-hidden" style="background:linear-gradient(135deg,#ffe8d6,#ffd6c2);border-color:#ffb088;">
+        <div class="font-mono text-xs tracking-widest text-[#c54a1f] mb-4">FUND</div>
+        <h3 class="font-serif-cn text-2xl font-bold mb-6">5,000 美元<br/>开发者基金</h3>
+        <p class="text-[#4a423d] leading-relaxed">
+          优秀 Agent 应用<span class="font-semibold text-[#c54a1f]">直接收购</span>——不投资股权, 不要董事席位, 现金购买。
+        </p>
+        <div class="mt-6 num-mark accent-text" style="font-size:64px; line-height:0.9;">$5K</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 10 · PRICING ============== -->
+<section class="slide bg-[#faf7f2]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">09 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">Pricing & Availability</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12 items-end mb-16">
+      <div class="col-span-12 lg:col-span-7">
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4.5vw,72px); line-height:1.02; letter-spacing:-0.02em;">
+          定价。<br/><span class="accent-text">公开。简单。</span>
+        </h2>
+      </div>
+      <div class="col-span-12 lg:col-span-5">
+        <p class="text-[#4a423d] leading-relaxed">两个版本, 没有订阅, 没有按 token 计费——一次买断, 终身可用。</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+      <!-- Standard -->
+      <div class="card p-10 relative">
+        <div class="flex items-baseline justify-between mb-2">
+          <h3 class="font-serif-cn text-3xl font-bold">Standard</h3>
+          <span class="chip chip-light">Most popular</span>
+        </div>
+        <p class="text-[#8a807a] mb-8">面向独立开发者与小型团队。</p>
+        <div class="num-mark text-[#1a1614]" style="font-size:80px;line-height:1;">$4,999</div>
+        <div class="text-sm font-mono text-[#8a807a] mt-2">一次性 · 含 1 年保修</div>
+        <div class="hairline my-8"></div>
+        <ul class="space-y-3 text-[#4a423d]">
+          <li class="dot">192 GB unified memory</li>
+          <li class="dot">4 TB NVMe storage</li>
+          <li class="dot">单 N1 NPU · 35 t/s @ 70B</li>
+          <li class="dot">1M token context window</li>
+          <li class="dot">AgentOS 1.0 · 全部功能</li>
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="card p-10 relative overflow-hidden text-[#f5ede2]" style="background:linear-gradient(160deg,#1a1614 0%,#2d2622 100%);border-color:#3a2e25;">
+        <div class="absolute top-0 right-0 w-48 h-48 accent-gradient rounded-full blur-3xl opacity-30"></div>
+        <div class="relative">
+          <div class="flex items-baseline justify-between mb-2">
+            <h3 class="font-serif-cn text-3xl font-bold">Pro</h3>
+            <span class="chip chip-dark">For studios</span>
+          </div>
+          <p class="text-[#a89a8a] mb-8">面向工作室与小型推理集群。</p>
+          <div class="num-mark accent-text" style="font-size:80px;line-height:1;">$7,499</div>
+          <div class="text-sm font-mono text-[#a89a8a] mt-2">一次性 · 含 2 年保修</div>
+          <div class="hairline-dark my-8"></div>
+          <ul class="space-y-3 text-[#cfc1b1]">
+            <li class="dot">384 GB unified memory</li>
+            <li class="dot">8 TB NVMe storage</li>
+            <li class="dot"><span class="text-white font-medium">双 N1 NPU</span> · ~70 t/s @ 70B</li>
+            <li class="dot">1M token context window</li>
+            <li class="dot">AgentOS 1.0 + 集群调度</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card p-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">PRE-ORDER</div>
+          <div class="font-serif-cn text-3xl font-bold">06 / 01 / 2026</div>
+          <p class="text-sm text-[#4a423d] mt-2">全球预订开放</p>
+        </div>
+        <div class="md:border-l md:border-r border-[#e8e0d4] md:px-6">
+          <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">SHIPS</div>
+          <div class="font-serif-cn text-3xl font-bold accent-text">07 / 15 / 2026</div>
+          <p class="text-sm text-[#4a423d] mt-2">全球首发</p>
+        </div>
+        <div>
+          <div class="font-mono text-xs tracking-widest text-[#8a807a] mb-2">EARLY BIRD</div>
+          <div class="font-serif-cn text-3xl font-bold">−15 %</div>
+          <p class="text-sm text-[#4a423d] mt-2">开发者计划用户立享早鸟折扣</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 11 · CLAUDE / GPT 关系 ============== -->
+<section class="slide bg-[#f1ebe1]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">10 / 12</span>
+      <div class="hairline flex-1"></div>
+      <span class="chip chip-light">Positioning</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12">
+      <div class="col-span-12 lg:col-span-5">
+        <p class="font-mono text-sm text-[#c54a1f] tracking-widest mb-4">VS CLOUD</p>
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(36px,4vw,60px); line-height:1.05; letter-spacing:-0.02em;">
+          我们不是<br/>在<span class="accent-text">竞争</span>。<br/>我们在<span class="accent-text">补齐</span>。
+        </h2>
+        <p class="mt-8 text-[#4a423d] text-lg leading-relaxed" style="max-width:65ch;">
+          云端继续做云端最擅长的 (大规模训练, 全球协作, 即开即用),
+          本地把本地夺回来——你的桌面应该装下你的整个工作。
+        </p>
+      </div>
+
+      <div class="col-span-12 lg:col-span-7 space-y-4">
+        <div class="card p-7 flex items-start gap-5">
+          <span class="num-mark text-[#c54a1f]" style="font-size:32px;line-height:1;">01</span>
+          <div>
+            <h3 class="font-serif-cn text-xl font-semibold mb-2">你的代码库</h3>
+            <p class="text-[#4a423d] leading-relaxed">不应离开你的桌面。私有逻辑, 商业秘密, 客户数据——它们值得物理边界。</p>
+          </div>
+        </div>
+        <div class="card p-7 flex items-start gap-5">
+          <span class="num-mark text-[#c54a1f]" style="font-size:32px;line-height:1;">02</span>
+          <div>
+            <h3 class="font-serif-cn text-xl font-semibold mb-2">你的医疗记录</h3>
+            <p class="text-[#4a423d] leading-relaxed">不应被任何模型见过。HIPAA 合规不是 checkbox, 是默认行为。</p>
+          </div>
+        </div>
+        <div class="card p-7 flex items-start gap-5">
+          <span class="num-mark text-[#c54a1f]" style="font-size:32px;line-height:1;">03</span>
+          <div>
+            <h3 class="font-serif-cn text-xl font-semibold mb-2">你的创意草稿</h3>
+            <p class="text-[#4a423d] leading-relaxed">不应成为别人的训练料。你的失败品, 你的奇思妙想, 应只为你工作。</p>
+          </div>
+        </div>
+        <div class="card p-7 flex items-start gap-5" style="background:linear-gradient(135deg,#ffe8d6,#ffd6c2);border-color:#ffb088;">
+          <span class="num-mark accent-text" style="font-size:32px;line-height:1;">04</span>
+          <div>
+            <h3 class="font-serif-cn text-xl font-semibold mb-2">云端继续做云端最擅长的</h3>
+            <p class="text-[#4a423d] leading-relaxed">本地把本地夺回来。两条路并行, 而不是替代。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 12 · VISION ============== -->
+<section class="slide dark relative overflow-hidden">
+  <div class="glow accent-gradient" style="width:800px;height:800px;top:-200px;left:-200px;opacity:0.35;"></div>
+  <div class="glow" style="width:600px;height:600px;bottom:-200px;right:-200px;background:#ff5a2c;opacity:0.3;"></div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest text-[#8a807a]">11 / 12</span>
+      <div class="hairline-dark flex-1"></div>
+      <span class="chip chip-dark">A Vision</span>
+    </div>
+
+    <div class="max-w-5xl">
+      <p class="font-serif-cn text-2xl text-[#a89a8a] mb-8 leading-snug">十年前, 电脑回到了我们的桌面。</p>
+      <p class="font-serif-cn text-3xl text-[#cfc1b1] mb-12 leading-snug">十年后, <span class="text-white">智能</span> 也将回到我们的桌面。</p>
+
+      <h2 class="font-serif-cn font-black" style="font-size:clamp(48px,7vw,120px); line-height:0.95; letter-spacing:-0.03em;">
+        Atlas X1<br/>把 <span class="accent-text">AI</span> 从云端,<br/>搬回 <span class="accent-text">桌面</span>。
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 13 · CTA / Q&A ============== -->
+<section class="slide accent-gradient text-[#16110e] relative overflow-hidden">
+  <div class="absolute inset-0 grid-bg opacity-20"></div>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="flex items-center gap-4 mb-16">
+      <span class="font-mono text-xs tracking-widest opacity-70">12 / 12</span>
+      <div class="flex-1 h-px bg-[#16110e]/20"></div>
+      <span class="chip" style="background:rgba(22,17,14,0.1);color:#16110e;border:1px solid rgba(22,17,14,0.2);">Available now</span>
+    </div>
+
+    <div class="grid grid-cols-12 gap-12 items-end">
+      <div class="col-span-12 lg:col-span-8">
+        <p class="font-mono text-sm tracking-[0.3em] mb-8 opacity-70">Q & A · 预订与问答</p>
+        <h2 class="font-serif-cn font-black" style="font-size:clamp(56px,8vw,140px); line-height:0.92; letter-spacing:-0.03em;">
+          就这样。<br/>该你了。
+        </h2>
+      </div>
+      <div class="col-span-12 lg:col-span-4 space-y-6">
+        <div class="rounded-2xl p-7" style="background:rgba(22,17,14,0.08); border:1px solid rgba(22,17,14,0.15); backdrop-filter:blur(10px);">
+          <div class="font-mono text-xs tracking-widest opacity-70 mb-2">EMAIL</div>
+          <div class="font-serif-cn text-2xl font-semibold break-all">atlas@example.com</div>
+        </div>
+        <div class="rounded-2xl p-7" style="background:rgba(22,17,14,0.08); border:1px solid rgba(22,17,14,0.15); backdrop-filter:blur(10px);">
+          <div class="font-mono text-xs tracking-widest opacity-70 mb-2">PRE-ORDER</div>
+          <div class="font-serif-cn text-xl font-semibold break-all">atlas-x1.example.com<br/>/launch</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-32 flex items-center justify-between flex-wrap gap-4 pt-8 border-t border-[#16110e]/20">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-[#16110e] flex items-center justify-center font-mono font-bold text-[#ff7a45]">A</div>
+        <div>
+          <div class="font-serif-cn font-bold">Atlas X1</div>
+          <div class="font-mono text-xs opacity-70">AI 工作站事业部 · 2026</div>
+        </div>
+      </div>
+      <div class="font-mono text-xs tracking-widest opacity-70">SHIPS · 07 / 15 / 2026 · THANK YOU.</div>
+    </footer>
+  </div>
+</section>
+
+</body>
+</html>

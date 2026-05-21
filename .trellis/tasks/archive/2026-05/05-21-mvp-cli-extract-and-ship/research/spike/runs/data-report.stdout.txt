@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helios Cloud Q1 2026 季度业务回顾</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: {
+            50:  '#F7F7F5',
+            100: '#EFEEEA',
+            200: '#DDDBD3',
+            300: '#B8B5AB',
+            400: '#7E7B72',
+            500: '#54514A',
+            600: '#3A3833',
+            700: '#26241F',
+            800: '#1A1916',
+          },
+          brand: {
+            50:  '#EEF1FF',
+            100: '#DCE2FE',
+            200: '#B6C0FC',
+            400: '#5D6FE8',
+            500: '#3D4FD9',
+            600: '#2D3BC2',
+            700: '#1F2A99',
+          },
+          accent: {
+            400: '#E8A14B',
+            500: '#D88321',
+          }
+        },
+        fontFamily: {
+          sans: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+          serif: ['"Noto Serif SC"', 'serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+          display: ['Manrope', 'Inter', 'Noto Sans SC', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { font-family: 'Inter', 'Noto Sans SC', sans-serif; background: #F7F7F5; color: #26241F; -webkit-font-smoothing: antialiased; }
+  .num-display { font-family: 'Manrope', sans-serif; font-feature-settings: "tnum"; letter-spacing: -0.02em; }
+  .max-prose { max-width: 65ch; }
+  table.data-table { border-collapse: separate; border-spacing: 0; }
+  table.data-table thead th {
+    position: sticky; top: 0; background: #EFEEEA; z-index: 2;
+    font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: #54514A; font-weight: 600; padding: 0.85rem 1rem; text-align: left;
+    border-bottom: 1px solid #DDDBD3;
+  }
+  table.data-table tbody td {
+    padding: 0.85rem 1rem; font-size: 0.9rem; color: #26241F;
+    border-bottom: 1px solid #EFEEEA;
+  }
+  table.data-table tbody tr:nth-child(even) { background: #FBFBF9; }
+  table.data-table tbody tr:hover { background: #EEF1FF; transition: background 120ms ease; }
+  .tab-num { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.2rem 0.55rem; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.02em;
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(184,181,171,0.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(184,181,171,0.18) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .divider-dot::before { content: "·"; margin: 0 0.6rem; color: #B8B5AB; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+
+  <!-- ============ HEADER ============ -->
+  <header class="relative overflow-hidden rounded-2xl bg-white border border-ink-200 shadow-sm mb-8">
+    <div class="absolute inset-0 grid-bg opacity-60"></div>
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-brand-100 blur-3xl opacity-50"></div>
+    <div class="relative px-8 lg:px-12 py-10 lg:py-14">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="chip bg-brand-500 text-white">QUARTERLY REVIEW</span>
+        <span class="chip bg-ink-100 text-ink-600">Internal · Confidential</span>
+        <span class="chip bg-accent-400/20 text-accent-500">FY26 Q1</span>
+      </div>
+      <h1 class="font-display font-extrabold text-4xl lg:text-6xl text-ink-800 tracking-tight leading-[1.05]">
+        Helios Cloud
+        <span class="block text-brand-600 mt-2">Q1 2026 季度业务回顾</span>
+      </h1>
+      <p class="mt-6 text-ink-500 text-base lg:text-lg max-w-prose leading-relaxed">
+        Q1 是 Helios Cloud 商业化的转折之季。在宏观逆风、客户预算收缩的背景下, 我们靠产品力守住了 ARR 增速, 同时把 Gross Margin 推上了历史新高 ——
+        <span class="text-ink-800 font-medium">留存正在替代获新, 成为下一阶段增长引擎。</span>
+      </p>
+      <div class="mt-8 flex flex-wrap items-center text-xs text-ink-400 font-mono">
+        <span>报告周期 <span class="text-ink-700">2026-01-01 → 2026-03-31</span></span>
+        <span class="divider-dot"></span>
+        <span>发布日期 <span class="text-ink-700">2026-04-15</span></span>
+        <span class="divider-dot"></span>
+        <span>数据来源 <span class="text-ink-700">商业化产品事业部 · 财务 BI · CRM</span></span>
+        <span class="divider-dot"></span>
+        <span>分发范围 <span class="text-ink-700">内部仅限</span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ KPI CARDS ============ -->
+  <section class="mb-10">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-xs font-semibold tracking-widest text-brand-600 uppercase">Section 01</div>
+        <h2 class="font-display font-bold text-2xl text-ink-800 mt-1">关键 KPI 总览</h2>
+      </div>
+      <div class="text-xs text-ink-400 font-mono hidden md:block">vs. Q4 2025 / YoY</div>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+
+      <!-- KPI 1 -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-medium text-ink-400 uppercase tracking-wider">总营收</span>
+          <span class="chip bg-emerald-50 text-emerald-700 text-[10px]">+11.8%</span>
+        </div>
+        <div class="num-display text-3xl font-extrabold text-ink-800 tab-num">42.7<span class="text-base text-ink-400 font-medium ml-1">M USD</span></div>
+        <div class="text-[11px] text-ink-400 mt-1 tab-num">YoY <span class="text-emerald-600 font-semibold">+47.3%</span></div>
+        <div style="position:relative;height:40px" class="mt-3"><canvas id="spark1"></canvas></div>
+      </div>
+
+      <!-- KPI 2 -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-medium text-ink-400 uppercase tracking-wider">ARR</span>
+          <span class="chip bg-emerald-50 text-emerald-700 text-[10px]">+11.9%</span>
+        </div>
+        <div class="num-display text-3xl font-extrabold text-ink-800 tab-num">175.4<span class="text-base text-ink-400 font-medium ml-1">M</span></div>
+        <div class="text-[11px] text-ink-400 mt-1 tab-num">YoY <span class="text-emerald-600 font-semibold">+52.1%</span></div>
+        <div style="position:relative;height:40px" class="mt-3"><canvas id="spark2"></canvas></div>
+      </div>
+
+      <!-- KPI 3 -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-medium text-ink-400 uppercase tracking-wider">付费客户</span>
+          <span class="chip bg-emerald-50 text-emerald-700 text-[10px]">+13.9%</span>
+        </div>
+        <div class="num-display text-3xl font-extrabold text-ink-800 tab-num">2,103</div>
+        <div class="text-[11px] text-ink-400 mt-1 tab-num">YoY <span class="text-emerald-600 font-semibold">+38.6%</span></div>
+        <div style="position:relative;height:40px" class="mt-3"><canvas id="spark3"></canvas></div>
+      </div>
+
+      <!-- KPI 4 -->
+      <div class="bg-brand-500 text-white border border-brand-600 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-medium text-brand-100 uppercase tracking-wider">NRR</span>
+          <span class="chip bg-white/20 text-white text-[10px]">+7pp</span>
+        </div>
+        <div class="num-display text-3xl font-extrabold tab-num">128<span class="text-base text-brand-100 font-medium ml-1">%</span></div>
+        <div class="text-[11px] text-brand-100 mt-1 tab-num">YoY <span class="text-white font-semibold">+9pp</span></div>
+        <div style="position:relative;height:40px" class="mt-3"><canvas id="spark4"></canvas></div>
+      </div>
+
+      <!-- KPI 5 -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-medium text-ink-400 uppercase tracking-wider">Gross Margin</span>
+          <span class="chip bg-emerald-50 text-emerald-700 text-[10px]">+3.4pp</span>
+        </div>
+        <div class="num-display text-3xl font-extrabold text-ink-800 tab-num">74.8<span class="text-base text-ink-400 font-medium ml-1">%</span></div>
+        <div class="text-[11px] text-ink-400 mt-1 tab-num">YoY <span class="text-emerald-600 font-semibold">+6.2pp</span></div>
+        <div style="position:relative;height:40px" class="mt-3"><canvas id="spark5"></canvas></div>
+      </div>
+
+      <!-- KPI 6 -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-medium text-ink-400 uppercase tracking-wider">DAU 开发者</span>
+          <span class="chip bg-emerald-50 text-emerald-700 text-[10px]">+26.0%</span>
+        </div>
+        <div class="num-display text-3xl font-extrabold text-ink-800 tab-num">112.4<span class="text-base text-ink-400 font-medium ml-1">K</span></div>
+        <div class="text-[11px] text-ink-400 mt-1 tab-num">YoY <span class="text-emerald-600 font-semibold">+71.5%</span></div>
+        <div style="position:relative;height:40px" class="mt-3"><canvas id="spark6"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HIGHLIGHT FIVE NUMBERS ============ -->
+  <section class="mb-10">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-xs font-semibold tracking-widest text-brand-600 uppercase">Section 02</div>
+        <h2 class="font-display font-bold text-2xl text-ink-800 mt-1">五个最关键数字</h2>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="num-display text-4xl font-extrabold text-brand-600 tab-num">175.4M</div>
+        <div class="text-xs uppercase tracking-wider text-ink-400 mt-2">ARR · USD</div>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">历史首次跨过 <span class="font-semibold text-ink-800">1.5 亿</span> 门槛</p>
+      </div>
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="num-display text-4xl font-extrabold text-brand-600 tab-num">128%</div>
+        <div class="text-xs uppercase tracking-wider text-ink-400 mt-2">NRR · Top Quartile</div>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">SaaS 标杆水平 (业内基准 <span class="tab-num">110-120%</span>)</p>
+      </div>
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="num-display text-4xl font-extrabold text-brand-600 tab-num">11<span class="text-2xl ml-1">个月</span></div>
+        <div class="text-xs uppercase tracking-wider text-ink-400 mt-2">CAC Payback</div>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">较去年同期 <span class="line-through text-ink-400">18 个月</span> 缩短近 <span class="font-semibold text-accent-500">40%</span></p>
+      </div>
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="num-display text-4xl font-extrabold text-brand-600 tab-num">4.7%</div>
+        <div class="text-xs uppercase tracking-wider text-ink-400 mt-2">付费转化率</div>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">产品 - 增长飞轮起效, 较 Q4 提升 <span class="font-semibold text-ink-800">1.2pp</span></p>
+      </div>
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="num-display text-4xl font-extrabold text-brand-600 tab-num">38%</div>
+        <div class="text-xs uppercase tracking-wider text-ink-400 mt-2">大客户 ARR 占比</div>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">>100K ARR 客户, <span class="font-semibold text-ink-800">首次超过 SMB</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MAIN CHARTS ============ -->
+  <section class="mb-10">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-xs font-semibold tracking-widest text-brand-600 uppercase">Section 03</div>
+        <h2 class="font-display font-bold text-2xl text-ink-800 mt-1">主图表区</h2>
+      </div>
+      <div class="text-xs text-ink-400 font-mono hidden md:block">Trend / Composition / Funnel</div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- Revenue Trend -->
+      <div class="lg:col-span-2 bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-start justify-between mb-1">
+          <div>
+            <h3 class="font-display font-semibold text-lg text-ink-800">营收与 ARR 走势</h3>
+            <p class="text-xs text-ink-400 mt-1">最近 6 个季度 · 单位 USD M</p>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-ink-500">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-brand-500"></span>季度营收</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-accent-500"></span>ARR</span>
+          </div>
+        </div>
+        <div style="position:relative;height:260px" class="mt-4"><canvas id="chartRevenue"></canvas></div>
+      </div>
+
+      <!-- ARR by Tier -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="font-display font-semibold text-lg text-ink-800">ARR 客户分层占比</h3>
+        <p class="text-xs text-ink-400 mt-1">大客户首次超过 SMB</p>
+        <div style="position:relative;height:240px" class="mt-4"><canvas id="chartDonut"></canvas></div>
+      </div>
+
+      <!-- NRR by Segment -->
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="font-display font-semibold text-lg text-ink-800">各分层 NRR & 流失率</h3>
+        <p class="text-xs text-ink-400 mt-1">越往上越健康, 越往左越大客户</p>
+        <div style="position:relative;height:260px" class="mt-4"><canvas id="chartScatter"></canvas></div>
+      </div>
+
+      <!-- PLG Funnel -->
+      <div class="lg:col-span-2 bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-start justify-between mb-1">
+          <div>
+            <h3 class="font-display font-semibold text-lg text-ink-800">PLG 漏斗对比</h3>
+            <p class="text-xs text-ink-400 mt-1">关键卡点已从"试用-激活"转移到"激活-扩量"</p>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-ink-500">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-ink-300"></span>Q4 2025</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-brand-500"></span>Q1 2026</span>
+          </div>
+        </div>
+        <div style="position:relative;height:260px" class="mt-4"><canvas id="chartFunnel"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REVENUE TIER TABLE ============ -->
+  <section class="mb-10">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-xs font-semibold tracking-widest text-brand-600 uppercase">Section 04</div>
+        <h2 class="font-display font-bold text-2xl text-ink-800 mt-1">收入分层结构</h2>
+      </div>
+      <span class="text-xs text-ink-400 font-mono hidden md:block">N = 2,103 paying customers</span>
+    </div>
+
+    <div class="bg-white border border-ink-200 rounded-2xl shadow-sm overflow-hidden">
+      <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
+        <table class="data-table w-full">
+          <thead>
+            <tr>
+              <th>客户分层</th>
+              <th class="text-right">客户数</th>
+              <th class="text-right">ARR 占比</th>
+              <th class="text-right">NRR</th>
+              <th class="text-right">流失率</th>
+              <th>分层条形</th>
+            </tr>
+          </thead>
+          <tbody class="tab-num">
+            <tr>
+              <td>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-brand-700"></span><span class="font-semibold">Enterprise</span><span class="text-ink-400 text-xs">&gt;500K</span></div>
+              </td>
+              <td class="text-right">47</td>
+              <td class="text-right font-semibold">31%</td>
+              <td class="text-right text-emerald-600 font-semibold">142%</td>
+              <td class="text-right text-emerald-600">1.8%</td>
+              <td><div class="h-2 rounded-full bg-ink-100 overflow-hidden"><div class="h-full bg-brand-700" style="width:31%"></div></div></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-brand-500"></span><span class="font-semibold">Mid-Market</span><span class="text-ink-400 text-xs">100-500K</span></div>
+              </td>
+              <td class="text-right">218</td>
+              <td class="text-right font-semibold">28%</td>
+              <td class="text-right text-emerald-600 font-semibold">131%</td>
+              <td class="text-right">4.2%</td>
+              <td><div class="h-2 rounded-full bg-ink-100 overflow-hidden"><div class="h-full bg-brand-500" style="width:28%"></div></div></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-brand-400"></span><span class="font-semibold">Growth</span><span class="text-ink-400 text-xs">10-100K</span></div>
+              </td>
+              <td class="text-right">612</td>
+              <td class="text-right font-semibold">26%</td>
+              <td class="text-right font-semibold">118%</td>
+              <td class="text-right text-accent-500">8.7%</td>
+              <td><div class="h-2 rounded-full bg-ink-100 overflow-hidden"><div class="h-full bg-brand-400" style="width:26%"></div></div></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-400"></span><span class="font-semibold">SMB</span><span class="text-ink-400 text-xs">&lt;10K</span></div>
+              </td>
+              <td class="text-right">1,226</td>
+              <td class="text-right font-semibold">15%</td>
+              <td class="text-right">102%</td>
+              <td class="text-right text-rose-600 font-semibold">14.3%</td>
+              <td><div class="h-2 rounded-full bg-ink-100 overflow-hidden"><div class="h-full bg-accent-400" style="width:15%"></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Original raw KPI table -->
+    <div class="mt-4 bg-white border border-ink-200 rounded-2xl shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-ink-100 flex items-center justify-between">
+        <h3 class="font-display font-semibold text-base text-ink-800">原始 KPI 明细 (Q4 → Q1)</h3>
+        <span class="chip bg-ink-100 text-ink-500">raw data</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="data-table w-full">
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th class="text-right">Q4 2025</th>
+              <th class="text-right">Q1 2026</th>
+              <th class="text-right">环比</th>
+              <th class="text-right">YoY</th>
+            </tr>
+          </thead>
+          <tbody class="tab-num">
+            <tr><td>总营收 (USD M)</td><td class="text-right">38.2</td><td class="text-right font-semibold">42.7</td><td class="text-right text-emerald-600">+11.8%</td><td class="text-right text-emerald-600">+47.3%</td></tr>
+            <tr><td>ARR (USD M)</td><td class="text-right">156.8</td><td class="text-right font-semibold">175.4</td><td class="text-right text-emerald-600">+11.9%</td><td class="text-right text-emerald-600">+52.1%</td></tr>
+            <tr><td>付费客户数</td><td class="text-right">1,847</td><td class="text-right font-semibold">2,103</td><td class="text-right text-emerald-600">+13.9%</td><td class="text-right text-emerald-600">+38.6%</td></tr>
+            <tr><td>Net Revenue Retention</td><td class="text-right">121%</td><td class="text-right font-semibold">128%</td><td class="text-right text-emerald-600">+7pp</td><td class="text-right text-emerald-600">+9pp</td></tr>
+            <tr><td>Gross Margin</td><td class="text-right">71.4%</td><td class="text-right font-semibold">74.8%</td><td class="text-right text-emerald-600">+3.4pp</td><td class="text-right text-emerald-600">+6.2pp</td></tr>
+            <tr><td>月活开发者 DAU</td><td class="text-right">89,200</td><td class="text-right font-semibold">112,400</td><td class="text-right text-emerald-600">+26.0%</td><td class="text-right text-emerald-600">+71.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INSIGHTS ============ -->
+  <section class="mb-10">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-xs font-semibold tracking-widest text-brand-600 uppercase">Section 05</div>
+        <h2 class="font-display font-bold text-2xl text-ink-800 mt-1">三个核心洞察</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="text-3xl">🏛️</div>
+        <h3 class="font-display font-bold text-lg text-ink-800 mt-3">大客户成为压舱石</h3>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">
+          Enterprise 段在 Q1 净增 <span class="font-semibold text-ink-800 tab-num">9 个 logo</span>, 单客户 ARR 中位数从 <span class="tab-num">380K</span> 提升到 <span class="tab-num font-semibold">460K</span>。前 20 大客户贡献了 <span class="font-semibold text-brand-600 tab-num">53%</span> 的环比 ARR 增量, 印证了 PLG-to-Enterprise motion 转型有效。
+        </p>
+        <div class="mt-4 p-3 rounded-xl bg-accent-400/10 border border-accent-400/30">
+          <p class="text-xs text-accent-500 font-medium">⚠️ 警惕: top-1 客户占比 7.2%, 集中度累积中</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="text-3xl">🚦</div>
+        <h3 class="font-display font-bold text-lg text-ink-800 mt-3">PLG 漏斗拐点已现</h3>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">
+          关键卡点从 "试用-激活" 转移到了 "激活-扩量"。
+        </p>
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <div class="rounded-xl bg-emerald-50 p-3">
+            <div class="text-[10px] text-emerald-700 uppercase tracking-wider">激活率</div>
+            <div class="num-display text-xl font-extrabold text-emerald-700 tab-num mt-1">22% → 31%</div>
+          </div>
+          <div class="rounded-xl bg-rose-50 p-3">
+            <div class="text-[10px] text-rose-700 uppercase tracking-wider">扩量率</div>
+            <div class="num-display text-xl font-extrabold text-rose-700 tab-num mt-1">38% → 29%</div>
+          </div>
+        </div>
+        <p class="text-xs text-ink-400 mt-3 leading-relaxed">Q2 PLG 团队最高优先级 · 与 CS 反馈一致</p>
+      </div>
+
+      <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+        <div class="text-3xl">🤖</div>
+        <h3 class="font-display font-bold text-lg text-ink-800 mt-3">AI 重塑产品价值</h3>
+        <p class="text-sm text-ink-600 mt-3 leading-relaxed">
+          AI Copilot Q1 渗透率 <span class="font-semibold text-brand-600 tab-num">47%</span>。使用 Copilot 的客户:
+        </p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li class="flex items-baseline gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-1.5"></span><span>30 天留存率高出 <span class="font-semibold text-ink-800 tab-num">18pp</span></span></li>
+          <li class="flex items-baseline gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-1.5"></span><span>ARR 扩张速率高出 <span class="font-semibold text-ink-800 tab-num">31pp</span></span></li>
+          <li class="flex items-baseline gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-1.5"></span><span>月度使用频次 <span class="font-semibold text-ink-800 tab-num">2.4x</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Weekly digest-style insights -->
+    <div class="mt-6 bg-ink-700 text-ink-50 rounded-2xl p-6 lg:p-8">
+      <div class="text-xs uppercase tracking-widest text-brand-200 font-semibold mb-4">Insights Digest · 产品周报体</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 max-w-5xl">
+        <p class="text-sm leading-relaxed">💼 <span class="font-semibold">R&D 投入比降至 36.2%</span>(Q4 39.1%), 人力 freeze 叠加 AI 编程提效双轮驱动。</p>
+        <p class="text-sm leading-relaxed">📈 <span class="font-semibold">S&M Magic Number 1.42</span>(Q4 1.18), 向 PLG 倾斜的获客组合显著改善 ROI。</p>
+        <p class="text-sm leading-relaxed">⚡ <span class="font-semibold">Cloud COGS 同比下降 14%</span>, 自研推理基础设施开始释放红利。</p>
+        <p class="text-sm leading-relaxed">💰 <span class="font-semibold">自由现金流 +3.2M</span>, 首次单季转正, 但应收账款余额 28M, 周转天数 60 天偏长。</p>
+        <p class="text-sm leading-relaxed">🇪🇺 <span class="font-semibold">欧洲新增放缓 22%</span>, 受 GDPR 升级影响, Q2 需追加法务投入。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RISK & PRIORITIES ============ -->
+  <section class="mb-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+    <!-- Risks -->
+    <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="text-xs font-semibold tracking-widest text-rose-600 uppercase">Section 06A</div>
+          <h2 class="font-display font-bold text-xl text-ink-800 mt-1">风险与隐忧</h2>
+        </div>
+        <span class="chip bg-rose-50 text-rose-700">4 watch items</span>
+      </div>
+      <ul class="space-y-3">
+        <li class="p-4 rounded-xl border border-ink-100 hover:border-rose-200 hover:bg-rose-50/30 transition">
+          <div class="flex items-baseline justify-between">
+            <h4 class="font-semibold text-sm text-ink-800">现金流</h4>
+            <span class="text-xs text-ink-400 tab-num">FCF +3.2M</span>
+          </div>
+          <p class="text-xs text-ink-500 mt-1.5 leading-relaxed">首次单季转正, 但 AR 余额 28M, 周转天数 60 天偏长。</p>
+        </li>
+        <li class="p-4 rounded-xl border border-ink-100 hover:border-rose-200 hover:bg-rose-50/30 transition">
+          <div class="flex items-baseline justify-between">
+            <h4 class="font-semibold text-sm text-ink-800">客户集中度</h4>
+            <span class="text-xs text-rose-600 font-semibold tab-num">Top-1 = 7.2%</span>
+          </div>
+          <p class="text-xs text-ink-500 mt-1.5 leading-relaxed">突破 7% 警戒线, Q2 需主动稀释。</p>
+        </li>
+        <li class="p-4 rounded-xl border border-ink-100 hover:border-rose-200 hover:bg-rose-50/30 transition">
+          <div class="flex items-baseline justify-between">
+            <h4 class="font-semibold text-sm text-ink-800">欧洲区</h4>
+            <span class="text-xs text-rose-600 font-semibold tab-num">新增 -22%</span>
+          </div>
+          <p class="text-xs text-ink-500 mt-1.5 leading-relaxed">受 GDPR 升级影响, 法务投入需要追加。</p>
+        </li>
+        <li class="p-4 rounded-xl border border-ink-100 hover:border-rose-200 hover:bg-rose-50/30 transition">
+          <div class="flex items-baseline justify-between">
+            <h4 class="font-semibold text-sm text-ink-800">人才</h4>
+            <span class="text-xs text-rose-600 font-semibold tab-num">Senior IC 11%</span>
+          </div>
+          <p class="text-xs text-ink-500 mt-1.5 leading-relaxed">高于行业 8%, 退出原因主要为"增长机会"。</p>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Q2 Priorities -->
+    <div class="bg-white border border-ink-200 rounded-2xl p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="text-xs font-semibold tracking-widest text-brand-600 uppercase">Section 06B</div>
+          <h2 class="font-display font-bold text-xl text-ink-800 mt-1">Q2 优先事项</h2>
+        </div>
+        <span class="chip bg-brand-50 text-brand-600">5 bets</span>
+      </div>
+      <ol class="space-y-3">
+        <li class="flex gap-4 p-4 rounded-xl border border-ink-100 hover:border-brand-200 hover:bg-brand-50/40 transition">
+          <span class="num-display text-2xl font-extrabold text-brand-500 tab-num leading-none">01</span>
+          <div>
+            <h4 class="font-semibold text-sm text-ink-800">NRR 130% 守门</h4>
+            <p class="text-xs text-ink-500 mt-1 leading-relaxed">CS × Product 联合作战, 把扩量率从 29% 拉回 35%+</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-4 rounded-xl border border-ink-100 hover:border-brand-200 hover:bg-brand-50/40 transition">
+          <span class="num-display text-2xl font-extrabold text-brand-500 tab-num leading-none">02</span>
+          <div>
+            <h4 class="font-semibold text-sm text-ink-800">欧洲合规</h4>
+            <p class="text-xs text-ink-500 mt-1 leading-relaxed">完成 GDPR-NG 适配 · 4-5 名工程师 + 法务 1 名</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-4 rounded-xl border border-ink-100 hover:border-brand-200 hover:bg-brand-50/40 transition">
+          <span class="num-display text-2xl font-extrabold text-brand-500 tab-num leading-none">03</span>
+          <div>
+            <h4 class="font-semibold text-sm text-ink-800">AI Copilot v2</h4>
+            <p class="text-xs text-ink-500 mt-1 leading-relaxed">从"辅助"升级到"代理", 目标渗透率 <span class="tab-num font-semibold text-ink-700">65%</span></p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-4 rounded-xl border border-ink-100 hover:border-brand-200 hover:bg-brand-50/40 transition">
+          <span class="num-display text-2xl font-extrabold text-brand-500 tab-num leading-none">04</span>
+          <div>
+            <h4 class="font-semibold text-sm text-ink-800">现金回款专项</h4>
+            <p class="text-xs text-ink-500 mt-1 leading-relaxed">DSO 从 60 压到 45, 释放 <span class="tab-num font-semibold text-ink-700">6-8M</span> 经营性现金</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-4 rounded-xl border border-ink-100 hover:border-brand-200 hover:bg-brand-50/40 transition">
+          <span class="num-display text-2xl font-extrabold text-brand-500 tab-num leading-none">05</span>
+          <div>
+            <h4 class="font-semibold text-sm text-ink-800">人才保留</h4>
+            <p class="text-xs text-ink-500 mt-1 leading-relaxed">中层 IC 股权刷新 + 双梯队晋升路径推全</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ METHODOLOGY ============ -->
+  <section class="mb-10">
+    <details class="bg-white border border-ink-200 rounded-2xl shadow-sm group">
+      <summary class="px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-semibold tracking-widest text-ink-400 uppercase">Appendix</span>
+          <h3 class="font-display font-bold text-lg text-ink-800">方法论 & 数据说明</h3>
+        </div>
+        <span class="text-ink-400 group-open:rotate-180 transition-transform">⌄</span>
+      </summary>
+      <div class="px-6 pb-6 pt-2 border-t border-ink-100 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-ink-600 leading-relaxed">
+        <div>
+          <h4 class="font-semibold text-ink-800 mb-2">数据范围</h4>
+          <p>统计窗口为 2026-01-01 至 2026-03-31, 与财务季度对齐; YoY 对比窗口为 2025-Q1。</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-ink-800 mb-2">核心定义</h4>
+          <p>ARR = 月末活跃订阅 MRR × 12; NRR 仅基于上一季度起始客户群; Magic Number = (本季 ARR 增量 × 4) ÷ 上季度 S&M 支出。</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-ink-800 mb-2">口径与限制</h4>
+          <p>付费转化基于 90 天窗口; 大客户分层按 ARR 区间静态划分, 季度内升迁仅在季度末重算; 所有 USD 数据已剔除汇率波动影响。</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-ink-200 pt-6 pb-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-lg bg-brand-500 flex items-center justify-center text-white font-display font-bold text-xs">H</div>
+      <div>
+        <div class="font-display font-bold text-sm text-ink-800">Helios Cloud</div>
+        <div class="text-[11px] text-ink-400">商业化产品事业部 · BizOps Analytics</div>
+      </div>
+    </div>
+    <div class="text-[11px] text-ink-400 font-mono">© 2026 Helios Cloud · Confidential · v2026.Q1.final</div>
+  </footer>
+</div>
+
+<script>
+  // ============ Chart.js Global ============
+  Chart.defaults.font.family = "'Inter', 'Noto Sans SC', sans-serif";
+  Chart.defaults.color = '#54514A';
+  Chart.defaults.borderColor = '#EFEEEA';
+
+  const palette = {
+    brand: '#3D4FD9',
+    brandLight: '#B6C0FC',
+    brandDeep: '#1F2A99',
+    accent: '#D88321',
+    accentSoft: '#E8A14B',
+    ink: '#7E7B72',
+    inkLight: '#DDDBD3',
+    emerald: '#10B981'
+  };
+
+  // ============ Sparklines ============
+  function sparkConfig(data, color, fill) {
+    return {
+      type: 'line',
+      data: {
+        labels: data.map((_, i) => i),
+        datasets: [{
+          data, borderColor: color,
+          backgroundColor: fill || (color + '22'),
+          borderWidth: 2, fill: !!fill, tension: 0.4,
+          pointRadius: 0, pointHoverRadius: 0
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display:false }, tooltip: { enabled:false } },
+        scales: { x:{ display:false }, y:{ display:false } },
+        elements: { line: { capBezierPoints:false } }
+      }
+    };
+  }
+  new Chart(document.getElementById('spark1'), sparkConfig([29, 31, 33, 35, 38.2, 42.7], palette.brand, palette.brand+'22'));
+  new Chart(document.getElementById('spark2'), sparkConfig([115, 128, 138, 148, 156.8, 175.4], palette.brand, palette.brand+'22'));
+  new Chart(document.getElementById('spark3'), sparkConfig([1517, 1605, 1702, 1780, 1847, 2103], palette.brand, palette.brand+'22'));
+  new Chart(document.getElementById('spark4'), sparkConfig([119, 120, 119, 120, 121, 128], '#ffffff', '#ffffff33'));
+  new Chart(document.getElementById('spark5'), sparkConfig([68.6, 69.4, 70.1, 70.8, 71.4, 74.8], palette.accent, palette.accent+'22'));
+  new Chart(document.getElementById('spark6'), sparkConfig([65500, 72100, 78300, 84500, 89200, 112400], palette.brand, palette.brand+'22'));
+
+  // ============ Revenue Trend ============
+  new Chart(document.getElementById('chartRevenue'), {
+    type: 'bar',
+    data: {
+      labels: ['Q4 2024', 'Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'],
+      datasets: [
+        {
+          type: 'bar', label: '季度营收 (M)',
+          data: [27.4, 29.0, 32.1, 35.4, 38.2, 42.7],
+          backgroundColor: palette.brand, borderRadius: 6, barPercentage: 0.55,
+          order: 2
+        },
+        {
+          type: 'line', label: 'ARR (M)',
+          data: [108.2, 115.3, 128.6, 142.4, 156.8, 175.4],
+          borderColor: palette.accent, backgroundColor: palette.accent,
+          borderWidth: 2.5, tension: 0.35, pointRadius: 4, pointHoverRadius: 6,
+          yAxisID: 'y1', order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display:false } },
+      scales: {
+        x: { grid: { display:false }, ticks: { font: { size: 11 } } },
+        y: { position:'left', grid: { color: '#EFEEEA' }, ticks: { callback: v => v + 'M', font: { size: 11 } } },
+        y1: { position:'right', grid: { display:false }, ticks: { callback: v => v + 'M', font: { size: 11 }, color: palette.accent } }
+      }
+    }
+  });
+
+  // ============ Donut: ARR by Tier ============
+  new Chart(document.getElementById('chartDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Enterprise', 'Mid-Market', 'Growth', 'SMB'],
+      datasets: [{
+        data: [31, 28, 26, 15],
+        backgroundColor: [palette.brandDeep, palette.brand, palette.brandLight, palette.accentSoft],
+        borderColor: '#FFFFFF', borderWidth: 3, hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } }
+      }
+    }
+  });
+
+  // ============ Scatter: NRR vs Churn ============
+  new Chart(document.getElementById('chartScatter'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Enterprise', data: [{ x: 1.8, y: 142, r: 16 }], backgroundColor: palette.brandDeep },
+        { label: 'Mid-Market', data: [{ x: 4.2, y: 131, r: 14 }], backgroundColor: palette.brand },
+        { label: 'Growth',     data: [{ x: 8.7, y: 118, r: 12 }], backgroundColor: palette.brandLight },
+        { label: 'SMB',        data: [{ x: 14.3, y: 102, r: 10 }], backgroundColor: palette.accentSoft }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, padding: 10, font: { size: 10 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label} · NRR ${ctx.parsed.y}% · Churn ${ctx.parsed.x}%` } }
+      },
+      elements: { point: { radius: ctx => ctx.raw.r, hoverRadius: ctx => ctx.raw.r + 2 } },
+      scales: {
+        x: { title: { display:true, text:'流失率 (%)', font: { size: 11 } }, grid: { color:'#EFEEEA' }, ticks: { font:{size:10} } },
+        y: { title: { display:true, text:'NRR (%)', font: { size: 11 } }, grid: { color:'#EFEEEA' }, suggestedMin: 95, suggestedMax: 150, ticks: { font:{size:10} } }
+      }
+    }
+  });
+
+  // ============ PLG Funnel Comparison ============
+  new Chart(document.getElementById('chartFunnel'), {
+    type: 'bar',
+    data: {
+      labels: ['注册 Signup', '试用 Trial', '激活 Activation', '付费转化 Paid', '扩量 Expansion'],
+      datasets: [
+        { label: 'Q4 2025', data: [100, 64, 22, 3.5, 38], backgroundColor: palette.inkLight, borderRadius: 6, barPercentage: 0.7 },
+        { label: 'Q1 2026', data: [100, 71, 31, 4.7, 29], backgroundColor: palette.brand, borderRadius: 6, barPercentage: 0.7 }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display:false },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.x}%` } }
+      },
+      scales: {
+        x: { grid: { color: '#EFEEEA' }, ticks: { callback: v => v + '%', font: { size: 10 } } },
+        y: { grid: { display:false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
