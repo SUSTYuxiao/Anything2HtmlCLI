@@ -72,3 +72,36 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 3: 并行收口：npm publish prep + spec sync 项目边界原则
+
+**Date**: 2026-05-22
+**Task**: 并行收口：npm publish prep + spec sync 项目边界原则
+**Branch**: `main`
+
+### Summary
+
+本 session 站在 'a2h CLI 化' 目标视角并行收口两件事：(1) npm publish prep——package.json 元数据完善 + prepublishOnly + files 精确化 + README 加 Installation/Usage/Embedding 三段（特别是 spawn cookbook 给 LLM 调用方）+ npm pack 实测 tarball 317KB 干净 + 全局 npm i -g 安装实测 + 真实 smoke 12KB HTML exit 0；(2) spec sync——把 cli-polish session 中确定但仅记录在 archived prd 的 3 条经验提升到 active spec：cli-design.md 加'项目边界原则'段（'a2h 仅在 CLI 层做事，严禁深入 ref 业务层'）+ upstream-sync.md 交叉引用 + quality-guidelines.md 加 Agent Layer Extensibility（AGENT_CLASSIFIERS map 模式）+ logging-guidelines.md 进度协议改写为心跳优先。trellis-check 顺手修一处 directory-structure.md 的 files 字段示例与现实对齐。验证：50/50 测试 / dist 26.6KB / tarball 干净 / 三方退出码契约对齐。归档 publish-prep + spec-sync；bootstrap-guidelines 仍保留。a2h CLI 化目标的核心交付物已全部到位（可装/可调用/契约文档化），剩 user 自决项（USER placeholder + npm scope）。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `a6705d0` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete

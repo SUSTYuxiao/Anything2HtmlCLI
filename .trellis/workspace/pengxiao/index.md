@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 2
-- **Last Active**: 2026-05-21
+- **Total Sessions**: 3
+- **Last Active**: 2026-05-22
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~74 | Active |
+| `journal-1.md` | ~107 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 3 | 2026-05-22 | 并行收口：npm publish prep + spec sync 项目边界原则 | `a6705d0` | `main` |
 | 2 | 2026-05-21 | CLI polish: 砍 preview / 加 qoder / 心跳 progress + spec 中文化与反模式速查 | `f5931f0` | `main` |
 | 1 | 2026-05-21 | a2h CLI: charter → spec → spike → PR1 + PR2（P0 全过） | `cb6a6bc`, `51ee5b9` | `main` |
 <!-- @@@/auto:session-history -->
