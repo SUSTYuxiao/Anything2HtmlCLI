@@ -1,0 +1,5 @@
+{"file": ".trellis/tasks/05-22-readme-refactor/prd.md", "reason": "本任务 PRD：拆分清单 + 迁移目标 + 验收标准 + Out of Scope。"}
+{"file": "README.md", "reason": "重构源——10 个 § 宪章段 + 4 个用户手册段，本任务把宪章段迁出。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "项目边界原则（最高原则）—— docs/design.md 应引用此处而非重写。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "退出码表 SSoT—— README Embedding 段保留时不应破坏现有引用。"}
+{"file": "AGENTS.md", "reason": "ref/ 只读约定 + Apache-2.0—— docs/design.md 提及参考实现时不应破坏这些规则。"}

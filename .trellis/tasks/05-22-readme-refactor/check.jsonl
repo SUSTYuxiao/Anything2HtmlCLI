@@ -1,0 +1,3 @@
+{"file": ".trellis/tasks/05-22-readme-refactor/prd.md", "reason": "Acceptance 7 项 grep 自检 + npm pack dry-run 体积。"}
+{"file": "README.md", "reason": "验证保留段（成本表 / Installation / Usage / Embedding）+ 迁出段（§3-§8、§10）+ 行数 < 200。"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "package.json files 字段保持 [dist/ + bin/ + LICENSE + README.md]——docs/ 不发 npm，spec 与现实仍对齐。"}
