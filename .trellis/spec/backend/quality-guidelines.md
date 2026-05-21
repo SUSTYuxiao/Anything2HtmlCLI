@@ -144,6 +144,36 @@ await invokeAgent("claude", opts, {
 
 **铁律**：副作用 io 散落进业务函数体即不可测。模块级 `Deps` 类型 + 默认值 fallback 是当前项目唯一认可的可测性结构——**不要**为可测性引 sinon / proxyquire / module-mocking 库（违反零运行时依赖）。
 
+### Agent Layer Extensibility — `AGENT_CLASSIFIERS` map 模式
+
+DI 让 `invokeAgent` 单点可测；**`AGENT_CLASSIFIERS` map 让加新 agent 不污染单点**。两条共同保证 `invoke.ts` 永远不长出 `if (agentId === "claude") ... else if ...` 的分支泥团。
+
+模式：每个 agent 的"stderr → A2hError"分类逻辑各自一个函数，集中注册到 map：
+
+```ts
+// src/agents/errors.ts —— per-agent 分类器集中注册
+export type ClassifyFn = (exitCode: number | null, stderr: string) => A2hError;
+
+const claudeClassify: ClassifyFn = (_code, stderr) => { /* budget/network/auth 关键字 */ };
+const qoderClassify:  ClassifyFn = (_code, stderr) => { /* 仅 network/auth 关键字, 最保守 */ };
+
+export const AGENT_CLASSIFIERS: Record<string, ClassifyFn> = {
+  claude: claudeClassify,
+  qoder:  qoderClassify,
+};
+```
+
+**加新 agent 流程（4 步，永远不动 `invoke.ts`）**：
+
+1. `agents/argv.ts`：上游 `case "<id>"` 已就位则直接复用；缺则推上游 PR
+2. `agents/errors.ts`：`AGENT_CLASSIFIERS` map 加一项 `<id>: classifyFn`
+3. `agents/invoke.ts`：自动 dispatch（无需改）
+4. `commands/render.ts`：`--agent` flag 白名单加 `<id>`
+
+**unknown agent fallback**：`classifyAgentFailure` 在 map 未命中时走 `qoderClassify`——它是关键字最少假设的保守分类器（network + auth 即返回 `E_AGENT_UNAVAILABLE`），适合未知 stderr 风格。
+
+**严禁**：在 `invoke.ts` 内 hardcode `if (agentId === "claude") ... else if (agentId === "qoder") ...`——这违反 map 抽象，每加一个 agent 就要改 invoke.ts，DI 单点立刻退化成多点。
+
 ---
 
 ## ─── 输出验证：HTML 头尾正则 + 退出码 40 ───────────

@@ -275,3 +275,11 @@ SHA 是同步可追溯性的唯一根：没有它就无法回答"这版本对应
 | ref/ git 状态 | .gitignore 排除，禁止 git add |
 | 同步后 | 必跑 npm test 才 commit |
 | commit 格式 | `chore(sync): bump upstream to <short-sha>` |
+
+---
+
+## 相关原则
+
+**项目边界原则**（"只做 CLI 适配，不深入 ref 业务"）见 [`cli-design.md`](./cli-design.md) 末尾"项目边界原则"段。
+本指南的"src/ 是 ref/ 的纯下游投影"与该原则互为表里——前者约束代码流向（向上游回流，不本地 fork），
+后者约束功能边界（CLI 层做事，业务层丢回 ref）。两条线一起守，薄壳同步才不漏。

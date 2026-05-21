@@ -1,0 +1,5 @@
+{"file": ".trellis/tasks/05-22-spec-sync-cli-polish-lessons/prd.md", "reason": "Acceptance Criteria 6 项 grep 自检 + typecheck/lint/test 全过。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "验证'项目边界原则'段已加入且措辞符合 cli-polish 任务 prd 的'最高原则'。"}
+{"file": ".trellis/spec/guides/upstream-sync.md", "reason": "验证交叉引用已加 + 不重复扩写边界原则全文。"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "验证'Agent Layer Extensibility'小节加入 + AGENT_CLASSIFIERS map 模式描述。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "验证进度协议段是否对齐心跳优先；若已对齐则确认'已含跳过'是合规的。"}

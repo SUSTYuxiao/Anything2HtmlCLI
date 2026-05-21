@@ -1,0 +1,6 @@
+{"file": ".trellis/tasks/05-22-npm-publish-prep/prd.md", "reason": "Acceptance Criteria 7 项：package.json 字段 / prepublishOnly 串行 / npm pack --dry-run 输出 / tarball 体积 / tmp 安装 + 真实 smoke / README 三段。"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "验证 prepublishOnly 串行 quality gate 与 spec 测试栈对齐。"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "验证 files 字段白名单 = spec 中 npm publish 章节的清单。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "验证 README Embedding 段中退出码 / --json-errors 协议描述与 cli-design.md SSoT 完全一致。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "验证 README 中退出码常量名 (E_SKILL_NOT_FOUND / E_AGENT_UNAVAILABLE 等) 拼写正确。"}
+{"file": "AGENTS.md", "reason": "验证未在 npm tarball 中夹带 ref/ 内容（违反 ref 只读约定 + Apache-2.0 attribution 边界）。"}

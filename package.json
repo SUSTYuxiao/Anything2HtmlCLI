@@ -1,7 +1,26 @@
 {
   "name": "@a2h/cli",
   "version": "0.1.0",
-  "description": "Anything-to-HTML CLI: thin shell over local agent CLIs (claude / …) that turns any text into a self-contained HTML file.",
+  "description": "Convert text to a self-contained HTML file via local agent CLIs (claude / qoder), zero-runtime-deps",
+  "keywords": [
+    "cli",
+    "html",
+    "agent",
+    "claude",
+    "qoder",
+    "markdown",
+    "render",
+    "static-site"
+  ],
+  "homepage": "https://github.com/USER/Anything2HtmlCLI#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/USER/Anything2HtmlCLI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/USER/Anything2HtmlCLI/issues"
+  },
+  "author": "pengxiao",
   "type": "module",
   "license": "Apache-2.0",
   "bin": {
@@ -10,11 +29,11 @@
   "files": [
     "dist/",
     "bin/",
-    "package.json",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "build": "esbuild src/cli.ts --bundle --platform=node --target=node20 --format=esm --external:node:* --outfile=dist/cli.js --minify --legal-comments=inline",
@@ -23,7 +42,8 @@
     "test:fixtures": "node -e \"import('node:fs').then(fs=>{fs.rmSync('dist-test/skills',{recursive:true,force:true});fs.cpSync('src/templates/skills','dist-test/skills',{recursive:true})})\"",
     "test": "npm run test:build && npm run test:fixtures && node --test --enable-source-maps dist-test/extract-html.test.js dist-test/errors.test.js dist-test/render.test.js dist-test/skills.test.js dist-test/invoke.test.js",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit && eslint"
+    "lint": "tsc --noEmit && eslint",
+    "prepublishOnly": "npm run sync && npm run lint && npm run build && npm test"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

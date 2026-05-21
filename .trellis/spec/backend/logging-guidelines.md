@@ -55,27 +55,55 @@ const shouldShowProgress =
 
 任一条件假即完全静默——这覆盖了：被 Agent 嵌入调用（pipe）、`-o file.html` 重定向、CI 环境（`isTTY` 自然为 false）。
 
+### 推荐路径：基于时间的心跳（heartbeat）
+
+**默认实现**：`invokeAgent` 内部 `setInterval(opts.onProgress, 5000)`，每 5 秒回调 caller 传入的 `onProgress`；caller 一般传 `() => log.progressTick()`，TTY+!quiet 时打一个 `·` 累加。
+
+```ts
+// src/agents/invoke.ts —— heartbeat 实测形态（仅作示例，不修改本文件）
+const HEARTBEAT_MS = 5000;
+let heartbeat: NodeJS.Timeout | null = null;
+if (opts.onProgress) heartbeat = setInterval(opts.onProgress, HEARTBEAT_MS);
+const stopHeartbeat = (): void => { if (heartbeat) { clearInterval(heartbeat); heartbeat = null; } };
+
+// close / error / abort 三路径都必须 stopHeartbeat()——否则 setInterval 泄漏
+child.on("close", () => { stopHeartbeat(); /* ... */ });
+child.on("error", () => { stopHeartbeat(); /* ... */ });
+opts.signal?.addEventListener("abort", () => { stopHeartbeat(); /* ... */ }, { once: true });
+```
+
+**为什么用心跳而非读 stdout**：调用方拿 stdout 当 HTML 解析；invokeAgent 不窥探 stdout 中间内容（`stdout += chunk` 仅累计，不解码 stream-json）。这是项目边界原则的具体体现——**LLM 协议解析是 ref 的事，不是 CLI 的事**（参见 `.trellis/spec/guides/cli-design.md` 末尾"项目边界原则"段）。
+
 ### 进度行内容（最简，可粘贴）
 
 ```
 [a2h] skill=article-magazine agent=claude
-[a2h] streaming… 4k chars
+· · · · · · · · · · · · · ·          ← 心跳：每 5s 一个点（TTY+!quiet 时累加追加）
 [a2h] done in 68s, wrote 15.9KB
 ```
+
+`done` 时必须换行落定，把动态行钉为静态记录（`log.done(...)` 内部已 `\n` 起手）。
 
 ### 节奏
 
 | 模式 | 节奏 |
 | --- | --- |
-| `--output-format stream-json --include-partial-messages` | 每 ~500ms 重写 streaming 行（用 `\r` 覆盖同一行） |
-| `--output-format text`（spike 默认） | 仅 start + done 两条，无中间 streaming（claude 中途无信号可读） |
+| 默认（heartbeat） | `setInterval(opts.onProgress, 5000)` → `log.progressTick()` 仅 TTY+!quiet 写 `·` |
+| `--quiet` / 非 TTY | 心跳函数仍跑，但 `progressTick` 内部条件假，零字节落到 stderr |
 
-`done` 时必须换行落定，把动态行钉为静态记录。
+### 可选演化（未来评估，**当前不做**）
+
+解析 LLM 协议层流（如 claude `stream-json --include-partial-messages` 的 token-by-token progress）——
+**这越过项目边界**（cli-design.md "项目边界原则"），引入 stream-json subtype 解读、事件流 buffering、
+ndjson parser。需由独立任务显式评估收益与边界债务，不在本规范默认开启。
 
 ### TTY 重写示意
 
 ```ts
-// streaming 阶段：覆盖同一行（不刷屏）
+// 心跳路径（推荐）：每 5s 追加一个点，不覆盖
+process.stderr.write(dim("·"));   // 由 log.progressTick() 内部完成
+
+// 旧 streaming 路径（保留 API，但 invokeAgent 心跳路径下已不主动调用）
 process.stderr.write(`\r[a2h] streaming… ${chars}k chars`);
 
 // done 阶段：换行 + 终态

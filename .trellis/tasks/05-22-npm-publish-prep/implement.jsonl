@@ -1,0 +1,9 @@
+{"file": ".trellis/tasks/05-22-npm-publish-prep/prd.md", "reason": "本任务 PRD：5 件事 + 验收清单 + Out of Scope。"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "构建 / lint / 测试约束 + 体积红线 + 同步纪律——prepublishOnly 串行 sync/lint/build/test 必须对齐这套 quality gate。"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "files 字段白名单依据：仅发 dist/ + bin/ + LICENSE + README.md；src/ + scripts/ + tsconfig 不发。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "退出码表 + --json-errors 协议——README Embedding 段必须照抄 SSoT 不发明新协议。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "退出码常量名 SSoT——README Embedding 段引用退出码必须用同一套命名。"}
+{"file": "README.md", "reason": "现有项目宪章 + 成本与时间参考表——本任务追加 Installation / Usage / Embedding 三段，不能破坏现有内容。"}
+{"file": "AGENTS.md", "reason": "ref/ 只读约定 + Apache-2.0 attribution——本任务的 npm publish 流程不能破坏这些规则（如不要打包 ref/ 进 tarball）。"}
+{"file": "LICENSE", "reason": "Apache-2.0 文本——package.json license 字段必须与之对齐。"}
+{"file": "package.json", "reason": "现状参考——本任务在此基础上补字段，不重写。"}

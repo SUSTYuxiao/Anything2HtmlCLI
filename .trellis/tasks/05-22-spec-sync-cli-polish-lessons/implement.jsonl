@@ -1,0 +1,9 @@
+{"file": ".trellis/tasks/05-22-spec-sync-cli-polish-lessons/prd.md", "reason": "本任务 PRD：3 个候选清单 + 文件 ownership + 修改纪律。"}
+{"file": ".trellis/tasks/archive/2026-05/05-21-cli-polish-claude-qoder/prd.md", "reason": "源头：cli-polish 任务的最高原则（做好 ref 适配封装，其他丢给 ref）+ Q-CP-4 决策（共享 invokeAgent + per-agent classifier map）。"}
+{"file": ".trellis/tasks/archive/2026-05/05-21-mvp-cli-extract-and-ship/research/spike-end-to-end.md", "reason": "spike F1: text mode 够用 / F3: 复杂模板黑屏 / F6: TTY-aware progress——心跳 progress 决策的依据。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "候选 1 写入位置：末尾加'项目边界原则'段；不动 preview 已砍说明（已正确）。"}
+{"file": ".trellis/spec/guides/upstream-sync.md", "reason": "候选 1 末尾加交叉引用 cli-design.md 的边界原则。"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "候选 2 写入位置：DI 段附近加'Agent Layer Extensibility'小节，记录 AGENT_CLASSIFIERS map 模式。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "候选 3 检查位置：进度协议段是否仍写'基于 stream-json'，若是改为'基于时间的心跳'优先。"}
+{"file": "src/agents/errors.ts", "reason": "候选 2 模式参考：现有 AGENT_CLASSIFIERS 实现作为 spec 中代码示例的来源（不修改它）。"}
+{"file": "src/agents/invoke.ts", "reason": "候选 3 心跳实现参考：setInterval(opts.onProgress, 5000) + clearInterval 三路径——作为 spec 示例（不修改它）。"}

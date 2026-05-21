@@ -300,3 +300,20 @@ agent 嵌入场景下，agent 自己管 flag 即可，a2h 不需要"用户配置
 | 默认 progress 出口 | stderr，仅 isTTY 时 |
 | 错误协议 | exit code + 可选 `--json-errors` |
 | 配置形态 | 仅 flag，无 rc / env |
+
+---
+
+## 项目边界原则
+
+`a2h` 仅在 **CLI 适配层**做事——argparse / I/O 通道 / 退出码 / stderr 协议 / agent 选择 / 心跳 progress / HTML 头尾校验。
+
+**严禁深入 ref 业务层**：
+
+- LLM 协议解析（stream-json 解码 / 事件流 / token 流计数）
+- skill prompt 调优、模板设计、shared directives 改写
+- LLM 错误码 subtype 解读（如 stream-json `error` 事件细分）
+- 渲染 / 抽取逻辑改写（`extract-html.ts` 属上游同步层）
+
+**失败兜底**：关键字 / 启发式现状能用就先用，不切结构化解析层（参见 `src/agents/errors.ts` 的 `claudeClassify` / `qoderClassify`：纯关键字匹配，零协议层依赖）。
+
+**加新功能前自问**："这是 CLI 的事，还是 ref 的事？"——后者立刻丢回上游 PR 或独立任务评估，**不在本仓库 fork**。一旦本仓库私自 patch 渲染逻辑，下次 `npm run sync` 即破产薄壳同步原则。

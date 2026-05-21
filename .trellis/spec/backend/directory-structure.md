@@ -78,10 +78,13 @@ import('../dist/cli.js');
 {
   "type": "module",
   "bin": { "a2h": "bin/a2h" },
-  "files": ["dist/", "bin/", "package.json", "LICENSE"],
-  "engines": { "node": ">=20" }
+  "files": ["dist/", "bin/", "LICENSE", "README.md"],
+  "engines": { "node": ">=20.0.0" }
 }
 ```
+
+`package.json` 本身**不需要**写进 `files`——npm 永远自动包含；显式声明反而误导维护者以为可省。
+`README.md` 同理 npm 默认带，但显式声明是为了让"用户手册入口"在 `files` 数组里一眼可见。
 
 ---
 
@@ -104,20 +107,25 @@ src/
 
 ## ─── npm publish 范围 ────────────────────────────────
 
-发布物**只含构建产物 + 入口壳**，源码不发：
+发布物**只含构建产物 + 入口壳 + 必要元数据**，源码不发：
 
 ```text
 [发] dist/cli.js          # esbuild 单文件 bundle
+[发] dist/skills/         # 75 个 skill 数据资产（运行时 fs.readFile，不内联）
 [发] bin/a2h              # shebang 包装
-[发] package.json
+[发] package.json         # npm 自动包含，无需写进 files
 [发] LICENSE              # Apache-2.0（继承上游）
+[发] README.md            # 用户手册入口（Installation / Usage / Embedding）
 [不发] src/               # 源码留在 GitHub
-[不发] scripts/
+[不发] scripts/           # 同步脚本只在开发期跑
 [不发] ref/               # 上游参考目录，与发布无关
-[不发] .trellis/
+[不发] .trellis/          # 任务、规范、工作区
+[不发] tsconfig.json / eslint.config.js / dist-test/  # 工具产物
 ```
 
 由 `package.json` 的 `"files"` 字段强制白名单；`.npmignore` 不再维护（黑名单易漏）。
+验收：`npm pack --dry-run` 输出顶层目录 ⊆ {`dist`, `bin`, `LICENSE`, `README.md`, `package.json`}，
+无 `src/` / `scripts/` / `.trellis/` / `ref/` / `dist-test/` 残留。
 
 ---
 
