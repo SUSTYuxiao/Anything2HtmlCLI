@@ -44,16 +44,23 @@ const ANSI = {
 
 ## 进度协议（PRD Q-MVP-6 决策 A）
 
-### 触发条件（三者全真）
+### 触发条件（仅 stderr.isTTY + !quiet）
 
 ```ts
-const shouldShowProgress =
-  process.stdout.isTTY === true &&
+const heartbeatVisible =
   process.stderr.isTTY === true &&
   !flags.quiet;
 ```
 
-任一条件假即完全静默——这覆盖了：被 Agent 嵌入调用（pipe）、`-o file.html` 重定向、CI 环境（`isTTY` 自然为 false）。
+任一条件假即完全静默——这覆盖了：被 Agent 嵌入调用（stderr 也被 pipe）、CI 环境（`isTTY` 自然为 false）、显式 `--quiet`。
+
+#### 为什么只看 stderr.isTTY，不看 stdout.isTTY
+
+心跳走 stderr，stdout 是数据通道。两条流的 TTY 状态相互独立判定：
+
+- `a2h render in.md > out.html`：stdout 被 `>` 重定向到文件 → `stdout.isTTY = false`；但 stderr 仍连终端 → `stderr.isTTY = true`，**用户在终端能看到心跳**才是正解。
+- 把 stdout.isTTY 拖进 stderr 反馈通道判定，会在这种最常见的"渲染并重定向"场景下错误地干掉心跳——用户 60+ 秒无反馈。
+- 通用原则：**走哪条通道的输出，就只看哪条通道的 isTTY**。stderr 输出（progress / progressTick / info / verbose / done）一律只看 `process.stderr.isTTY`。
 
 ### 推荐路径：基于时间的心跳（heartbeat）
 
@@ -88,8 +95,8 @@ opts.signal?.addEventListener("abort", () => { stopHeartbeat(); /* ... */ }, { o
 
 | 模式 | 节奏 |
 | --- | --- |
-| 默认（heartbeat） | `setInterval(opts.onProgress, 5000)` → `log.progressTick()` 仅 TTY+!quiet 写 `·` |
-| `--quiet` / 非 TTY | 心跳函数仍跑，但 `progressTick` 内部条件假，零字节落到 stderr |
+| 默认（heartbeat） | `setInterval(opts.onProgress, 5000)` → `log.progressTick()` 仅 stderr.isTTY+!quiet 写 `·` |
+| `--quiet` / stderr 非 TTY | 心跳函数仍跑，但 `progressTick` 内部条件假，零字节落到 stderr |
 
 ### 可选演化（未来评估，**当前不做**）
 
@@ -138,32 +145,33 @@ let flags: Flags = { quiet: false, verbose: false };
 
 export function configureLogger(f: Flags): void { flags = f; }
 
-const isTTY = (): boolean =>
-  Boolean(process.stdout.isTTY && process.stderr.isTTY);
+// stderr 通道 TTY 检测 (走 stderr 的输出共用此判定)
+const stderrIsTty = (): boolean => process.stderr.isTTY === true;
+const stderrVisible = (): boolean => stderrIsTty() && !flags.quiet;
 
 const useColor = (): boolean =>
-  Boolean(process.stderr.isTTY) && !process.env.NO_COLOR;
+  stderrIsTty() && !process.env.NO_COLOR;
 
 const yellow = (s: string) => useColor() ? `\x1b[33m${s}\x1b[0m` : s;
 const red    = (s: string) => useColor() ? `\x1b[31m${s}\x1b[0m` : s;
 const dim    = (s: string) => useColor() ? `\x1b[2m${s}\x1b[0m`  : s;
 
 export const log = {
-  // ---- info: TTY 且非 quiet 时打 ----
+  // ---- info: stderr TTY 且非 quiet 时打 ----
   info: (msg: string): void => {
-    if (!isTTY() || flags.quiet) return;
+    if (!stderrVisible()) return;
     process.stderr.write(dim(`[a2h] ${msg}`) + "\n");
   },
 
-  // ---- progress: 仅 TTY，\r 覆盖同一行 ----
+  // ---- progress: 仅 stderr TTY，\r 覆盖同一行 ----
   progress: (msg: string): void => {
-    if (!isTTY() || flags.quiet) return;
+    if (!stderrVisible()) return;
     process.stderr.write(`\r${dim(`[a2h] ${msg}`)}`);
   },
 
   // ---- done: 收束 progress，换行落定 ----
   done: (msg: string): void => {
-    if (!isTTY() || flags.quiet) return;
+    if (!stderrVisible()) return;
     process.stderr.write(`\n${yellow(`[a2h] ${msg}`)}\n`);
   },
 

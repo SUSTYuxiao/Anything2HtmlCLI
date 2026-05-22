@@ -19,93 +19,122 @@ import { runSkills } from "./commands/skills.js";
 // ─── version (PR4 时改为从 package.json 注入) ────────────────────────
 const VERSION = "0.1.0";
 
-// ─── help texts ──────────────────────────────────────────────────────
-const HELP_TOP = `a2h ${VERSION} — text → self-contained HTML, no server.
+// ─── help texts (中文叙述 + 英文 identifier / flag / 路径 / 命令) ────
+// 风格: 与 README / .trellis/spec/ 中文文档一致; 子命令面 / flag /
+// 退出码常量名保持英文 (机器可读 + 与 SSoT error-handling.md 对齐).
+const HELP_TOP = `a2h ${VERSION} — 把文本变成单文件 HTML，无需启服务器。
 
-USAGE
-  a2h <command> [args] [flags]
+用法
+  a2h <子命令> [参数] [选项]
 
-COMMANDS
-  render <input | -> [--skill <id>] [-o <file>]
-                       Render input to a self-contained HTML file.
-                       --skill defaults to "article-magazine".
-                       -o defaults: file input + TTY → <input-stem>.html;
-                                    file input + pipe → stdout;
-                                    stdin → stdout. Use "-o -" to force stdout.
-  skills [--json]      List available skill identifiers.
+子命令
+  render <输入 | ->     用指定 skill 渲染输入文本为单文件 HTML
+  skills [--json]       列出所有可用 skill 标识符
 
-GLOBAL FLAGS
-  -q, --quiet          Suppress progress / info on stderr.
-  -v, --verbose        Extra diagnostics on stderr.
-  -h, --help           Show this help (or help for a subcommand).
-      --version        Print version and upstream commit SHA.
+全局选项
+  -q, --quiet           静默模式（stderr 不打 progress / info）
+  -v, --verbose         详细模式（stderr 增加调试信息）
+  -h, --help            打印帮助；也可用 a2h <子命令> --help 看子命令详情
+      --version         打印版本号
 
-EXAMPLES
-  a2h skills --json
-  a2h render in.md
-  a2h render article.md --skill article-magazine -o out.html
-  echo "$content" | a2h render - --skill blog-post --json-errors > out.html
+示例
+  a2h skills                          # 列出所有 skill
+  a2h render in.md                    # 交互终端：默认 article-magazine + 写到 ./in.html
+  cat in.md | a2h render -            # 管道：stdin 读入，stdout 输出
+  a2h render in.md --json-errors > out.html
+                                      # Agent 嵌入：失败时 stdout 出 JSON 错误对象
 
-For per-command help, run: a2h <command> --help
+文档
+  README、设计、路线图见仓库根目录 README.md / docs/
 `;
 
-const HELP_RENDER = `a2h render — text → self-contained HTML
+const HELP_RENDER = `a2h render — 把输入文本渲染为单文件 HTML
 
-USAGE
-  a2h render <input | -> [--skill <id>] [-o <file>] [flags]
+用法
+  a2h render <输入 | -> [选项]
 
-DESCRIPTION
-  Render input text to a self-contained HTML file using the given skill.
+参数
+  <输入>                  文件路径；用 - 表示从 stdin 读取
 
-FLAGS
-  --skill <id>           Skill identifier. Defaults to "article-magazine".
-                         Run \`a2h skills\` to list available ids.
-  --agent <id>           Agent CLI to invoke (claude | qoder). Default: claude.
-                         Env override: A2H_AGENT.
-  -o, --out <file>       Output file path. Pass "-" to force stdout.
-                         If omitted, output target is auto-decided:
-                           file input + interactive TTY → <input-stem>.html
-                                                          (same dir as input)
-                           file input + pipe / redirect  → stdout
-                           stdin input ("-")             → stdout (always)
-  --max-budget-usd <n>   Forward to claude CLI as cost ceiling.
-  --json-errors          Emit JSON error object to stdout on failure.
-  --no-bare              Disable claude --bare (rarely needed).
-  -q, --quiet            Suppress progress on stderr.
-  -h, --help             Show this help.
+选项 (Skill)
+  --skill <id>            skill 标识符；缺省 article-magazine
+                          用 a2h skills 查所有可用 id
 
-EXAMPLES
-  # Interactive (defaults: --skill article-magazine, -o ./in.html):
+选项 (Agent)
+  --agent <id>            调用的 agent CLI（claude | qoder）；缺省 claude
+                          环境变量 A2H_AGENT 可覆盖默认
+
+选项 (输出)
+  -o, --out <file>        输出文件路径；- 哨兵强制写 stdout
+                          缺省按"输入类型 + stdout 是否 TTY"自动决定：
+                            文件输入 + 交互终端 → 写 <input-stem>.html（与输入同目录）
+                            文件输入 + pipe / 重定向 → 写 stdout（保管道契约）
+                            stdin 输入（-）→ 写 stdout（永远）
+
+选项 (成本)
+  --max-budget-usd <n>    透传 claude --max-budget-usd（成本上限，美元）
+
+选项 (错误协议)
+  --json-errors           失败时在 stdout 写 JSON 错误对象（首字符 {），
+                          便于 Agent 调用方靠首字符切判分支
+
+选项 (Bare 模式)
+  --no-bare               关闭 claude --bare（默认开启，极少需要关）
+
+选项 (静默 / 帮助)
+  -q, --quiet             静默 stderr progress / info（错误仍打）
+  -h, --help              显示本帮助
+
+示例
+  # 交互终端（默认 skill + 自动写 ./in.html）：
   a2h render in.md
 
-  # Explicit skill + output path:
+  # 显式 skill + 输出路径：
   a2h render article.md --skill article-magazine -o article.html
 
-  # Force stdout even on a TTY (sentinel "-o -"):
+  # 强制 stdout（- 哨兵），便于 pipe：
   a2h render in.md -o - | grep '<title>'
 
-  # Agent-pipe invocation (zero disk):
+  # Agent 嵌入（零落盘 + 结构化错误协议）：
   echo "$content" | a2h render - --skill blog-post --json-errors > out.html
 
-  # Switch agent:
+  # 切换 agent：
   a2h render in.md --skill article-magazine --agent qoder -o out.html
+
+退出码
+  0   ok
+  1   E_USAGE             命令行参数错
+  10  E_SKILL_NOT_FOUND   --skill 不存在
+  20  E_AGENT_UNAVAILABLE 本机无对应 agent CLI
+  30  E_BUDGET_EXCEEDED   超过 --max-budget-usd
+  40  E_OUTPUT_INVALID    LLM 输出非合规 HTML
+  50  E_NETWORK           agent 网络故障
+
+详见 README §Embedding from another Agent / Skill
 `;
 
-const HELP_SKILLS = `a2h skills — list available skill identifiers
+const HELP_SKILLS = `a2h skills — 列出可用 skill 标识符
 
-USAGE
-  a2h skills [--json] [flags]
+用法
+  a2h skills [--json]
 
-DESCRIPTION
-  List skill ids that \`render\` accepts.
+选项
+  --json                JSON 数组输出（便于 Agent 消费）
+  -h, --help            显示本帮助
 
-FLAGS
-  --json                 Output as JSON array (for agent consumption).
-  -h, --help             Show this help.
+说明
+  共 75 个 skill，覆盖 article / blog / card / deck / dashboard /
+  data-report 等类别。完整列表参见 src/templates/skills/。
 
-EXAMPLES
+示例
+  # 默认人类对齐表格：
   a2h skills
+
+  # JSON + jq 取所有 id：
   a2h skills --json | jq '.[].id'
+
+  # 按 category 过滤（例如所有 deck 类）：
+  a2h skills --json | jq '.[] | select(.category == "deck")'
 `;
 
 // ─── argv helpers (手写 argparse, 不引 commander/yargs) ──────────────

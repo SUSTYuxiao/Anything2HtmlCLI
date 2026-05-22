@@ -1,0 +1,6 @@
+{"file": ".trellis/tasks/05-22-help-text-polish/prd.md", "reason": "Acceptance 11 项 + Out of Scope。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "验证 help 风格符合 spec + 退出码表三方一致（HELP_RENDER vs error-handling.md vs cli-design.md）。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "退出码表对照基准。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "验证心跳 TTY 检测修正后 spec 同步对齐'仅 stderr.isTTY'。"}
+{"file": "src/logger.ts", "reason": "验证 progressTick + 其他 stderr 方法的 TTY 检测全部改为只看 stderr.isTTY。"}
+{"file": "src/cli.ts", "reason": "验证 3 段 help 全中文化 + 退出码表落地。"}

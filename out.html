@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anything2HtmlCLI · 把任意文本变成单文件 HTML</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+          serif: ['Noto Serif SC', 'Georgia', 'serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+        colors: {
+          ink: '#0a0a0a',
+          paper: '#fafafa',
+          accent: '#c2410c', // 灼橙 — 单一强调色
+        },
+      },
+    },
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background: #fafafa;
+    color: #0a0a0a;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+  .prose-article p {
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    color: #404040;
+    max-width: 65ch;
+  }
+  .prose-article p + p { margin-top: 1.25rem; }
+  .drop-cap::first-letter {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    float: left;
+    font-size: 4.25rem;
+    line-height: 0.9;
+    padding: 0.35rem 0.75rem 0 0;
+    color: #c2410c;
+  }
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 3.5rem 0;
+  }
+  .ornament::before, .ornament::after {
+    content: "";
+    flex: 0 0 60px;
+    height: 1px;
+    background: #d4d4d4;
+  }
+  .ornament-dot {
+    width: 6px; height: 6px;
+    background: #c2410c;
+    transform: rotate(45deg);
+  }
+  .custom-bullet > li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+    color: #404040;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+  .custom-bullet > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 8px; height: 8px;
+    background: #c2410c;
+  }
+  blockquote.pull {
+    border-left: 4px solid #c2410c;
+    padding: 0.25rem 0 0.25rem 1.5rem;
+    font-style: italic;
+    color: #525252;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin: 1.75rem 0;
+  }
+  pre.code {
+    background: #0a0a0a;
+    color: #e5e5e5;
+    border-radius: 0.875rem;
+    padding: 1.25rem 1.5rem 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+  }
+  pre.code .lang-tag {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.875rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #737373;
+    font-family: 'Inter', sans-serif;
+  }
+  .tok-c { color: #737373; font-style: italic; }
+  .tok-k { color: #fb923c; }
+  .tok-s { color: #86efac; }
+  .tok-n { color: #fde68a; }
+  .tok-f { color: #93c5fd; }
+  .tok-p { color: #d4d4d4; }
+  table.zebra { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+  table.zebra th {
+    text-align: left;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    padding: 0.875rem 1rem;
+    border-bottom: 1.5px solid #0a0a0a;
+  }
+  table.zebra td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #404040;
+    vertical-align: top;
+  }
+  table.zebra tr:hover td { background: #f5f5f4; }
+  .kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem;
+    background: #f5f5f4;
+    border: 1px solid #e5e7eb;
+    border-bottom-width: 2px;
+    border-radius: 0.375rem;
+    padding: 0.125rem 0.4rem;
+    color: #0a0a0a;
+  }
+  h2.section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.015em;
+    color: #0a0a0a;
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+  }
+  h3.sub-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+    font-size: 1.375rem;
+    color: #0a0a0a;
+    margin-top: 2rem;
+    margin-bottom: 0.875rem;
+    letter-spacing: -0.01em;
+  }
+  h4.mini-title {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #0a0a0a;
+    margin-top: 1.5rem;
+    margin-bottom: 0.625rem;
+    letter-spacing: 0.005em;
+  }
+  a.inline-link {
+    color: #c2410c;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: all 0.2s;
+  }
+  a.inline-link:hover { background: #fef3c7; }
+  .meta-divider { color: #d4d4d4; padding: 0 0.5rem; }
+  .stat-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1.25rem 1.25rem;
+    background: #fff;
+    transition: all 0.2s;
+  }
+  .stat-card:hover { border-color: #c2410c; transform: translateY(-2px); }
+  .stat-num {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    font-size: 2.25rem;
+    line-height: 1;
+    color: #0a0a0a;
+    letter-spacing: -0.02em;
+  }
+  .stat-num .accent { color: #c2410c; }
+  .pillar {
+    border-left: 3px solid #c2410c;
+    padding-left: 1rem;
+  }
+  .fade-in { animation: fadeIn 0.8s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+  .hero-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c2410c;
+    font-weight: 600;
+  }
+  .number-marker {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    color: #c2410c;
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
+  }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  .focus\:ring-accent:focus { outline: 2px solid #c2410c; outline-offset: 2px; }
+  ::selection { background: #fed7aa; color: #0a0a0a; }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ========================= 顶部细 nav ========================= -->
+<header class="border-b border-neutral-200 bg-paper/90 backdrop-blur sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-2.5 h-2.5 bg-accent rotate-45"></div>
+      <span class="font-mono text-sm tracking-tight text-ink">a2h</span>
+      <span class="text-neutral-400 text-xs ml-2 hidden sm:inline">/ Anything2HtmlCLI</span>
+    </div>
+    <nav class="text-xs font-medium text-neutral-600 hidden md:flex gap-6">
+      <a href="#why" class="hover:text-accent transition">Why</a>
+      <a href="#install" class="hover:text-accent transition">Installation</a>
+      <a href="#usage" class="hover:text-accent transition">Usage</a>
+      <a href="#embedding" class="hover:text-accent transition">Embedding</a>
+      <a href="#exit-codes" class="hover:text-accent transition">Exit Codes</a>
+      <a href="#cost" class="hover:text-accent transition">Cost</a>
+    </nav>
+    <span class="font-mono text-xs text-neutral-500">v0.1.0</span>
+  </div>
+</header>
+
+<!-- ========================= HERO ========================= -->
+<section class="border-b border-neutral-200 bg-gradient-to-b from-paper to-white">
+  <div class="max-w-3xl mx-auto px-6 pt-20 pb-16 fade-in">
+    <div class="hero-eyebrow mb-6">Engineering Notes · CLI Tooling</div>
+    <h1 class="font-serif font-black text-5xl md:text-6xl leading-[1.05] tracking-tight text-ink mb-6">
+      把任意文本，<br>
+      变成 <span class="text-accent">单文件 HTML</span>。
+    </h1>
+    <p class="text-xl md:text-2xl text-neutral-600 leading-relaxed font-light mb-10 max-w-2xl">
+      不启服务，纯 CLI，可被任何 Agent / Skill 内嵌调用 ——
+      一条命令、零落盘、能 spawn 进任何工作流。
+    </p>
+    <div class="flex items-center text-sm text-neutral-500 font-medium">
+      <span>By <span class="text-ink">@a2h/cli</span></span>
+      <span class="meta-divider">·</span>
+      <span>12 min read</span>
+      <span class="meta-divider">·</span>
+      <time datetime="2026-05-22">2026 / 05 / 22</time>
+      <span class="meta-divider">·</span>
+      <span class="text-accent">Apache-2.0</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= 正文容器 ========================= -->
+<main class="max-w-3xl mx-auto px-6 py-16">
+
+  <!-- ============= 1. Why this exists ============= -->
+  <article id="why" class="mb-4">
+    <div class="number-marker mb-3">§ 01 — WHY THIS EXISTS</div>
+    <h2 class="section-title">这是什么？为什么会有这把工具？</h2>
+
+    <div class="prose-article">
+      <p class="drop-cap">
+        <strong class="text-ink">a2h</strong> 把
+        <a class="inline-link" href="https://github.com/nexu-io/html-anything"><code class="font-mono text-sm">nexu-io/html-anything</code></a>
+        的"文本 → 精美 HTML"能力，从"必须本地起 npm 服务"的形态，蒸馏为一个
+        <strong class="text-ink">无服务依赖、可管道调用的 CLI</strong> ——
+        一条命令、零落盘、能被 spawn 进任何 Agent 的工作流里。
+      </p>
+
+      <blockquote class="pull">
+        a2h 自身不连任何 LLM API，所有 LLM 调用通过本机已登录的 agent CLI 透传。
+        配额、登录、网络全部由对应 agent CLI 负责，本工具<strong>零运行时依赖</strong>。
+      </blockquote>
+
+      <p>
+        完整设计动机、架构原则与代码组织详见
+        <a class="inline-link" href="./docs/design.md"><code class="font-mono text-sm">docs/design.md</code></a>；
+        阶段性里程碑见
+        <a class="inline-link" href="./docs/roadmap.md"><code class="font-mono text-sm">docs/roadmap.md</code></a>。
+      </p>
+    </div>
+
+    <!-- 三个柱子: 核心定位 -->
+    <div class="grid sm:grid-cols-3 gap-4 mt-8">
+      <div class="stat-card">
+        <div class="stat-num"><span class="accent">0</span></div>
+        <div class="text-xs uppercase tracking-wider text-neutral-500 mt-2 font-semibold">服务进程</div>
+        <div class="text-sm text-neutral-700 mt-2 leading-relaxed">不起 npm dev server，无后台守护。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span class="accent">1</span></div>
+        <div class="text-xs uppercase tracking-wider text-neutral-500 mt-2 font-semibold">条命令搞定</div>
+        <div class="text-sm text-neutral-700 mt-2 leading-relaxed"><code class="font-mono text-xs">a2h render in.md</code> 即出 HTML。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span class="accent">∞</span></div>
+        <div class="text-xs uppercase tracking-wider text-neutral-500 mt-2 font-semibold">可嵌入</div>
+        <div class="text-sm text-neutral-700 mt-2 leading-relaxed">能被任何 Agent / Skill spawn 调用。</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 2. Installation ============= -->
+  <article id="install" class="mb-4">
+    <div class="number-marker mb-3">§ 02 — INSTALLATION</div>
+    <h2 class="section-title">安装</h2>
+
+    <div class="prose-article">
+      <p>从 npm 全局安装，或临时使用本地 tarball：</p>
+    </div>
+
+    <pre class="code mt-4"><span class="lang-tag">bash</span><span class="tok-c"># 从 npm 全局安装</span>
+npm i -g @a2h/cli
+
+<span class="tok-c"># 或暂用本地 tarball：</span>
+npm i -g &lt;path-to&gt;/a2h-cli-&lt;version&gt;.tgz</pre>
+
+    <div class="prose-article mt-6">
+      <p>
+        要求 <strong class="text-ink">Node.js <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">&gt;= 20.0.0</code></strong>
+        （与 esbuild bundle target 对齐）。
+      </p>
+    </div>
+
+    <h3 class="sub-title">前置依赖：本机已登录的 agent CLI</h3>
+
+    <div class="prose-article">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h</code>
+        调用本机已登录的 agent CLI 产出 HTML，需要至少装其一：
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4 mt-5">
+      <div class="border border-neutral-200 rounded-2xl p-5 bg-white hover:border-accent transition">
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="font-mono text-sm font-semibold text-ink">claude</span>
+          <span class="text-[10px] uppercase tracking-widest bg-accent text-white px-2 py-0.5 rounded">默认</span>
+        </div>
+        <h4 class="font-serif font-bold text-lg mb-1">Claude Code</h4>
+        <p class="text-sm text-neutral-600 leading-relaxed">
+          默认 agent，参考
+          <a class="inline-link" href="https://docs.claude.com/en/docs/claude-code">官方文档</a>。
+        </p>
+      </div>
+      <div class="border border-neutral-200 rounded-2xl p-5 bg-white hover:border-accent transition">
+        <div class="flex items-baseline justify-between mb-2">
+          <span class="font-mono text-sm font-semibold text-ink">qodercli</span>
+          <span class="text-[10px] uppercase tracking-widest text-neutral-500 border border-neutral-300 px-2 py-0.5 rounded">可选</span>
+        </div>
+        <h4 class="font-serif font-bold text-lg mb-1">Qoder CLI</h4>
+        <p class="text-sm text-neutral-600 leading-relaxed">
+          可选第二 agent，详见
+          <a class="inline-link" href="https://qoder.dev">qoder.dev</a>。
+        </p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">开发者本地自测</h3>
+
+    <div class="prose-article">
+      <p>不发包到 npm 也能用全局命令试这把工具：</p>
+    </div>
+
+    <pre class="code mt-4"><span class="lang-tag">bash</span>npm install
+npm run dev:link        <span class="tok-c"># build + npm link，把全局 `a2h` 软链到当前项目</span>
+a2h --version           <span class="tok-c"># 期望: a2h 0.1.0</span>
+a2h render in.md        <span class="tok-c"># 直接用全局命令试</span>
+npm run dev:unlink      <span class="tok-c"># 解除软链 (重复跑不报错)</span></pre>
+
+    <div class="prose-article mt-5">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">dev:unlink</code>
+        内置 <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">|| true</code>，
+        已 unlink 时再跑也是 exit 0；不做更复杂的 PATH 自动检测 —— <em>轻量为美</em>。
+      </p>
+    </div>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 3. Usage ============= -->
+  <article id="usage" class="mb-4">
+    <div class="number-marker mb-3">§ 03 — USAGE</div>
+    <h2 class="section-title">基本用法</h2>
+
+    <h3 class="sub-title">把 markdown 文件渲染成 HTML</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">bash</span>a2h render in.md --skill article-magazine -o out.html
+
+<span class="tok-c"># 在交互式终端，等价于上一行 —— --skill 默认 article-magazine、</span>
+<span class="tok-c"># -o 默认写到与输入同目录的 in.html：</span>
+a2h render in.md</pre>
+
+    <div class="prose-article mt-5">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">--skill</code>
+        缺省时为
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">article-magazine</code>；
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">-o</code>
+        缺省按 "输入类型 + stdout 是否 TTY" 自动决定：
+      </p>
+    </div>
+
+    <ul class="custom-bullet mt-3">
+      <li><strong class="text-ink">文件输入 + 交互终端</strong> → 写到 <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">&lt;input-stem&gt;.html</code>（与输入同目录）</li>
+      <li><strong class="text-ink">文件输入 + pipe / 重定向</strong> → 写 stdout（保 Unix 管道契约）</li>
+      <li><strong class="text-ink">stdin 输入（<code class="font-mono">-</code>）</strong> → 写 stdout（永远）</li>
+      <li><strong class="text-ink">显式 <code class="font-mono">-o -</code> 哨兵</strong> → 强制 stdout，无视输入类型与 TTY</li>
+    </ul>
+
+    <h3 class="sub-title">走 stdin（管道场景，零落盘）</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">bash</span>cat in.md | a2h render - --skill blog-post -o out.html</pre>
+
+    <div class="prose-article mt-5">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">-</code>
+        哨兵表示从 stdin 读输入（与
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">cat</code> /
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">kubectl apply -f -</code>
+        一致语义）。
+      </p>
+    </div>
+
+    <h3 class="sub-title">切换 agent（claude / qoder）</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">bash</span>a2h render in.md --skill article-magazine --agent qoder -o out.html
+
+<span class="tok-c"># 或用环境变量覆盖默认 agent：</span>
+A2H_AGENT=qoder a2h render in.md --skill article-magazine -o out.html</pre>
+
+    <h3 class="sub-title">列出所有可用 skill</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">bash</span>a2h skills              <span class="tok-c"># 人类对齐表格</span>
+a2h skills --json       <span class="tok-c"># agent 友好 JSON</span></pre>
+
+    <h3 class="sub-title">显式预算上限（推荐复杂模板）</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">bash</span>a2h render in.md --skill data-report --max-budget-usd 2 -o out.html</pre>
+
+    <div class="prose-article mt-5">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h</code>
+        自身不设默认上限 —— 参考下文 <a class="inline-link" href="#cost">"成本与时间参考"</a>
+        按模板族传值。
+      </p>
+    </div>
+
+    <h3 class="sub-title">写到 stdout（Unix 管道）</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">bash</span>a2h render in.md --skill article-magazine &gt; out.html</pre>
+
+    <blockquote class="pull">
+      成功路径上 stdout 首字符必然是 <code class="font-mono not-italic">&lt;</code>
+      （DOCTYPE 起手），便于 grep / pipe。
+    </blockquote>
+
+    <div class="prose-article">
+      <p>
+        详见
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h --help</code> /
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h render --help</code> /
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h skills --help</code>。
+      </p>
+    </div>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 4. Embedding ============= -->
+  <article id="embedding" class="mb-4">
+    <div class="number-marker mb-3">§ 04 — EMBEDDING</div>
+    <h2 class="section-title">从其它 Agent / Skill 内嵌调用</h2>
+
+    <div class="prose-article">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h</code>
+        设计目标之一是被其它 Agent / Skill 内嵌调用。LLM 调用方推荐以下模式。
+      </p>
+    </div>
+
+    <h3 class="sub-title">Spawn 调用（零磁盘副作用）</h3>
+
+    <pre class="code mt-2"><span class="lang-tag">typescript</span><span class="tok-k">import</span> { <span class="tok-f">spawn</span> } <span class="tok-k">from</span> <span class="tok-s">"node:child_process"</span>;
+
+<span class="tok-k">const</span> child = <span class="tok-f">spawn</span>(<span class="tok-s">"a2h"</span>, [
+  <span class="tok-s">"render"</span>, <span class="tok-s">"-"</span>,
+  <span class="tok-s">"--skill"</span>, <span class="tok-s">"article-magazine"</span>,
+  <span class="tok-s">"--agent"</span>, <span class="tok-s">"claude"</span>,
+  <span class="tok-s">"--max-budget-usd"</span>, <span class="tok-s">"0.5"</span>,
+  <span class="tok-s">"--json-errors"</span>,          <span class="tok-c">// 失败时 stdout 写 JSON 错误对象</span>
+], { <span class="tok-n">stdio</span>: [<span class="tok-s">"pipe"</span>, <span class="tok-s">"pipe"</span>, <span class="tok-s">"pipe"</span>] });
+
+child.stdin.<span class="tok-f">write</span>(promptContent);
+child.stdin.<span class="tok-f">end</span>();
+
+<span class="tok-k">let</span> stdout = <span class="tok-s">""</span>;
+<span class="tok-k">let</span> stderr = <span class="tok-s">""</span>;
+child.stdout.<span class="tok-f">on</span>(<span class="tok-s">"data"</span>, (c) =&gt; (stdout += c));
+child.stderr.<span class="tok-f">on</span>(<span class="tok-s">"data"</span>, (c) =&gt; (stderr += c));
+
+child.<span class="tok-f">on</span>(<span class="tok-s">"close"</span>, (code) =&gt; {
+  <span class="tok-k">if</span> (code === 0) {
+    <span class="tok-c">// stdout 是合规 HTML（首字符 `&lt;`）</span>
+    <span class="tok-k">return</span> stdout;
+  } <span class="tok-k">else</span> {
+    <span class="tok-c">// stdout 首字符 `{` —— --json-errors 协议下的错误对象</span>
+    <span class="tok-k">const</span> err = JSON.<span class="tok-f">parse</span>(stdout);
+    <span class="tok-c">// err.code: "E_SKILL_NOT_FOUND" / "E_AGENT_UNAVAILABLE" / ...</span>
+    <span class="tok-k">throw new</span> <span class="tok-f">Error</span>(err.message);
+  }
+});</pre>
+
+    <blockquote class="pull">
+      LLM 调用方靠 exit code 走 switch，永不需要解析 stderr 文案。
+    </blockquote>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 5. Exit Codes ============= -->
+  <article id="exit-codes" class="mb-4">
+    <div class="number-marker mb-3">§ 05 — EXIT CODE PROTOCOL</div>
+    <h2 class="section-title">退出码协议</h2>
+
+    <div class="prose-article">
+      <p>调用方用 exit code 走 <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">switch</code>，永不需要解析 stderr 文案。</p>
+    </div>
+
+    <div class="overflow-x-auto mt-6 border border-neutral-200 rounded-2xl">
+      <table class="zebra">
+        <thead>
+          <tr>
+            <th class="w-20">退出码</th>
+            <th class="w-56">常量名</th>
+            <th>含义</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">0</span></td>
+            <td><span class="font-mono text-accent font-semibold">OK</span></td>
+            <td>成功</td>
+          </tr>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">1</span></td>
+            <td><span class="font-mono text-accent font-semibold">E_USAGE</span></td>
+            <td>命令行参数错（缺必需 arg、未知 flag）</td>
+          </tr>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">10</span></td>
+            <td><span class="font-mono text-accent font-semibold">E_SKILL_NOT_FOUND</span></td>
+            <td><code class="font-mono text-xs">--skill</code> 指定的 skill 不存在</td>
+          </tr>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">20</span></td>
+            <td><span class="font-mono text-accent font-semibold">E_AGENT_UNAVAILABLE</span></td>
+            <td>本机无对应 agent CLI 或未登录</td>
+          </tr>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">30</span></td>
+            <td><span class="font-mono text-accent font-semibold">E_BUDGET_EXCEEDED</span></td>
+            <td><code class="font-mono text-xs">--max-budget-usd</code> 触发</td>
+          </tr>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">40</span></td>
+            <td><span class="font-mono text-accent font-semibold">E_OUTPUT_INVALID</span></td>
+            <td>LLM 输出非合规 HTML（无 DOCTYPE / 无 <code class="font-mono text-xs">&lt;/html&gt;</code>）</td>
+          </tr>
+          <tr>
+            <td><span class="font-mono font-bold text-ink">50</span></td>
+            <td><span class="font-mono text-accent font-semibold">E_NETWORK</span></td>
+            <td>claude / qoder 网络故障（DNS / 超时 / 连接重置）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose-article mt-6">
+      <p>
+        完整协议见
+        <a class="inline-link" href="./.trellis/spec/backend/error-handling.md"><code class="font-mono text-sm">.trellis/spec/backend/error-handling.md</code></a>。
+      </p>
+    </div>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 6. 双流分离 ============= -->
+  <article id="streams" class="mb-4">
+    <div class="number-marker mb-3">§ 06 — STDOUT / STDERR</div>
+    <h2 class="section-title">双流分离</h2>
+
+    <div class="prose-article">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h</code>
+        严格区分 stdout (机器) 与 stderr (人)：成功路径下 stdout 永远是 HTML 或 JSON，stderr 留给彩色错误提示与 TTY 进度。
+      </p>
+    </div>
+
+    <div class="overflow-x-auto mt-6 border border-neutral-200 rounded-2xl">
+      <table class="zebra">
+        <thead>
+          <tr>
+            <th class="w-1/4">模式</th>
+            <th>stdout</th>
+            <th>stderr</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong class="text-ink">默认 + 成功</strong></td>
+            <td>HTML（首字符 <code class="font-mono">&lt;</code>）</td>
+            <td>空（或 TTY 进度行）</td>
+          </tr>
+          <tr>
+            <td><strong class="text-ink">默认 + 失败</strong></td>
+            <td>空</td>
+            <td>人读 colored 错误</td>
+          </tr>
+          <tr>
+            <td><strong class="text-ink"><code class="font-mono">--json-errors</code> + 成功</strong></td>
+            <td>HTML（首字符 <code class="font-mono">&lt;</code>）</td>
+            <td>空（或 TTY 进度行）</td>
+          </tr>
+          <tr>
+            <td><strong class="text-ink"><code class="font-mono">--json-errors</code> + 失败</strong></td>
+            <td>JSON 错误对象（首字符 <code class="font-mono">{</code>）</td>
+            <td>人读 colored 错误</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose-article mt-6">
+      <p>LLM 调用方的最简判别 —— 一行就够：</p>
+    </div>
+
+    <pre class="code mt-3"><span class="lang-tag">typescript</span><span class="tok-k">const</span> isError = output.<span class="tok-f">trimStart</span>().<span class="tok-f">startsWith</span>(<span class="tok-s">"{"</span>);</pre>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 7. budget / json-errors 推荐 ============= -->
+  <article id="recommend" class="mb-4">
+    <div class="number-marker mb-3">§ 07 — RECOMMENDED FLAGS</div>
+    <h2 class="section-title">两个推荐传参</h2>
+
+    <h3 class="sub-title">推荐传 <code class="font-mono text-accent">--max-budget-usd</code> 兜底成本</h3>
+
+    <div class="prose-article">
+      <p>
+        参考下文
+        <a class="inline-link" href="#cost">"成本与时间参考"</a>，
+        按模板族传：
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4 mt-5">
+      <div class="border border-neutral-200 rounded-2xl p-5 bg-white pillar">
+        <h4 class="font-serif font-bold text-base mb-1">article 类</h4>
+        <p class="text-xs text-neutral-500 mb-3 leading-relaxed">article-magazine / blog-post / newsletter</p>
+        <pre class="code text-xs !p-3"><span class="tok-p">--max-budget-usd </span><span class="tok-n">0.5</span></pre>
+      </div>
+      <div class="border border-neutral-200 rounded-2xl p-5 bg-white pillar">
+        <h4 class="font-serif font-bold text-base mb-1">deck 类</h4>
+        <p class="text-xs text-neutral-500 mb-3 leading-relaxed">deck-* / 多页演示</p>
+        <pre class="code text-xs !p-3"><span class="tok-p">--max-budget-usd </span><span class="tok-n">2.0</span></pre>
+      </div>
+      <div class="border border-neutral-200 rounded-2xl p-5 bg-white pillar">
+        <h4 class="font-serif font-bold text-base mb-1">dataviz 类</h4>
+        <p class="text-xs text-neutral-500 mb-3 leading-relaxed">data-report / dashboard</p>
+        <pre class="code text-xs !p-3"><span class="tok-p">--max-budget-usd </span><span class="tok-n">2.0</span></pre>
+      </div>
+    </div>
+
+    <h3 class="sub-title">推荐 <code class="font-mono text-accent">--json-errors</code> 让 stdout 永远结构化</h3>
+
+    <div class="prose-article">
+      <p>
+        启用后失败时 stdout =
+        <strong class="text-ink">JSON 错误对象</strong>
+        （首字符 <code class="font-mono">{</code>），成功时 stdout =
+        <strong class="text-ink">HTML</strong>
+        （首字符 <code class="font-mono">&lt;</code>）。
+      </p>
+      <p>LLM 调用方靠首字符切判分支，无需解析 stderr。</p>
+    </div>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 8. 成本与时间参考 ============= -->
+  <article id="cost" class="mb-4">
+    <div class="number-marker mb-3">§ 08 — COST &amp; LATENCY</div>
+    <h2 class="section-title">成本与时间参考</h2>
+
+    <div class="prose-article">
+      <p>
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">a2h render</code>
+        端到端耗时与成本由下游
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">claude</code>
+        CLI 决定。下表来自
+        <strong class="text-ink">2026-05-21 spike 验证</strong>
+        （article-magazine / deck-product-launch / data-report），供调用方在嵌入时显式传
+        <code class="font-mono text-sm bg-neutral-100 px-1.5 py-0.5 rounded">--max-budget-usd</code>
+        时参考。
+      </p>
+    </div>
+
+    <!-- 三个数据卡 -->
+    <div class="grid md:grid-cols-3 gap-4 mt-7">
+      <div class="border border-neutral-200 rounded-2xl bg-white p-5">
+        <div class="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold mb-3">article 类</div>
+        <div class="flex items-baseline gap-2 mb-1">
+          <span class="stat-num"><span class="accent">~70</span></span>
+          <span class="text-sm text-neutral-500 font-medium">秒</span>
+        </div>
+        <div class="flex items-baseline gap-2 mb-4">
+          <span class="font-serif font-bold text-2xl text-ink">$0.3</span>
+          <span class="text-sm text-neutral-400">–</span>
+          <span class="font-serif font-bold text-2xl text-ink">$0.5</span>
+        </div>
+        <div class="text-xs text-neutral-500 leading-relaxed border-t border-neutral-100 pt-3">
+          article-magazine · blog-post · newsletter
+        </div>
+        <div class="mt-3 inline-block bg-orange-50 border border-orange-200 text-accent text-xs font-mono px-2 py-1 rounded">
+          --max-budget-usd 0.5
+        </div>
+      </div>
+
+      <div class="border border-neutral-200 rounded-2xl bg-white p-5">
+        <div class="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold mb-3">deck 类</div>
+        <div class="flex items-baseline gap-2 mb-1">
+          <span class="stat-num"><span class="accent">~170</span></span>
+          <span class="text-sm text-neutral-500 font-medium">秒</span>
+        </div>
+        <div class="flex items-baseline gap-2 mb-4">
+          <span class="font-serif font-bold text-2xl text-ink">$0.6</span>
+          <span class="text-sm text-neutral-400">–</span>
+          <span class="font-serif font-bold text-2xl text-ink">$1.2</span>
+        </div>
+        <div class="text-xs text-neutral-500 leading-relaxed border-t border-neutral-100 pt-3">
+          deck-* · 多页演示
+        </div>
+        <div class="mt-3 inline-block bg-orange-50 border border-orange-200 text-accent text-xs font-mono px-2 py-1 rounded">
+          --max-budget-usd 2.0
+        </div>
+      </div>
+
+      <div class="border border-neutral-200 rounded-2xl bg-white p-5">
+        <div class="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold mb-3">dataviz 类</div>
+        <div class="flex items-baseline gap-2 mb-1">
+          <span class="stat-num"><span class="accent">~145</span></span>
+          <span class="text-sm text-neutral-500 font-medium">秒</span>
+        </div>
+        <div class="flex items-baseline gap-2 mb-4">
+          <span class="font-serif font-bold text-2xl text-ink">$0.6</span>
+          <span class="text-sm text-neutral-400">–</span>
+          <span class="font-serif font-bold text-2xl text-ink">$1.0</span>
+        </div>
+        <div class="text-xs text-neutral-500 leading-relaxed border-t border-neutral-100 pt-3">
+          data-report · dashboard
+        </div>
+        <div class="mt-3 inline-block bg-orange-50 border border-orange-200 text-accent text-xs font-mono px-2 py-1 rounded">
+          --max-budget-usd 2.0
+        </div>
+      </div>
+    </div>
+
+    <!-- 简易 SVG 横向条形图 -->
+    <h4 class="mini-title mt-10">耗时直观对比 (秒)</h4>
+    <div class="border border-neutral-200 rounded-2xl bg-white p-5 mt-3">
+      <svg viewBox="0 0 600 180" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- grid -->
+        <line x1="120" y1="20"  x2="120" y2="160" stroke="#e5e7eb" stroke-width="1"/>
+        <line x1="240" y1="20"  x2="240" y2="160" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="360" y1="20"  x2="360" y2="160" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="480" y1="20"  x2="480" y2="160" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="120" y1="160" x2="540" y2="160" stroke="#0a0a0a" stroke-width="1"/>
+        <!-- ticks -->
+        <text x="120" y="175" font-size="10" fill="#737373" font-family="Inter" text-anchor="middle">0s</text>
+        <text x="240" y="175" font-size="10" fill="#737373" font-family="Inter" text-anchor="middle">50s</text>
+        <text x="360" y="175" font-size="10" fill="#737373" font-family="Inter" text-anchor="middle">100s</text>
+        <text x="480" y="175" font-size="10" fill="#737373" font-family="Inter" text-anchor="middle">150s</text>
+        <!-- bars: scale 1s = 2.4px;  start at x=120 -->
+        <!-- article: 70s -> 168px -->
+        <text x="115" y="48" font-size="11" fill="#0a0a0a" font-family="Inter" font-weight="600" text-anchor="end">article</text>
+        <rect x="120" y="36" width="168" height="20" fill="#fed7aa" rx="2"/>
+        <rect x="120" y="36" width="168" height="20" fill="#c2410c" opacity="0.85" rx="2"/>
+        <text x="295" y="50" font-size="11" fill="#0a0a0a" font-family="JetBrains Mono" font-weight="600">~70s · $0.3-0.5</text>
+        <!-- dataviz: 145s -> 348px -->
+        <text x="115" y="92" font-size="11" fill="#0a0a0a" font-family="Inter" font-weight="600" text-anchor="end">dataviz</text>
+        <rect x="120" y="80" width="348" height="20" fill="#fdba74" rx="2"/>
+        <text x="475" y="94" font-size="11" fill="#0a0a0a" font-family="JetBrains Mono" font-weight="600">~145s · $0.6-1.0</text>
+        <!-- deck: 170s -> 408px -->
+        <text x="115" y="136" font-size="11" fill="#0a0a0a" font-family="Inter" font-weight="600" text-anchor="end">deck</text>
+        <rect x="120" y="124" width="408" height="20" fill="#9a3412" rx="2"/>
+        <text x="535" y="138" font-size="11" fill="#0a0a0a" font-family="JetBrains Mono" font-weight="600" text-anchor="end">~170s</text>
+      </svg>
+    </div>
+
+    <blockquote class="pull mt-8">
+      <code class="font-mono not-italic">a2h</code> CLI 自身<strong>不设默认上限</strong>；
+      上述参考值由调用方在嵌入时显式传入。
+    </blockquote>
+  </article>
+
+  <div class="ornament"><span class="ornament-dot"></span><span class="ornament-dot"></span><span class="ornament-dot"></span></div>
+
+  <!-- ============= 9. 更多 ============= -->
+  <article id="more" class="mb-4">
+    <div class="number-marker mb-3">§ 09 — MORE</div>
+    <h2 class="section-title">更多资料</h2>
+
+    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+      <a href="./docs/design.md" class="block border border-neutral-200 rounded-2xl p-5 bg-white hover:border-accent hover:shadow-sm transition group">
+        <div class="text-[10px] uppercase tracking-widest text-accent font-semibold mb-2">DESIGN</div>
+        <h4 class="font-serif font-bold text-lg text-ink mb-1 group-hover:text-accent transition">设计与架构原则</h4>
+        <code class="font-mono text-xs text-neutral-500">docs/design.md</code>
+      </a>
+      <a href="./docs/roadmap.md" class="block border border-neutral-200 rounded-2xl p-5 bg-white hover:border-accent hover:shadow-sm transition group">
+        <div class="text-[10px] uppercase tracking-widest text-accent font-semibold mb-2">ROADMAP</div>
+        <h4 class="font-serif font-bold text-lg text-ink mb-1 group-hover:text-accent transition">路线图</h4>
+        <code class="font-mono text-xs text-neutral-500">docs/roadmap.md</code>
+      </a>
+      <a href="./AGENTS.md" class="block border border-neutral-200 rounded-2xl p-5 bg-white hover:border-accent hover:shadow-sm transition group">
+        <div class="text-[10px] uppercase tracking-widest text-accent font-semibold mb-2">CONVENTIONS</div>
+        <h4 class="font-serif font-bold text-lg text-ink mb-1 group-hover:text-accent transition">AI 协作约定</h4>
+        <code class="font-mono text-xs text-neutral-500">AGENTS.md</code>
+      </a>
+      <div class="block border border-neutral-200 rounded-2xl p-5 bg-white">
+        <div class="text-[10px] uppercase tracking-widest text-accent font-semibold mb-2">LICENSE</div>
+        <h4 class="font-serif font-bold text-lg text-ink mb-1">Apache-2.0</h4>
+        <span class="font-mono text-xs text-neutral-500">© 2026 a2h contributors</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============= 文末行动卡 ============= -->
+  <div class="mt-20 border-t border-b border-neutral-200 py-12 text-center bg-gradient-to-b from-paper to-orange-50/30 rounded-3xl px-6">
+    <div class="ornament-dot mx-auto mb-5"></div>
+    <h3 class="font-serif font-black text-2xl md:text-3xl text-ink mb-3 leading-tight">
+      如果觉得有用，<br class="sm:hidden">欢迎转发 ✦
+    </h3>
+    <p class="text-neutral-600 text-base leading-relaxed max-w-md mx-auto mb-6">
+      把这把零依赖、纯 CLI 的小工具，分享给下一个想"一行命令出 HTML"的人。
+    </p>
+    <div class="flex items-center justify-center gap-3 flex-wrap">
+      <a href="https://github.com/nexu-io/html-anything" class="inline-flex items-center gap-2 bg-ink text-paper px-5 py-2.5 rounded-full text-sm font-medium hover:bg-accent transition focus:ring-accent">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17a10.94 10.94 0 015.74 0c2.19-1.48 3.15-1.17 3.15-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+        Star on GitHub
+      </a>
+      <a href="#" class="inline-flex items-center gap-2 border border-neutral-300 text-ink px-5 py-2.5 rounded-full text-sm font-medium hover:border-accent hover:text-accent transition focus:ring-accent">
+        npm i -g @a2h/cli
+      </a>
+    </div>
+  </div>
+
+  <!-- ============= footer ============= -->
+  <footer class="mt-12 text-center">
+    <div class="flex justify-center items-center gap-2 mb-3">
+      <div class="w-1.5 h-1.5 bg-accent rotate-45"></div>
+      <div class="w-1.5 h-1.5 bg-neutral-300 rotate-45"></div>
+      <div class="w-1.5 h-1.5 bg-neutral-300 rotate-45"></div>
+    </div>
+    <p class="text-xs text-neutral-500 font-mono">
+      Anything2HtmlCLI · v0.1.0 · Apache-2.0 · Built for embedding
+    </p>
+    <p class="text-xs text-neutral-400 mt-2">
+      stdout starts with <code class="text-accent">&lt;</code> on success, <code class="text-accent">{</code> on <code>--json-errors</code> failure.
+    </p>
+  </footer>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+{"file": ".trellis/tasks/05-22-help-text-polish/prd.md", "reason": "本任务 PRD：help 中文化目标 + 心跳 TTY 修正 + 验收标准。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "Help 文本风格 + 退出码表 SSoT——本任务的目标格式必须与 cli-design 一致。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "退出码表 SSoT——HELP_RENDER 加的退出码表必须字面一致（0/1/10/20/30/40/50）。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "stderr 协议 + TTY 检测——本任务需修正心跳 TTY 检测条件，spec 同步对齐'仅 stderr.isTTY + !quiet'。"}
+{"file": "src/cli.ts", "reason": "HELP_TOP / HELP_RENDER / HELP_SKILLS 三段所在文件。"}
+{"file": "src/logger.ts", "reason": "progressTick TTY 检测修正位置。"}
+{"file": "src/agents/invoke.ts", "reason": "心跳 setInterval 触发位置——若需要 logger.ts 改动牵连 invoke.ts 接口需同步。"}
+{"file": "src/commands/render.ts", "reason": "现有 isTTY DI 注入——若 logger 内部 isTTY 改动，render.ts 注入逻辑可能需对齐。"}
+{"file": "README.md", "reason": "HELP_TOP 末尾'文档'段引用 README——确保链接有效。"}

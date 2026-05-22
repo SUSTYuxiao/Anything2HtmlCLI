@@ -38,9 +38,9 @@
   "scripts": {
     "build": "esbuild src/cli.ts --bundle --platform=node --target=node20 --format=esm --external:node:* --outfile=dist/cli.js --minify --legal-comments=inline",
     "sync": "node scripts/sync-from-ref.mjs",
-    "test:build": "esbuild src/__tests__/extract-html.test.ts src/__tests__/errors.test.ts src/__tests__/render.test.ts src/__tests__/skills.test.ts src/__tests__/invoke.test.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist-test --external:node:*",
+    "test:build": "esbuild src/__tests__/extract-html.test.ts src/__tests__/errors.test.ts src/__tests__/render.test.ts src/__tests__/skills.test.ts src/__tests__/invoke.test.ts src/__tests__/logger.test.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist-test --external:node:*",
     "test:fixtures": "node -e \"import('node:fs').then(fs=>{fs.rmSync('dist-test/skills',{recursive:true,force:true});fs.cpSync('src/templates/skills','dist-test/skills',{recursive:true})})\"",
-    "test": "npm run test:build && npm run test:fixtures && node --test --enable-source-maps dist-test/extract-html.test.js dist-test/errors.test.js dist-test/render.test.js dist-test/skills.test.js dist-test/invoke.test.js",
+    "test": "npm run test:build && npm run test:fixtures && node --test --enable-source-maps dist-test/extract-html.test.js dist-test/errors.test.js dist-test/render.test.js dist-test/skills.test.js dist-test/invoke.test.js dist-test/logger.test.js",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit && eslint",
     "dev:link": "npm run build && npm link",
