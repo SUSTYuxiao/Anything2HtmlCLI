@@ -138,3 +138,37 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 5: render 默认值优化（--skill / -o TTY 检测）+ dev:link 脚本 + README 重构
+
+**Date**: 2026-05-22
+**Task**: render 默认值优化（--skill / -o TTY 检测）+ dev:link 脚本 + README 重构
+**Branch**: `main`
+
+### Summary
+
+本 session 两件事：(1) README 重构——246→187 行，分离设计/路线图到 docs/design.md (169) + docs/roadmap.md (39)；用户视角文档（Install/Usage/Embedding/成本表）与项目宪章彻底解耦；docs/ 不入 npm tarball。(2) render 默认值优化——常用调用从必填变可选：--skill 默认 article-magazine；-o 4 路优先级链（显式 > stdin → stdout > 文件+TTY → file > 文件+非 TTY → stdout），新加 -o - 哨兵保留'文件输入要 stdout'路径；DI 注入 isTTY 便于测试。dev:link/dev:unlink 软链脚本简化开发者本地自测。59/59 测试 + dist 28.6KB。Linus 品味把关：决策不抽 output-target.ts 单文件（紧耦合不增噪），优先级链消除特殊情况而非加 if/else 嵌套。已记录偏离：sub-agent 意外触发一次真实 LLM ~/bin/zsh.3。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `70e28c0` | (see git log) |
+| `f406a7f` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
