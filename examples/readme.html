@@ -4,47 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anything2HtmlCLI — 把任意文本变成单文件 HTML</title>
-  <meta name="description" content="Anything2HtmlCLI：把任意文本变成单文件 HTML——不启服务，纯 CLI，可被任何 Agent / Skill 内嵌调用。" />
+  <meta name="description" content="Anything2HtmlCLI：把任意文本变成单文件 HTML——无需部署、无需 UI 操作，纯 CLI，可被任何 Agent / Skill 内嵌调用。" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600;700;800&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans SC', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            serif: ['Noto Serif SC', 'ui-serif', 'Georgia', 'serif']
+          },
           colors: {
             ink: '#0a0a0a',
             paper: '#fafafa',
-            muted: '#737373',
-            line: '#e5e7eb',
-            coal: '#171717',
-            accent: '#2563eb',
-            amber: '#f59e0b'
-          },
-          fontFamily: {
-            sans: ['Inter', 'Noto Sans SC', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-            serif: ['Noto Serif SC', 'ui-serif', 'Georgia', 'serif'],
-            mono: ['JetBrains Mono', 'SFMono-Regular', 'Menlo', 'monospace']
+            primary: '#2563eb',
+            accent: '#f97316'
           },
           boxShadow: {
-            soft: '0 24px 70px rgba(10, 10, 10, 0.08)',
-            card: '0 12px 36px rgba(10, 10, 10, 0.06)'
+            soft: '0 18px 60px rgba(10, 10, 10, 0.08)',
+            card: '0 10px 30px rgba(10, 10, 10, 0.06)'
           }
         }
       }
     }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
       color-scheme: light;
       --paper: #fafafa;
       --ink: #0a0a0a;
-      --muted: #737373;
+      --muted: #525252;
       --line: #e5e7eb;
-      --accent: #2563eb;
-      --amber: #f59e0b;
+      --primary: #2563eb;
+      --accent: #f97316;
     }
 
     * {
@@ -54,11 +50,11 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.10), transparent 28rem),
-        radial-gradient(circle at 90% 12%, rgba(245, 158, 11, 0.10), transparent 24rem),
-        linear-gradient(180deg, #fafafa 0%, #f5f5f4 100%);
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 34rem),
+        radial-gradient(circle at 85% 12%, rgba(249, 115, 22, 0.10), transparent 26rem),
+        linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
       color: var(--ink);
-      font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
     }
@@ -69,9 +65,9 @@
 
     a {
       color: #1d4ed8;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 4px;
-      transition: color 160ms ease, background-color 160ms ease;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+      transition: color 180ms ease, background 180ms ease;
     }
 
     a:hover {
@@ -80,25 +76,58 @@
 
     a:focus-visible,
     button:focus-visible {
-      outline: 3px solid rgba(37, 99, 235, 0.45);
+      outline: 3px solid rgba(37, 99, 235, 0.35);
       outline-offset: 3px;
-      border-radius: 0.5rem;
+      border-radius: 0.45rem;
     }
 
-    .article-grid {
-      background-image:
-        linear-gradient(rgba(229, 231, 235, 0.52) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(229, 231, 235, 0.52) 1px, transparent 1px);
-      background-size: 32px 32px;
-      mask-image: linear-gradient(to bottom, black, transparent 70%);
+    .article-body p {
+      font-size: 1.125rem;
+      line-height: 1.85;
+      color: #404040;
+      margin: 1.15rem 0;
+    }
+
+    .article-body h2 {
+      font-family: "Noto Serif SC", ui-serif, Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      margin: 4rem 0 1.35rem;
+      color: #0a0a0a;
+    }
+
+    .article-body h3 {
+      font-family: "Noto Serif SC", ui-serif, Georgia, serif;
+      font-size: clamp(1.45rem, 2.4vw, 2rem);
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      margin: 2.8rem 0 1rem;
+      color: #171717;
+    }
+
+    .article-body strong {
+      color: #111827;
+      font-weight: 750;
+    }
+
+    .article-body code:not(pre code) {
+      background: #eef2ff;
+      color: #1e3a8a;
+      border: 1px solid #dbeafe;
+      padding: 0.12rem 0.38rem;
+      border-radius: 0.45rem;
+      font-size: 0.92em;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
     .ornament {
       border: 0;
-      height: 32px;
-      margin: 4rem auto;
-      max-width: 700px;
+      height: 4.5rem;
+      margin: 3.6rem auto 1.2rem;
       position: relative;
+      max-width: 700px;
     }
 
     .ornament::before {
@@ -106,80 +135,81 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 168px;
+      width: 8.5rem;
       height: 1px;
       transform: translate(-50%, -50%);
       background: linear-gradient(90deg, transparent, #d4d4d4, transparent);
     }
 
     .ornament::after {
-      content: "◆";
+      content: "✦";
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -54%);
-      color: #2563eb;
+      width: 2.25rem;
+      height: 2.25rem;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
       background: #fafafa;
-      padding: 0 14px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      box-shadow: 0 10px 28px rgba(10, 10, 10, 0.06);
+      font-size: 0.95rem;
     }
 
-    .prose-article h2 {
-      margin-top: 0;
-      margin-bottom: 1.25rem;
-      font-family: "Noto Serif SC", Georgia, ui-serif, serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.12;
-      letter-spacing: -0.04em;
-      color: #0a0a0a;
+    .custom-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 1.2rem 0 1.8rem;
+      display: grid;
+      gap: 0.8rem;
     }
 
-    .prose-article h3 {
-      margin-top: 2.25rem;
-      margin-bottom: 1rem;
-      font-family: "Noto Serif SC", Georgia, ui-serif, serif;
-      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      color: #171717;
-    }
-
-    .prose-article p {
-      max-width: 65ch;
-      margin-top: 0;
-      margin-bottom: 1.35rem;
+    .custom-list li {
+      position: relative;
+      padding-left: 1.8rem;
       color: #404040;
-      font-size: 1.125rem;
-      line-height: 1.9;
+      font-size: 1.0625rem;
+      line-height: 1.75;
     }
 
-    .lead {
-      font-size: clamp(1.22rem, 2.2vw, 1.55rem) !important;
-      line-height: 1.78 !important;
-      color: #262626 !important;
+    .custom-list li::before {
+      content: "";
+      position: absolute;
+      left: 0.2rem;
+      top: 0.72rem;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 0.16rem;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
     }
 
     .quote-block {
-      border-left: 6px solid #2563eb;
-      background: rgba(37, 99, 235, 0.055);
+      margin: 1.6rem 0;
+      padding: 1.2rem 1.35rem 1.2rem 1.45rem;
+      border-left: 6px solid var(--accent);
+      background: rgba(249, 115, 22, 0.07);
       border-radius: 0 1rem 1rem 0;
-      padding: 1.25rem 1.5rem;
-      margin: 2rem 0;
       color: #262626;
-      font-family: "Noto Serif SC", Georgia, ui-serif, serif;
-      font-size: 1.25rem;
       font-style: italic;
       line-height: 1.8;
     }
 
+    .quote-block p {
+      margin: 0;
+      color: #262626;
+    }
+
     .code-card {
-      margin: 1.5rem 0 2rem;
-      overflow: hidden;
+      margin: 1.25rem 0 1.6rem;
       border-radius: 1rem;
-      background: #171717;
-      box-shadow: 0 18px 50px rgba(10, 10, 10, 0.16);
-      border: 1px solid #262626;
+      overflow: hidden;
+      background: #111827;
+      box-shadow: 0 18px 44px rgba(17, 24, 39, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .code-label {
@@ -187,121 +217,33 @@
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #262626;
-      color: #a3a3a3;
-      font-family: "JetBrains Mono", Menlo, monospace;
+      padding: 0.72rem 1rem;
+      background: #0f172a;
+      color: #cbd5e1;
       font-size: 0.78rem;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      background: #0f0f0f;
-    }
-
-    .traffic {
-      display: inline-flex;
-      gap: 0.45rem;
-      align-items: center;
-    }
-
-    .traffic span {
-      width: 0.68rem;
-      height: 0.68rem;
-      border-radius: 999px;
-      display: inline-block;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     pre {
       margin: 0;
-      padding: 1.25rem;
+      padding: 1.1rem 1.15rem 1.25rem;
       overflow-x: auto;
       color: #e5e7eb;
       font-size: 0.94rem;
-      line-height: 1.78;
-      font-family: "JetBrains Mono", Menlo, monospace;
+      line-height: 1.7;
       tab-size: 2;
     }
 
-    code {
-      font-family: "JetBrains Mono", Menlo, monospace;
-      font-size: 0.92em;
-    }
-
-    p code,
-    li code {
-      background: rgba(37, 99, 235, 0.08);
-      color: #1d4ed8;
-      border: 1px solid rgba(37, 99, 235, 0.16);
-      border-radius: 0.42rem;
-      padding: 0.08rem 0.36rem;
-      white-space: nowrap;
-    }
-
-    .custom-list {
-      list-style: none;
-      padding-left: 0;
-      margin: 1.25rem 0 2rem;
-      display: grid;
-      gap: 0.85rem;
-    }
-
-    .custom-list li {
-      position: relative;
-      padding-left: 1.6rem;
-      color: #404040;
-      font-size: 1.075rem;
-      line-height: 1.78;
-    }
-
-    .custom-list li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.82em;
-      width: 0.58rem;
-      height: 0.58rem;
-      border-radius: 0.18rem;
-      background: #2563eb;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-      transform: translateY(-50%);
-    }
-
-    .meta-dot::before {
-      content: "";
-      width: 4px;
-      height: 4px;
-      border-radius: 999px;
-      background: #a3a3a3;
-      display: inline-block;
-      margin: 0 0.75rem;
-      vertical-align: middle;
-    }
-
-    .info-card {
-      border: 1px solid #e5e7eb;
-      background: rgba(250, 250, 250, 0.82);
-      backdrop-filter: blur(18px);
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      box-shadow: 0 12px 36px rgba(10, 10, 10, 0.06);
-    }
-
-    .mini-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.42rem;
-      color: #525252;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .mini-label::before {
-      content: "";
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 999px;
-      background: #f59e0b;
+    pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      color: inherit;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      white-space: pre;
     }
 
     .fade-in {
@@ -319,113 +261,133 @@
       }
     }
 
-    @media (max-width: 720px) {
-      .ornament {
-        margin: 3rem auto;
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in {
+        animation: none;
       }
 
-      .prose-article p {
-        font-size: 1.05rem;
-      }
-
-      pre {
-        font-size: 0.82rem;
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="fixed inset-0 article-grid pointer-events-none opacity-70" aria-hidden="true"></div>
-
-  <header class="relative overflow-hidden">
-    <div class="mx-auto max-w-6xl px-6 pb-16 pt-10 sm:px-8 lg:px-10 lg:pb-24 lg:pt-16">
-      <nav class="mb-16 flex items-center justify-between gap-6" aria-label="页面导航">
-        <a href="#top" class="inline-flex items-center gap-3 no-underline">
-          <span class="grid h-10 w-10 place-items-center rounded-2xl bg-accent text-paper shadow-card">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 7.5C5 6.12 6.12 5 7.5 5h9C17.88 5 19 6.12 19 7.5v9c0 1.38-1.12 2.5-2.5 2.5h-9A2.5 2.5 0 0 1 5 16.5v-9Z" stroke="currentColor" stroke-width="2"/>
-              <path d="M8.6 12h6.8M12 8.6v6.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="text-sm font-extrabold tracking-tight text-ink">Anything2HtmlCLI</span>
+  <header class="px-6 pt-10 md:pt-16 pb-12 md:pb-16">
+    <div class="mx-auto max-w-5xl fade-in">
+      <nav class="mb-12 flex items-center justify-between gap-4" aria-label="页面导航">
+        <a href="#main" class="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-paper/80 px-4 py-2 text-sm font-semibold text-neutral-700 shadow-sm backdrop-blur transition-all hover:border-blue-200 hover:bg-blue-50">
+          <span class="h-2 w-2 rounded-full bg-primary"></span>
+          跳到正文
         </a>
-        <div class="hidden items-center gap-5 text-sm font-semibold text-neutral-600 sm:flex">
-          <a href="#why" class="no-underline">Why</a>
-          <a href="#installation" class="no-underline">Install</a>
-          <a href="#humans" class="no-underline">Humans</a>
-          <a href="#agents" class="no-underline">Agents</a>
+        <div class="hidden sm:flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+          <span>CLI</span>
+          <span class="h-1 w-1 rounded-full bg-neutral-300"></span>
+          <span>Agent Ready</span>
+          <span class="h-1 w-1 rounded-full bg-neutral-300"></span>
+          <span>Single HTML</span>
         </div>
       </nav>
 
-      <section id="top" class="grid items-end gap-10 lg:grid-cols-[1.08fr_0.92fr]">
-        <div class="fade-in">
-          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-paper/75 px-4 py-2 text-sm font-semibold text-neutral-700 shadow-sm backdrop-blur">
-            <span class="h-2 w-2 rounded-full bg-accent"></span>
-            纯 CLI · 零运行时依赖 · Agent / Skill 可内嵌
-          </div>
-          <h1 class="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.06em] text-ink sm:text-6xl lg:text-7xl">
+      <div class="grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-end">
+        <div>
+          <p class="mb-5 inline-flex rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">
             Anything2HtmlCLI
-          </h1>
-          <p class="mt-7 max-w-[64ch] text-xl leading-relaxed text-neutral-700 sm:text-2xl">
-            把任意文本变成单文件 HTML——不启服务，纯 CLI，可被任何 Agent / Skill 内嵌调用。
           </p>
-          <div class="mt-8 flex flex-wrap items-center gap-y-3 text-sm font-medium text-neutral-600">
-            <span>项目说明</span>
-            <span class="meta-dot">约 8 分钟阅读</span>
-            <span class="meta-dot">2026-05-22</span>
-            <span class="meta-dot">Apache-2.0</span>
+          <h1 class="max-w-4xl text-5xl font-extrabold leading-[1.02] tracking-[-0.06em] text-ink md:text-6xl">
+            把任意文本变成单文件 HTML
+          </h1>
+          <p class="mt-6 max-w-[65ch] text-xl leading-relaxed text-neutral-700">
+            无需部署、无需 UI 操作，纯 CLI，可被任何 Agent / Skill 内嵌调用。
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-3 text-sm text-neutral-600">
+            <span class="rounded-full border border-neutral-200 bg-paper px-3 py-1.5 shadow-sm">README 文档</span>
+            <span class="rounded-full border border-neutral-200 bg-paper px-3 py-1.5 shadow-sm">阅读时间约 8 分钟</span>
+            <span class="rounded-full border border-neutral-200 bg-paper px-3 py-1.5 shadow-sm">更新日期 2026/05/22</span>
           </div>
         </div>
 
-        <aside class="info-card fade-in" style="animation-delay: 120ms;" aria-label="项目速览">
-          <p class="mini-label">Command first</p>
-          <div class="mt-5 rounded-2xl border border-neutral-200 bg-neutral-950 p-5 text-neutral-100 shadow-soft">
-            <div class="mb-4 flex items-center gap-2">
+        <aside class="rounded-2xl border border-neutral-200 bg-paper/90 p-4 shadow-soft backdrop-blur" aria-label="Anything2HtmlCLI preview">
+          <div class="overflow-hidden rounded-xl border border-neutral-200 bg-neutral-950">
+            <div class="flex items-center gap-2 border-b border-neutral-800 px-4 py-3">
               <span class="h-3 w-3 rounded-full bg-red-400"></span>
-              <span class="h-3 w-3 rounded-full bg-amber-400"></span>
-              <span class="h-3 w-3 rounded-full bg-emerald-400"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
+              <span class="h-3 w-3 rounded-full bg-green-400"></span>
+              <span class="ml-auto text-xs font-semibold text-neutral-400">preview.html</span>
             </div>
-            <code class="block whitespace-pre-wrap text-[0.95rem] leading-7 text-neutral-100">a2h render in.md &gt; out.html</code>
+            <svg viewBox="0 0 720 460" role="img" aria-labelledby="previewTitle previewDesc" class="block h-auto w-full">
+              <title id="previewTitle">Anything2HtmlCLI preview</title>
+              <desc id="previewDesc">一个由命令行输入 markdown 并输出 HTML 的视觉预览。</desc>
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.95"/>
+                  <stop offset="100%" stop-color="#f97316" stop-opacity="0.86"/>
+                </linearGradient>
+                <filter id="blurShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="22" stdDeviation="18" flood-color="#000000" flood-opacity="0.32"/>
+                </filter>
+              </defs>
+              <rect width="720" height="460" fill="#111827"/>
+              <circle cx="620" cy="70" r="155" fill="#2563eb" opacity="0.18"/>
+              <circle cx="120" cy="380" r="170" fill="#f97316" opacity="0.12"/>
+              <rect x="58" y="66" width="604" height="328" rx="28" fill="#fafafa" filter="url(#blurShadow)"/>
+              <rect x="92" y="102" width="254" height="32" rx="8" fill="#0a0a0a"/>
+              <rect x="92" y="154" width="392" height="14" rx="7" fill="#d4d4d4"/>
+              <rect x="92" y="180" width="334" height="14" rx="7" fill="#e5e7eb"/>
+              <rect x="92" y="224" width="214" height="16" rx="8" fill="#2563eb" opacity="0.9"/>
+              <rect x="92" y="260" width="500" height="14" rx="7" fill="#d4d4d4"/>
+              <rect x="92" y="286" width="468" height="14" rx="7" fill="#e5e7eb"/>
+              <rect x="92" y="312" width="385" height="14" rx="7" fill="#e5e7eb"/>
+              <rect x="444" y="96" width="168" height="116" rx="18" fill="url(#g1)" opacity="0.95"/>
+              <path d="M482 154h92M528 118v72" stroke="#fafafa" stroke-width="12" stroke-linecap="round"/>
+              <rect x="452" y="242" width="144" height="86" rx="18" fill="#eef2ff"/>
+              <text x="524" y="276" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="800" fill="#1d4ed8">a2h</text>
+              <text x="524" y="304" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#525252">render in.md</text>
+            </svg>
           </div>
-          <dl class="mt-6 grid gap-4 sm:grid-cols-2">
-            <div class="rounded-2xl border border-line bg-paper p-4">
-              <dt class="text-xs font-bold uppercase tracking-[0.12em] text-neutral-500">心智</dt>
-              <dd class="mt-2 text-lg font-extrabold text-ink">一根管道</dd>
-            </div>
-            <div class="rounded-2xl border border-line bg-paper p-4">
-              <dt class="text-xs font-bold uppercase tracking-[0.12em] text-neutral-500">不是</dt>
-              <dd class="mt-2 text-lg font-extrabold text-ink">平台 / 服务</dd>
-            </div>
-            <div class="rounded-2xl border border-line bg-paper p-4">
-              <dt class="text-xs font-bold uppercase tracking-[0.12em] text-neutral-500">Node.js</dt>
-              <dd class="mt-2 text-lg font-extrabold text-ink">&gt;= 20.0.0</dd>
-            </div>
-            <div class="rounded-2xl border border-line bg-paper p-4">
-              <dt class="text-xs font-bold uppercase tracking-[0.12em] text-neutral-500">默认 Skill</dt>
-              <dd class="mt-2 text-lg font-extrabold text-ink">article-magazine</dd>
-            </div>
-          </dl>
         </aside>
-      </section>
+      </div>
     </div>
   </header>
 
-  <main class="relative mx-auto max-w-3xl px-6 pb-24 sm:px-8">
-    <article class="prose-article">
-      <section id="why" aria-labelledby="why-title">
-        <h2 id="why-title">这是什么 / Why this exists</h2>
-        <p class="lead">
+  <main id="main" class="article-body px-6 pb-16">
+    <article class="mx-auto max-w-[700px]">
+      <section aria-labelledby="why-this-exists">
+        <h2 id="why-this-exists">这是什么 / Why this exists</h2>
+        <p>
           <strong><code>a2h</code> 把“文本 → 精美 HTML”的能力蒸馏成一条本地命令。</strong>
         </p>
         <p>
-          源能力来自 <a href="https://github.com/nexu-io/html-anything" target="_blank" rel="noopener noreferrer">nexu-io/html-anything</a>（Apache-2.0）。原项目以 npm 服务形态运行；<code>a2h</code> 把它重塑为一个<strong>零运行时依赖、零落盘、可管道、可被 spawn 进任何 Agent 工作流</strong>的 CLI。
+          源能力来自 <a href="https://github.com/nexu-io/html-anything" target="_blank" rel="noopener noreferrer"><code>nexu-io/html-anything</code></a>（Apache-2.0）。原项目以部署本地 Web 服务形态运行；<code>a2h</code> 把它重塑为一个<strong>无需部署、无需 UI 操作、零运行时依赖、可管道、可被 spawn 进任何 Agent 工作流</strong>的 CLI。
         </p>
 
+        <figure class="my-8 overflow-hidden rounded-2xl border border-neutral-200 bg-paper shadow-card">
+          <div class="border-b border-neutral-200 bg-neutral-50 px-4 py-3">
+            <figcaption class="text-sm font-bold text-neutral-700">Anything2HtmlCLI preview</figcaption>
+          </div>
+          <div class="p-5">
+            <div class="rounded-xl border border-neutral-800 bg-neutral-950 p-4 shadow-soft">
+              <div class="mb-5 flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-red-400"></span>
+                <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
+                <span class="h-3 w-3 rounded-full bg-green-400"></span>
+                <span class="ml-auto text-xs font-semibold text-neutral-500">terminal</span>
+              </div>
+              <div class="space-y-3 font-mono text-sm leading-relaxed">
+                <div><span class="text-green-400">$</span> <span class="text-neutral-100">a2h render in.md &gt; out.html</span></div>
+                <div class="text-blue-300">stdout 首字符：&lt;</div>
+                <div class="text-neutral-400">生成单文件 HTML，无需部署、无需 UI。</div>
+              </div>
+            </div>
+          </div>
+        </figure>
+
         <ul class="custom-list">
-          <li><strong>怎么用</strong>：<code>a2h render in.md &gt; out.html</code> —— 一条命令，无服务，stdout 即结果。</li>
-          <li><strong>给谁用</strong>：把渲染能力嵌入 Skill / Agent 自动化的开发者；在 CLI 工作流里直接 markdown → HTML 的工程师。</li>
-          <li><strong>不是什么</strong>：不是 LLM 客户端 / 不连任何 API / 不缓存 / 不起服务；所有 LLM 调用通过本机已登录的 <code>claude</code> / <code>qodercli</code> 透传。</li>
-          <li><strong>心智</strong>：<code>a2h</code> 是一根管道，不是一个平台。</li>
+          <li><strong>怎么用</strong>：<code>a2h render in.md &gt; out.html</code> —— 一条命令，无部署、无 UI，stdout 即结果</li>
+          <li><strong>给谁用</strong>：把渲染能力嵌入 Skill / Agent 自动化的开发者；在 CLI 工作流里直接 markdown → HTML 的工程师</li>
+          <li><strong>不是什么</strong>：不是 LLM 客户端 / 不连任何 API / 不缓存 / 不起服务；所有 LLM 调用通过本机已登录的 <code>claude</code> / <code>qodercli</code> 透传</li>
+          <li><strong>心智</strong>：<code>a2h</code> 是一根管道，不是一个平台</li>
         </ul>
 
         <p>
@@ -435,35 +397,29 @@
 
       <hr class="ornament" />
 
-      <section id="installation" aria-labelledby="installation-title">
-        <h2 id="installation-title">Installation</h2>
+      <section aria-labelledby="installation">
+        <h2 id="installation">Installation</h2>
 
-        <div class="code-card" aria-label="安装命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>install</span></div>
           <pre><code>npm i -g anything2html-cli</code></pre>
         </div>
 
         <p>
           源码试用 / 贡献开发请走末尾的 <a href="#contributing">如何贡献 / Contributing</a> 章节，用 <code>npm link</code> 建立本地全局命令。
         </p>
-
         <p>
           要求 Node.js <code>&gt;= 20.0.0</code>（与 esbuild bundle target 对齐）。
         </p>
 
-        <h3>前置依赖</h3>
+        <h3 id="prerequisites">前置依赖</h3>
         <p>
           <code>a2h</code> 调用本机已登录的 agent CLI 产出 HTML，需要至少装其一：
         </p>
-
         <ul class="custom-list">
-          <li><a href="https://docs.claude.com/en/docs/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a>（<code>claude</code>）：默认 agent。</li>
-          <li><a href="https://qoder.dev" target="_blank" rel="noopener noreferrer">Qoder CLI</a>（<code>qodercli</code>）：可选第二 agent。</li>
+          <li><a href="https://docs.claude.com/en/docs/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a>（<code>claude</code>）：默认 agent</li>
+          <li><a href="https://qoder.dev" target="_blank" rel="noopener noreferrer">Qoder CLI</a>（<code>qodercli</code>）：可选第二 agent</li>
         </ul>
-
         <p>
           <code>a2h</code> 自身不连任何 LLM API，所有 LLM 调用通过本机已登录的 agent CLI 透传——配额、登录、网络全部由对应 agent CLI 负责，本工具零运行时依赖。
         </p>
@@ -471,19 +427,16 @@
 
       <hr class="ornament" />
 
-      <section id="humans" aria-labelledby="humans-title">
-        <h2 id="humans-title">Usage / For Humans</h2>
-        <p class="lead">
+      <section aria-labelledby="usage-humans">
+        <h2 id="usage-humans">Usage / For Humans</h2>
+        <p>
           终端直接使用的常见姿势。所有命令默认对 TTY 友好（彩色进度行 + 自动写文件），对管道也友好（stdout 写 HTML，可直接 <code>&gt; out.html</code> / <code>| pbcopy</code>）。
         </p>
 
-        <h3>把 markdown 文件渲染成 HTML</h3>
-        <div class="code-card" aria-label="渲染 markdown 文件命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
-          <pre><code>a2h render in.md --skill article-magazine -o out.html
+        <h3 id="render-markdown-file">把 markdown 文件渲染成 HTML</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>render markdown</span></div>
+          <pre><code>a2h render in.md -o out.html
 
 # 在交互式终端，等价于上一行 —— --skill 默认 article-magazine、
 # -o 默认写到与输入同目录的 in.html：
@@ -491,76 +444,59 @@ a2h render in.md</code></pre>
         </div>
 
         <blockquote class="quote-block">
-          <code>--skill</code> 缺省 → <code>article-magazine</code>；<code>-o</code> 缺省按“输入类型 + stdout 是否 TTY”自动决定。
+          <p>
+            <code>--skill</code> 缺省 → <code>article-magazine</code>；其它模板可先阅读上游 <a href="./ref/html-anything/next/src/lib/templates"><code>ref/html-anything/next/src/lib/templates</code></a> 的模板定义，再用 <code>--skill &lt;id&gt;</code> 指定。<code>-o</code> 缺省按“输入类型 + stdout 是否 TTY”自动决定：
+          </p>
         </blockquote>
 
         <ul class="custom-list">
-          <li>文件输入 + 交互终端 → 写到 <code>&lt;input-stem&gt;.html</code>（与输入同目录）。</li>
-          <li>文件输入 + pipe / 重定向 → 写 stdout（保 Unix 管道契约）。</li>
-          <li>stdin 输入（<code>-</code>）→ 写 stdout（永远）。</li>
-          <li>显式 <code>-o -</code> 哨兵 → 强制 stdout，无视输入类型与 TTY。</li>
+          <li>文件输入 + 交互终端 → 写到 <code>&lt;input-stem&gt;.html</code>（与输入同目录）</li>
+          <li>文件输入 + pipe / 重定向 → 写 stdout（保 Unix 管道契约）</li>
+          <li>stdin 输入（<code>-</code>）→ 写 stdout（永远）</li>
+          <li>显式 <code>-o -</code> 哨兵 → 强制 stdout，无视输入类型与 TTY</li>
         </ul>
 
-        <h3>走 stdin（管道场景，零落盘）</h3>
-        <div class="code-card" aria-label="stdin 管道命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
+        <h3 id="stdin-pipe">走 stdin（管道场景，零落盘）</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>stdin</span></div>
           <pre><code>cat in.md | a2h render - --skill blog-post -o out.html</code></pre>
         </div>
-
         <p>
           <code>-</code> 哨兵表示从 stdin 读输入（与 <code>cat</code> / <code>kubectl apply -f -</code> 一致语义）。
         </p>
 
-        <h3>切换 agent（claude / qoder）</h3>
-        <div class="code-card" aria-label="切换 agent 命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
-          <pre><code>a2h render in.md --skill article-magazine --agent qoder -o out.html
+        <h3 id="switch-agent">切换 agent（claude / qoder）</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>agent</span></div>
+          <pre><code>a2h render in.md --agent qoder -o out.html
 # 或用环境变量覆盖默认 agent：
-A2H_AGENT=qoder a2h render in.md --skill article-magazine -o out.html</code></pre>
+A2H_AGENT=qoder a2h render in.md -o out.html</code></pre>
         </div>
 
-        <h3>列出所有可用 skill</h3>
-        <div class="code-card" aria-label="列出 skills 命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
+        <h3 id="list-skills">列出所有可用 skill</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>skills</span></div>
           <pre><code>a2h skills              # 人类对齐表格
 a2h skills --json       # agent 友好 JSON</code></pre>
         </div>
 
-        <h3>显式预算上限（推荐复杂模板）</h3>
-        <div class="code-card" aria-label="预算上限命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
+        <h3 id="budget">显式预算上限（推荐复杂模板）</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>budget</span></div>
           <pre><code>a2h render in.md --skill data-report --max-budget-usd 2 -o out.html</code></pre>
         </div>
-
         <p>
           <code>a2h</code> 自身不设默认上限——参考 <a href="./docs/agent-integration.md#推荐传---max-budget-usd-兜底成本"><code>docs/agent-integration.md</code></a> 按模板族传值。
         </p>
 
-        <h3>写到 stdout（Unix 管道）</h3>
-        <div class="code-card" aria-label="写到 stdout 命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
-          <pre><code>a2h render in.md --skill article-magazine &gt; out.html</code></pre>
+        <h3 id="stdout-unix">写到 stdout（Unix 管道）</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>stdout</span></div>
+          <pre><code>a2h render in.md &gt; out.html</code></pre>
         </div>
-
         <p>
           成功路径上 stdout 首字符必然是 <code>&lt;</code>（DOCTYPE 起手），便于 grep / pipe。
         </p>
-
         <p>
           详见 <code>a2h --help</code> / <code>a2h render --help</code> / <code>a2h skills --help</code>。
         </p>
@@ -568,23 +504,20 @@ a2h skills --json       # agent 友好 JSON</code></pre>
 
       <hr class="ornament" />
 
-      <section id="agents" aria-labelledby="agents-title">
-        <h2 id="agents-title">Usage / For Agents</h2>
-        <p class="lead">
+      <section aria-labelledby="usage-agents">
+        <h2 id="usage-agents">Usage / For Agents</h2>
+        <p>
           <code>a2h</code> 的设计目标之一就是被其它 Agent / Skill 内嵌调用。集成模式只有一句话：
         </p>
 
         <blockquote class="quote-block">
-          spawn 子进程 → 写 stdin → 读 stdout → 看首字符判成功 / 失败。
+          <p>spawn 子进程 → 写 stdin → 读 stdout → 看首字符判成功/失败。</p>
         </blockquote>
 
         <p>最简集成：</p>
 
-        <div class="code-card" aria-label="Agent 集成 TypeScript 示例">
-          <div class="code-label">
-            <span>typescript</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
+        <div class="code-card">
+          <div class="code-label"><span>typescript</span><span>agent integration</span></div>
           <pre><code>import { spawn } from "node:child_process";
 
 const child = spawn("a2h", [
@@ -606,16 +539,15 @@ child.stdin.end();
 
       <hr class="ornament" />
 
-      <section id="contributing" aria-labelledby="contributing-title">
-        <h2 id="contributing-title">如何贡献 / Contributing</h2>
-        <p class="lead">欢迎 issue / PR。</p>
+      <section aria-labelledby="contributing">
+        <h2 id="contributing">如何贡献 / Contributing</h2>
+        <p>
+          欢迎 issue / PR。
+        </p>
 
-        <h3>本地自测（不发包到 npm 也能用全局命令）</h3>
-        <div class="code-card" aria-label="本地自测命令">
-          <div class="code-label">
-            <span>bash</span>
-            <span class="traffic" aria-hidden="true"><span class="bg-red-400"></span><span class="bg-amber-400"></span><span class="bg-emerald-400"></span></span>
-          </div>
+        <h3 id="local-test">本地自测（不发包到 npm 也能用全局命令）</h3>
+        <div class="code-card">
+          <div class="code-label"><span>bash</span><span>local development</span></div>
           <pre><code>npm install
 npm run dev:link        # build + npm link，把全局 `a2h` 软链到当前项目
 a2h --version           # 期望: a2h 0.1.0
@@ -627,7 +559,7 @@ npm run dev:unlink      # 解除软链 (重复跑不报错)</code></pre>
           <code>dev:unlink</code> 内置 <code>|| true</code>，已 unlink 时再跑也是 exit 0；不做更复杂的 PATH 自动检测——轻量为美。
         </p>
 
-        <h3>完整开发流程</h3>
+        <h3 id="full-dev-flow">完整开发流程</h3>
         <p>
           本仓库使用 <a href="./.trellis/workflow.md">Trellis</a> 工作流（任务驱动、spec 优先、brainstorm + check 双闸）。提交 PR 前请先读 <a href="./.trellis/workflow.md"><code>.trellis/workflow.md</code></a> 与 <a href="./AGENTS.md"><code>AGENTS.md</code></a>。
         </p>
@@ -635,8 +567,8 @@ npm run dev:unlink      # 解除软链 (重复跑不报错)</code></pre>
 
       <hr class="ornament" />
 
-      <section id="more" aria-labelledby="more-title">
-        <h2 id="more-title">更多</h2>
+      <section aria-labelledby="more">
+        <h2 id="more">更多</h2>
         <ul class="custom-list">
           <li>设计与架构原则：<a href="./docs/design.md"><code>docs/design.md</code></a></li>
           <li>路线图：<a href="./docs/roadmap.md"><code>docs/roadmap.md</code></a></li>
@@ -645,26 +577,22 @@ npm run dev:unlink      # 解除软链 (重复跑不报错)</code></pre>
           <li>License: Apache-2.0</li>
         </ul>
       </section>
-    </article>
 
-    <aside class="mt-20 overflow-hidden rounded-3xl border border-line bg-neutral-950 p-7 text-paper shadow-soft sm:p-9" aria-label="行动卡片">
-      <div class="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-center">
-        <div>
-          <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-200">Share the pipe</p>
-          <h2 class="mt-3 font-serif text-3xl font-black tracking-[-0.04em] text-paper sm:text-4xl">如果觉得有用，欢迎转发</h2>
-          <p class="mt-4 max-w-[58ch] text-base leading-8 text-neutral-300">
-            把这条本地命令分享给需要在 CLI、Skill 或 Agent 工作流里稳定生成单文件 HTML 的开发者。
-          </p>
-        </div>
-        <a href="#top" class="inline-flex items-center justify-center rounded-2xl bg-paper px-5 py-3 text-sm font-extrabold text-ink no-underline transition-all hover:-translate-y-0.5 hover:bg-neutral-100">
-          回到顶部
-        </a>
-      </div>
-    </aside>
+      <aside class="mt-14 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-orange-50 p-6 shadow-card">
+        <p class="m-0 text-sm font-bold uppercase tracking-[0.16em] text-blue-700">Share</p>
+        <h2 class="mt-3 mb-3 font-serif text-3xl leading-tight tracking-[-0.03em] text-ink">如果觉得有用，欢迎转发</h2>
+        <p class="m-0 max-w-[65ch] text-lg leading-relaxed text-neutral-700">
+          把 <code>a2h</code> 分享给需要在 CLI、Agent 或 Skill 工作流里稳定生成单文件 HTML 的开发者。
+        </p>
+      </aside>
+    </article>
   </main>
 
-  <footer class="relative border-t border-line bg-paper/60 px-6 py-10 text-center text-sm text-neutral-500 backdrop-blur">
-    <p>Anything2HtmlCLI · 单文件 HTML 渲染说明 · Apache-2.0</p>
+  <footer class="border-t border-neutral-200 px-6 py-10">
+    <div class="mx-auto flex max-w-[700px] flex-col gap-3 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+      <p class="m-0">Anything2HtmlCLI · Apache-2.0</p>
+      <p class="m-0">文本 → HTML · CLI first · Agent ready</p>
+    </div>
   </footer>
 </body>
 </html>

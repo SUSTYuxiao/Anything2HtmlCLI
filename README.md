@@ -1,6 +1,6 @@
 # Anything2HtmlCLI
 
-> 把任意文本变成单文件 HTML——不启服务，纯 CLI，可被任何 Agent / Skill 内嵌调用。
+> 把任意文本变成单文件 HTML——无需部署、无需 UI 操作，纯 CLI，可被任何 Agent / Skill 内嵌调用。
 
 ---
 
@@ -8,9 +8,11 @@
 
 **`a2h` 把"文本 → 精美 HTML"的能力蒸馏成一条本地命令。**
 
-源能力来自 [`nexu-io/html-anything`](https://github.com/nexu-io/html-anything)（Apache-2.0）。原项目以 npm 服务形态运行；`a2h` 把它重塑为一个**零运行时依赖、零落盘、可管道、可被 spawn 进任何 Agent 工作流**的 CLI。
+源能力来自 [`nexu-io/html-anything`](https://github.com/nexu-io/html-anything)（Apache-2.0）。原项目以部署本地 Web 服务形态运行；`a2h` 把它重塑为一个**无需部署、无需 UI 操作、零运行时依赖、可管道、可被 spawn 进任何 Agent 工作流**的 CLI。
 
-- **怎么用**：`a2h render in.md > out.html` —— 一条命令，无服务，stdout 即结果
+![Anything2HtmlCLI preview](./examples/preview.png)
+
+- **怎么用**：`a2h render in.md > out.html` —— 一条命令，无部署、无 UI，stdout 即结果
 - **给谁用**：把渲染能力嵌入 Skill / Agent 自动化的开发者；在 CLI 工作流里直接 markdown → HTML 的工程师
 - **不是什么**：不是 LLM 客户端 / 不连任何 API / 不缓存 / 不起服务；所有 LLM 调用通过本机已登录的 `claude` / `qodercli` 透传
 - **心智**：`a2h` 是一根管道，不是一个平台
@@ -47,14 +49,14 @@ npm i -g anything2html-cli
 ### 把 markdown 文件渲染成 HTML
 
 ```bash
-a2h render in.md --skill article-magazine -o out.html
+a2h render in.md -o out.html
 
 # 在交互式终端，等价于上一行 —— --skill 默认 article-magazine、
 # -o 默认写到与输入同目录的 in.html：
 a2h render in.md
 ```
 
-> `--skill` 缺省 → `article-magazine`；`-o` 缺省按"输入类型 + stdout 是否 TTY"自动决定：
+> `--skill` 缺省 → `article-magazine`；其它模板可先阅读上游 [`ref/html-anything/next/src/lib/templates`](./ref/html-anything/next/src/lib/templates) 的模板定义，再用 `--skill <id>` 指定。`-o` 缺省按"输入类型 + stdout 是否 TTY"自动决定：
 > - 文件输入 + 交互终端 → 写到 `<input-stem>.html`（与输入同目录）
 > - 文件输入 + pipe / 重定向 → 写 stdout（保 Unix 管道契约）
 > - stdin 输入（`-`）→ 写 stdout（永远）
@@ -71,9 +73,9 @@ cat in.md | a2h render - --skill blog-post -o out.html
 ### 切换 agent（claude / qoder）
 
 ```bash
-a2h render in.md --skill article-magazine --agent qoder -o out.html
+a2h render in.md --agent qoder -o out.html
 # 或用环境变量覆盖默认 agent：
-A2H_AGENT=qoder a2h render in.md --skill article-magazine -o out.html
+A2H_AGENT=qoder a2h render in.md -o out.html
 ```
 
 ### 列出所有可用 skill
@@ -94,7 +96,7 @@ a2h render in.md --skill data-report --max-budget-usd 2 -o out.html
 ### 写到 stdout（Unix 管道）
 
 ```bash
-a2h render in.md --skill article-magazine > out.html
+a2h render in.md > out.html
 ```
 
 成功路径上 stdout 首字符必然是 `<`（DOCTYPE 起手），便于 grep / pipe。
