@@ -21,11 +21,11 @@
 
 ## Installation
 
-> 🚧 **尚未发布到 npm**。下面是发布后的预期使用方式；当前要试用，请走末尾的 [如何贡献 / Contributing](#如何贡献--contributing) 章节，用源码 + `npm link` 流程。
-
 ```bash
 npm i -g anything2html-cli
 ```
+
+源码试用 / 贡献开发请走末尾的 [如何贡献 / Contributing](#如何贡献--contributing) 章节，用 `npm link` 建立本地全局命令。
 
 要求 Node.js `>= 20.0.0`（与 esbuild bundle target 对齐）。
 
