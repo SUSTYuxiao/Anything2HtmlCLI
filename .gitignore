@@ -10,6 +10,9 @@ node_modules/
 
 # Test / spike output
 *.log
+# a2h render 默认在输入文件同级写 <stem>.html;
+# 仓库根跑 a2h render <root-file> 会产生根 .html, 视为临时产物
+/*.html
 .trellis/tasks/*/research/spike/runs/
 .trellis/tasks/*/research/spike/inputs/
 .trellis/tasks/*/research/spike/out.html

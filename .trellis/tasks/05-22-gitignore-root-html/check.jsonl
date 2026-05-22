@@ -1,0 +1,2 @@
+{"file": ".trellis/tasks/05-22-gitignore-root-html/prd.md", "reason": "Acceptance 5 项 grep / git ls-files 验证。"}
+{"file": ".gitignore", "reason": "验证 /*.html 加入正确（开头斜杠仅根目录）。"}
