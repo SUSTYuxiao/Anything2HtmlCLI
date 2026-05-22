@@ -1,0 +1,9 @@
+{"file": ".trellis/tasks/05-22-render-defaults-and-link/prd.md", "reason": "本任务 PRD：4 个 Open Questions 已锁、-o 分场景默认表 + 实现伪代码、acceptance 13 项。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "I/O 契约 SSoT——本任务在 Q-MVP-IO 决策 B 框架内扩展默认值（不推翻 Unix 管道契约），可能需更新 §I/O 契约段。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "退出码不变，但 --skill 默认值不绕过 E_SKILL_NOT_FOUND 校验——本任务必须保留这条契约。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "TTY 检测条件——render -o 默认行为复用 process.stdout.isTTY，与 progress 心跳 TTY 检测同源。"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "测试栈 + DI 注入模式——render.test.ts 新增 5 项测试用 DI mock process.stdout.isTTY。"}
+{"file": "package.json", "reason": "scripts 加 dev:link / dev:unlink（不破坏现有 sync/lint/build/test/prepublishOnly）。"}
+{"file": "src/commands/render.ts", "reason": "默认值实现位置——parseRenderArgs 加 --skill default + 解 -o 缺省/哨兵；runRender 加 inferOutPath。"}
+{"file": "src/cli.ts", "reason": "HELP_RENDER 文本更新 --skill 默认 + -o 完整场景表 + -o - 哨兵语义。"}
+{"file": "README.md", "reason": "Usage 段中现有示例可能需更新对齐新默认（保留旧示例风格，仅在合适处加新默认提示）。"}

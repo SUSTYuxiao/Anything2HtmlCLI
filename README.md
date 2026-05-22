@@ -31,6 +31,20 @@ npm i -g <path-to>/a2h-cli-<version>.tgz
 
 `a2h` 自身不连任何 LLM API，所有 LLM 调用通过本机已登录的 agent CLI 透传——这意味着配额、登录、网络全部由对应 agent CLI 负责，本工具零运行时依赖。
 
+### 开发者本地自测
+
+不发包到 npm 也能用全局命令试这把工具：
+
+```bash
+npm install
+npm run dev:link        # build + npm link，把全局 `a2h` 软链到当前项目
+a2h --version           # 期望: a2h 0.1.0
+a2h render in.md        # 直接用全局命令试
+npm run dev:unlink      # 解除软链 (重复跑不报错)
+```
+
+`dev:unlink` 内置 `|| true`，已 unlink 时再跑也是 exit 0；不做更复杂的 PATH 自动检测——轻量为美。
+
 ---
 
 ## Usage
@@ -39,7 +53,17 @@ npm i -g <path-to>/a2h-cli-<version>.tgz
 
 ```bash
 a2h render in.md --skill article-magazine -o out.html
+
+# 在交互式终端，等价于上一行 —— --skill 默认 article-magazine、
+# -o 默认写到与输入同目录的 in.html：
+a2h render in.md
 ```
+
+> `--skill` 缺省 → `article-magazine`；`-o` 缺省按"输入类型 + stdout 是否 TTY"自动决定：
+> - 文件输入 + 交互终端 → 写到 `<input-stem>.html`（与输入同目录）
+> - 文件输入 + pipe / 重定向 → 写 stdout（保 Unix 管道契约）
+> - stdin 输入（`-`）→ 写 stdout（永远）
+> - 显式 `-o -` 哨兵 → 强制 stdout，无视输入类型与 TTY
 
 ### 走 stdin（管道场景，零落盘）
 

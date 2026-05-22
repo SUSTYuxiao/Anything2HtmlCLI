@@ -1,0 +1,5 @@
+{"file": ".trellis/tasks/05-22-render-defaults-and-link/prd.md", "reason": "Acceptance 13 项 + Open Questions 全锁的对照基准。"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "验证 -o 默认行为符合 I/O 契约扩展 + Q-MVP-IO 决策 B 不被推翻。"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "验证 --skill 默认值不绕过 E_SKILL_NOT_FOUND 校验路径。"}
+{"file": ".trellis/spec/backend/logging-guidelines.md", "reason": "验证 -o TTY 检测与 progress 心跳 TTY 检测使用同一 isTTY 入口（一致性）。"}
+{"file": "src/commands/render.ts", "reason": "验证默认值优先级链 (显式 -o > stdin → stdout > TTY 文件 > 非 TTY stdout) 实现正确。"}

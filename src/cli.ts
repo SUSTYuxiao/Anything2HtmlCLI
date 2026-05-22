@@ -26,8 +26,12 @@ USAGE
   a2h <command> [args] [flags]
 
 COMMANDS
-  render <input | -> --skill <id> [-o <file>]
+  render <input | -> [--skill <id>] [-o <file>]
                        Render input to a self-contained HTML file.
+                       --skill defaults to "article-magazine".
+                       -o defaults: file input + TTY → <input-stem>.html;
+                                    file input + pipe → stdout;
+                                    stdin → stdout. Use "-o -" to force stdout.
   skills [--json]      List available skill identifiers.
 
 GLOBAL FLAGS
@@ -38,6 +42,7 @@ GLOBAL FLAGS
 
 EXAMPLES
   a2h skills --json
+  a2h render in.md
   a2h render article.md --skill article-magazine -o out.html
   echo "$content" | a2h render - --skill blog-post --json-errors > out.html
 
@@ -47,16 +52,22 @@ For per-command help, run: a2h <command> --help
 const HELP_RENDER = `a2h render — text → self-contained HTML
 
 USAGE
-  a2h render <input | -> --skill <id> [-o <file>] [flags]
+  a2h render <input | -> [--skill <id>] [-o <file>] [flags]
 
 DESCRIPTION
   Render input text to a self-contained HTML file using the given skill.
 
 FLAGS
-  --skill <id>           Skill identifier (required). Run \`a2h skills\` to list.
+  --skill <id>           Skill identifier. Defaults to "article-magazine".
+                         Run \`a2h skills\` to list available ids.
   --agent <id>           Agent CLI to invoke (claude | qoder). Default: claude.
                          Env override: A2H_AGENT.
-  -o, --out <file>       Output file path. Defaults to stdout.
+  -o, --out <file>       Output file path. Pass "-" to force stdout.
+                         If omitted, output target is auto-decided:
+                           file input + interactive TTY → <input-stem>.html
+                                                          (same dir as input)
+                           file input + pipe / redirect  → stdout
+                           stdin input ("-")             → stdout (always)
   --max-budget-usd <n>   Forward to claude CLI as cost ceiling.
   --json-errors          Emit JSON error object to stdout on failure.
   --no-bare              Disable claude --bare (rarely needed).
@@ -64,8 +75,19 @@ FLAGS
   -h, --help             Show this help.
 
 EXAMPLES
+  # Interactive (defaults: --skill article-magazine, -o ./in.html):
+  a2h render in.md
+
+  # Explicit skill + output path:
   a2h render article.md --skill article-magazine -o article.html
+
+  # Force stdout even on a TTY (sentinel "-o -"):
+  a2h render in.md -o - | grep '<title>'
+
+  # Agent-pipe invocation (zero disk):
   echo "$content" | a2h render - --skill blog-post --json-errors > out.html
+
+  # Switch agent:
   a2h render in.md --skill article-magazine --agent qoder -o out.html
 `;
 

@@ -27,8 +27,9 @@ PRD Q-MVP-5 决策：**多子命令**而非单一 `a2h` + 一堆 flag。
 ### P0 子命令（首版必达）
 
 ```text
-a2h render <input | -> --skill <id> [-o <file>] [flags]
-   生成单文件 HTML；缺省写 stdout，- 表示从 stdin 读取输入。
+a2h render <input | -> [--skill <id>] [-o <file>] [flags]
+   生成单文件 HTML；--skill 缺省 article-magazine；-o 缺省按场景自动决定（见 §3）。
+   - 表示从 stdin 读取输入。
 
 a2h skills [--json]
    列出可用 skill；--json 输出结构化数组供 agent 消费。
@@ -101,8 +102,10 @@ src/
 ### `render` 专属 flag
 
 ```text
---skill <id>          (必填) skill 标识，如 article-magazine / blog-post
--o <file>             输出到指定文件路径（不接受目录）；缺省写 stdout
+--skill <id>          skill 标识，如 article-magazine / blog-post
+                      缺省 = "article-magazine"（PR4 Q-RD-3 决策；不存在的 id 仍报 E_SKILL_NOT_FOUND）
+-o <file>             输出到指定文件路径（不接受目录）；缺省按场景自动决定（见 §3 输出）
+                      "-" 哨兵 = 强制 stdout
 --max-budget-usd <n>  透传至下游 claude CLI（PRD Q-MVP-7：默认 unset）
 --json-errors         失败时 stdout 写 JSON 错误对象（详见 §5）
 --bare                透传 claude --bare（默认 true，spike F3）
@@ -126,10 +129,16 @@ a2h render - --skill blog -o out.html < input.md
 
 ### 输出
 
-- **缺省**：stdout 输出 HTML（首字符必然是 `<`，便于 agent 区分错误对象的 `{`）。
+- **缺省**：按"输入类型 + stdout 是否 TTY"自动决定（PR4 Q-RD-4 决策 B）：
+  - 文件输入 + 交互终端 → 写 `<input-stem>.html`（与输入同目录）
+  - 文件输入 + pipe / 重定向（非 TTY） → 写 stdout（保 Unix 管道契约）
+  - stdin 输入（`-`） → 永远写 stdout（无原文件可推）
 - **`-o <file>`**：写指定**文件路径**，不接受目录路径。
   - 如需写入目录中的随机命名文件，由 shell 包装：`a2h render in.md --skill blog -o "$(mktemp -t a2h.XXXXXX.html)"`
   - 不支持 `-o /some/dir/`——保持语义最纯粹（PRD 决策 Q-MVP-IO B）。
+- **`-o -` 哨兵**：强制 stdout（PR4 Q-RD-2），用于"文件输入 + 交互终端但仍想要 stdout"场景，
+  例如 `a2h render in.md -o - | grep '<title>'`。
+- 关键不变量：成功路径上 stdout 首字符必然是 `<`（DOCTYPE 起手），无论默认 / 显式路径。
 
 ### Agent 嵌入零磁盘副作用
 
@@ -155,14 +164,18 @@ const html = await streamToString(child.stdout);
 
 ```text
 USAGE
-  a2h render <input | -> --skill <id> [-o <file>] [flags]
+  a2h render <input | -> [--skill <id>] [-o <file>] [flags]
 
 DESCRIPTION
   Render input text to a self-contained HTML file using the given skill.
 
 FLAGS
-  --skill <id>           Skill identifier (required). Run `a2h skills` to list.
-  -o, --out <file>       Output file path. Defaults to stdout.
+  --skill <id>           Skill identifier. Defaults to "article-magazine".
+                         Run \`a2h skills\` to list available ids.
+  -o, --out <file>       Output file path. Pass "-" to force stdout.
+                         If omitted: file input + TTY → <input-stem>.html;
+                                     file input + pipe → stdout;
+                                     stdin → stdout.
   --max-budget-usd <n>   Forward to claude CLI as cost ceiling.
   --json-errors          Emit JSON error object to stdout on failure.
   --no-bare              Disable claude --bare (rarely needed).
@@ -170,8 +183,8 @@ FLAGS
   -h, --help             Show this help.
 
 EXAMPLES
-  # Human invocation:
-  a2h render article.md --skill article-magazine -o article.html
+  # Human invocation (interactive defaults):
+  a2h render article.md
 
   # Agent pipe invocation (zero disk):
   echo "$content" | a2h render - --skill blog --json-errors > out.html
