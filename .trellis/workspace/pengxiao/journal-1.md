@@ -206,3 +206,36 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 7: git 卫生修补：ignore 根目录 *.html (a2h render 产物)
+
+**Date**: 2026-05-22
+**Task**: git 卫生修补：ignore 根目录 *.html (a2h render 产物)
+**Branch**: `main`
+
+### Summary
+
+修补上一个 commit 的漏网：a2h render 引入自动写 <stem>.html 同级行为后 git add -A 误捕获了根 out.html。.gitignore 加 /*.html (开头斜杠仅根目录，不影响 75 个 skill fixture example.html) + git rm --cached out.html (保留本地)。诚实标记上次的失误：feat(cli) commit 含 out.html 不该跟踪——本次清理。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `<latest-feat-commit>` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
