@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 5
+- **Total Sessions**: 6
 - **Last Active**: 2026-05-22
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~174 | Active |
+| `journal-1.md` | ~208 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 6 | 2026-05-22 | CLI UX: help 中文化 + 心跳 TTY 检测 bug 修复（render 默认值前置任务） | `70e28c0`, `f406a7f` | `main` |
 | 5 | 2026-05-22 | render 默认值优化（--skill / -o TTY 检测）+ dev:link 脚本 + README 重构 | `70e28c0`, `f406a7f` | `main` |
 | 4 | 2026-05-22 | README 重构：拆分用户视角与项目宪章（docs/design.md + docs/roadmap.md） | `f406a7f` | `main` |
 | 3 | 2026-05-22 | 并行收口：npm publish prep + spec sync 项目边界原则 | `a6705d0` | `main` |

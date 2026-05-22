@@ -172,3 +172,37 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 6: CLI UX: help 中文化 + 心跳 TTY 检测 bug 修复（render 默认值前置任务）
+
+**Date**: 2026-05-22
+**Task**: CLI UX: help 中文化 + 心跳 TTY 检测 bug 修复（render 默认值前置任务）
+**Branch**: `main`
+
+### Summary
+
+本 turn 收口 3 个 task：(1) README 重构 246→187 行 + docs/design+roadmap 分离；(2) render 默认值优化（--skill 默认 + -o 4 路 TTY 检测）+ dev:link 软链脚本；(3) help 三段全中文化 + 修复心跳 TTY 检测耦合 stdout 的关键 bug（user 实测 a2h render in.md > out.html 60+秒无反馈暴露）。65/65 测试 + dist 30.9KB。Linus 品味把关：心跳设计修复消除了'走 stderr 但绑 stdout 状态'的特殊情况耦合，sub-agent 正确识别 decideOutputTarget 与 logger 是两个独立 TTY 决策点没有错改。两种 DI 形态并存（logger 模块级 _testing seam / render 函数级 deps）有理由，第三处 DI 时再统一。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `70e28c0` | (see git log) |
+| `f406a7f` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
