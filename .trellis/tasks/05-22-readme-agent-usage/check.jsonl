@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "校对 docs/agent-integration.md 退出码表与 spec 完全一致：常量名、数值、含义三者无遗漏无臆造"}
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "校对 README Usage 命令示例（render / skills / -o / --skill / --agent / --max-budget-usd / -）与 CLI 设计约定一致"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "总体质量门禁：文档链接可达性、package.json 字段完整性、npm pack 产物白名单纯净"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "确认新增 docs/agent-integration.md 与 examples/readme.html 刷新后目录结构仍符合规范"}

@@ -24,6 +24,12 @@ Managed by Trellis. Edits outside this block are preserved; edits inside may be 
 
 项目目标见根目录 [`README.md`](./README.md)。任何关于"做什么 / 不做什么"的疑问，先回到 charter 对齐。
 
+## 文档地图
+
+- [`docs/design.md`](./docs/design.md) — 设计动机、架构原则与代码组织。
+- [`docs/roadmap.md`](./docs/roadmap.md) — 阶段性里程碑与发布节奏。
+- [`docs/agent-integration.md`](./docs/agent-integration.md) — Agent / Skill 嵌入协议、退出码、stdout/stderr 双流与成本预算。
+
 ## `ref/` 目录语义
 
 `ref/` 存放**只读的上游参考实现**，不是本项目的源码。

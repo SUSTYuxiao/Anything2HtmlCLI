@@ -110,7 +110,7 @@ const HELP_RENDER = `a2h render — 把输入文本渲染为单文件 HTML
   40  E_OUTPUT_INVALID    LLM 输出非合规 HTML
   50  E_NETWORK           agent 网络故障
 
-详见 README §Embedding from another Agent / Skill
+详见 README §Usage / For Agents 与 docs/agent-integration.md
 `;
 
 const HELP_SKILLS = `a2h skills — 列出可用 skill 标识符

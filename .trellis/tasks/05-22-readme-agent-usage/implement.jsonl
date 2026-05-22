@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/guides/cli-design.md", "reason": "README Usage / For Humans 中的命令样式、flag 命名、TTY/管道约定要与 CLI 设计原则一致；agent-integration.md 中的最简 spawn 例同样需要遵守"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "docs/agent-integration.md 的退出码表 (E_USAGE / E_SKILL_NOT_FOUND / E_AGENT_UNAVAILABLE / E_BUDGET_EXCEEDED / E_OUTPUT_INVALID / E_NETWORK) 必须与 spec 完全对齐，json-errors / 双流分离描述也以此为唯一真相源"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "在 docs/ 下新建 agent-integration.md，需符合项目目录组织约定，避免破坏现有结构"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "package.json 元数据修正、文档链接完整性、白名单文件等通用质量要求"}

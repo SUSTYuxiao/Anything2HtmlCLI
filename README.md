@@ -6,7 +6,14 @@
 
 ## 这是什么 / Why this exists
 
-`a2h` 把 [`nexu-io/html-anything`](https://github.com/nexu-io/html-anything) 的"文本→精美 HTML"能力，从"必须本地起 npm 服务"的形态，蒸馏为一个**无服务依赖、可管道调用的 CLI**——一条命令、零落盘、能被 spawn 进任何 Agent 的工作流里。
+**`a2h` 把"文本 → 精美 HTML"的能力蒸馏成一条本地命令。**
+
+源能力来自 [`nexu-io/html-anything`](https://github.com/nexu-io/html-anything)（Apache-2.0）。原项目以 npm 服务形态运行；`a2h` 把它重塑为一个**零运行时依赖、零落盘、可管道、可被 spawn 进任何 Agent 工作流**的 CLI。
+
+- **怎么用**：`a2h render in.md > out.html` —— 一条命令，无服务，stdout 即结果
+- **给谁用**：把渲染能力嵌入 Skill / Agent 自动化的开发者；在 CLI 工作流里直接 markdown → HTML 的工程师
+- **不是什么**：不是 LLM 客户端 / 不连任何 API / 不缓存 / 不起服务；所有 LLM 调用通过本机已登录的 `claude` / `qodercli` 透传
+- **心智**：`a2h` 是一根管道，不是一个平台
 
 完整设计动机、架构原则与代码组织详见 [`docs/design.md`](./docs/design.md)；阶段性里程碑见 [`docs/roadmap.md`](./docs/roadmap.md)。
 
@@ -14,10 +21,10 @@
 
 ## Installation
 
+> 🚧 **尚未发布到 npm**。下面是发布后的预期使用方式；当前要试用，请走末尾的 [如何贡献 / Contributing](#如何贡献--contributing) 章节，用源码 + `npm link` 流程。
+
 ```bash
-npm i -g @a2h/cli
-# 或暂用本地 tarball：
-npm i -g <path-to>/a2h-cli-<version>.tgz
+npm i -g anything2html-cli
 ```
 
 要求 Node.js `>= 20.0.0`（与 esbuild bundle target 对齐）。
@@ -29,27 +36,15 @@ npm i -g <path-to>/a2h-cli-<version>.tgz
 - [Claude Code](https://docs.claude.com/en/docs/claude-code) (`claude`)：默认 agent
 - [Qoder CLI](https://qoder.dev) (`qodercli`)：可选第二 agent
 
-`a2h` 自身不连任何 LLM API，所有 LLM 调用通过本机已登录的 agent CLI 透传——这意味着配额、登录、网络全部由对应 agent CLI 负责，本工具零运行时依赖。
-
-### 开发者本地自测
-
-不发包到 npm 也能用全局命令试这把工具：
-
-```bash
-npm install
-npm run dev:link        # build + npm link，把全局 `a2h` 软链到当前项目
-a2h --version           # 期望: a2h 0.1.0
-a2h render in.md        # 直接用全局命令试
-npm run dev:unlink      # 解除软链 (重复跑不报错)
-```
-
-`dev:unlink` 内置 `|| true`，已 unlink 时再跑也是 exit 0；不做更复杂的 PATH 自动检测——轻量为美。
+`a2h` 自身不连任何 LLM API，所有 LLM 调用通过本机已登录的 agent CLI 透传——配额、登录、网络全部由对应 agent CLI 负责，本工具零运行时依赖。
 
 ---
 
-## Usage
+## Usage / For Humans
 
-### 基本：把 markdown 文件渲染成 HTML
+终端直接使用的常见姿势。所有命令默认对 TTY 友好（彩色进度行 + 自动写文件），对管道也友好（stdout 写 HTML，可直接 `> out.html` / `| pbcopy`）。
+
+### 把 markdown 文件渲染成 HTML
 
 ```bash
 a2h render in.md --skill article-magazine -o out.html
@@ -94,7 +89,7 @@ a2h skills --json       # agent 友好 JSON
 a2h render in.md --skill data-report --max-budget-usd 2 -o out.html
 ```
 
-`a2h` 自身不设默认上限——参考下文"成本与时间参考"按模板族传值。
+`a2h` 自身不设默认上限——参考 [`docs/agent-integration.md`](./docs/agent-integration.md#推荐传---max-budget-usd-兜底成本) 按模板族传值。
 
 ### 写到 stdout（Unix 管道）
 
@@ -108,11 +103,13 @@ a2h render in.md --skill article-magazine > out.html
 
 ---
 
-## Embedding from another Agent / Skill
+## Usage / For Agents
 
-`a2h` 设计目标之一是被其它 Agent / Skill 内嵌调用。LLM 调用方推荐以下模式：
+`a2h` 的设计目标之一就是被其它 Agent / Skill 内嵌调用。集成模式只有一句话：
 
-### Spawn 调用（零磁盘副作用）
+> spawn 子进程 → 写 stdin → 读 stdout → 看首字符判成功/失败。
+
+最简集成：
 
 ```typescript
 import { spawn } from "node:child_process";
@@ -120,86 +117,38 @@ import { spawn } from "node:child_process";
 const child = spawn("a2h", [
   "render", "-",
   "--skill", "article-magazine",
-  "--agent", "claude",
-  "--max-budget-usd", "0.5",
-  "--json-errors",          // 失败时 stdout 写 JSON 错误对象
+  "--json-errors",            // 失败时 stdout 写 JSON 错误对象
 ], { stdio: ["pipe", "pipe", "pipe"] });
 
 child.stdin.write(promptContent);
 child.stdin.end();
-
-let stdout = "";
-let stderr = "";
-child.stdout.on("data", (c) => (stdout += c));
-child.stderr.on("data", (c) => (stderr += c));
-
-child.on("close", (code) => {
-  if (code === 0) {
-    // stdout 是合规 HTML（首字符 `<`）
-    return stdout;
-  } else {
-    // stdout 首字符 `{` —— --json-errors 协议下的错误对象
-    const err = JSON.parse(stdout);
-    // err.code: "E_SKILL_NOT_FOUND" / "E_AGENT_UNAVAILABLE" / "E_BUDGET_EXCEEDED" / ...
-    throw new Error(err.message);
-  }
-});
+// stdout 首字符 `<` = 成功的 HTML
+// stdout 首字符 `{` = 失败的 JSON 错误对象（含 code / exitCode / message）
 ```
 
-### 退出码协议
-
-| 退出码 | 常量名 | 含义 |
-| --- | --- | --- |
-| 0 | `OK` | 成功 |
-| 1 | `E_USAGE` | 命令行参数错（缺必需 arg、未知 flag） |
-| 10 | `E_SKILL_NOT_FOUND` | `--skill` 指定的 skill 不存在 |
-| 20 | `E_AGENT_UNAVAILABLE` | 本机无对应 agent CLI 或未登录 |
-| 30 | `E_BUDGET_EXCEEDED` | `--max-budget-usd` 触发 |
-| 40 | `E_OUTPUT_INVALID` | LLM 输出非合规 HTML(无 DOCTYPE / 无 `</html>`) |
-| 50 | `E_NETWORK` | claude / qoder 网络故障(DNS / 超时 / 连接重置) |
-
-调用方用 exit code 走 `switch`，永不需要解析 stderr 文案。完整协议见 [`.trellis/spec/backend/error-handling.md`](./.trellis/spec/backend/error-handling.md)。
-
-### 双流分离（stdout / stderr）
-
-| 模式 | stdout | stderr |
-| --- | --- | --- |
-| 默认 + 成功 | HTML（首字符 `<`） | 空（或 TTY 进度行） |
-| 默认 + 失败 | 空 | 人读 colored 错误 |
-| `--json-errors` + 成功 | HTML（首字符 `<`） | 空（或 TTY 进度行） |
-| `--json-errors` + 失败 | JSON 错误对象（首字符 `{`） | 人读 colored 错误 |
-
-LLM 调用方的最简判别：
-
-```ts
-const isError = output.trimStart().startsWith("{");
-```
-
-### 推荐传 `--max-budget-usd` 兜底成本
-
-参考下文"成本与时间参考"，按模板族传：
-
-- article 类（article-magazine / blog-post / newsletter）：`--max-budget-usd 0.5`
-- deck 类（deck-* / 多页演示）：`--max-budget-usd 2.0`
-- dataviz 类（data-report / dashboard）：`--max-budget-usd 2.0`
-
-### 推荐 `--json-errors` 让 stdout 永远是结构化数据
-
-启用后失败时 stdout = JSON 错误对象（首字符 `{`），成功时 stdout = HTML（首字符 `<`）。LLM 调用方靠首字符切判分支，无需解析 stderr。
+**完整嵌入手册**——退出码协议、stdout/stderr 双流分离、`--json-errors` 错误对象结构、按模板族的 `--max-budget-usd` 推荐、成本与时间参考、Troubleshooting——见 [`docs/agent-integration.md`](./docs/agent-integration.md)。
 
 ---
 
-## 成本与时间参考
+## 如何贡献 / Contributing
 
-`a2h render` 端到端耗时与成本由下游 `claude` CLI 决定。下表来自 2026-05-21 spike 验证（`article-magazine` / `deck-product-launch` / `data-report`），供调用方在嵌入时显式传 `--max-budget-usd` 时参考：
+欢迎 issue / PR。
 
-| 模板族 | 典型耗时 | 典型成本 | 推荐用户传参 |
-| --- | --- | --- | --- |
-| article 类（article-magazine / blog-post / newsletter）| ~70s | $0.3-0.5 | `--max-budget-usd 0.5` |
-| deck 类（deck-* / 多页演示）| ~170s | $0.6-1.2 | `--max-budget-usd 2.0` |
-| dataviz 类（data-report / dashboard）| ~145s | $0.6-1.0 | `--max-budget-usd 2.0` |
+### 本地自测（不发包到 npm 也能用全局命令）
 
-> `a2h` CLI 自身**不设默认上限**；上述参考值由调用方在嵌入时显式传入。
+```bash
+npm install
+npm run dev:link        # build + npm link，把全局 `a2h` 软链到当前项目
+a2h --version           # 期望: a2h 0.1.0
+a2h render in.md        # 直接用全局命令试
+npm run dev:unlink      # 解除软链 (重复跑不报错)
+```
+
+`dev:unlink` 内置 `|| true`，已 unlink 时再跑也是 exit 0；不做更复杂的 PATH 自动检测——轻量为美。
+
+### 完整开发流程
+
+本仓库使用 [Trellis](./.trellis/workflow.md) 工作流（任务驱动、spec 优先、brainstorm + check 双闸）。提交 PR 前请先读 [`.trellis/workflow.md`](./.trellis/workflow.md) 与 [`AGENTS.md`](./AGENTS.md)。
 
 ---
 
@@ -207,5 +156,6 @@ const isError = output.trimStart().startsWith("{");
 
 - 设计与架构原则：[`docs/design.md`](./docs/design.md)
 - 路线图：[`docs/roadmap.md`](./docs/roadmap.md)
+- Agent / Skill 嵌入手册：[`docs/agent-integration.md`](./docs/agent-integration.md)
 - AI 协作约定：[`AGENTS.md`](./AGENTS.md)
 - License: Apache-2.0

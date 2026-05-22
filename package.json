@@ -1,5 +1,5 @@
 {
-  "name": "@a2h/cli",
+  "name": "anything2html-cli",
   "version": "0.1.0",
   "description": "Convert text to a self-contained HTML file via local agent CLIs (claude / qoder), zero-runtime-deps",
   "keywords": [
@@ -12,13 +12,13 @@
     "render",
     "static-site"
   ],
-  "homepage": "https://github.com/USER/Anything2HtmlCLI#readme",
+  "homepage": "https://github.com/SUSTYuxiao/Anything2HtmlCLI#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/USER/Anything2HtmlCLI.git"
+    "url": "git+https://github.com/SUSTYuxiao/Anything2HtmlCLI.git"
   },
   "bugs": {
-    "url": "https://github.com/USER/Anything2HtmlCLI/issues"
+    "url": "https://github.com/SUSTYuxiao/Anything2HtmlCLI/issues"
   },
   "author": "pengxiao",
   "type": "module",
@@ -35,6 +35,9 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "esbuild src/cli.ts --bundle --platform=node --target=node20 --format=esm --external:node:* --outfile=dist/cli.js --minify --legal-comments=inline",
     "sync": "node scripts/sync-from-ref.mjs",
@@ -44,7 +47,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit && eslint",
     "dev:link": "npm run build && npm link",
-    "dev:unlink": "npm unlink -g @a2h/cli || true",
+    "dev:unlink": "npm unlink -g anything2html-cli || true",
     "prepublishOnly": "npm run sync && npm run lint && npm run build && npm test"
   },
   "devDependencies": {
